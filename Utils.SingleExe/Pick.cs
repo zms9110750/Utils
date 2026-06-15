@@ -1,287 +1,432 @@
-﻿ 
+#!/usr/bin/env -S dotnet --
+
+#:property TargetFramework=net10.0
+#:property PublishAot=false
+
+using System.Collections.Immutable;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
-// ══════ pick — Main 入口 ══════
+namespace zms9110750.Utils.SingleExe;
 
-class Pick
+/// <summary>值在排序列表中的索引范围。</summary>
+public readonly record struct ValueRange(int Start, int End, int Count)
 {
-    static void Main(string[] args)
+    /// <summary>移除索引后偏移。Start>removedIdx 整体左移，End>removedIdx 减 Count。</summary>
+    public ValueRange ShiftLeft(int removedIdx)
     {
-        if (args.Length == 0)
+        if (Start > removedIdx)
         {
-            Console.Error.WriteLine("pick <表达式1> [表达式2] ...");
-            Console.Error.WriteLine("pick -h");
-            return;
+            return new(Start - 1, End - 1, Count);
         }
 
-        foreach (var a in args)
+        if (End > removedIdx)
         {
-            if ((a ?? "") is "-?" or "-h" or "-help" or "--help")
-            { PrintHelp(); return; }
+            return new(Start, End - 1, Count - 1);
         }
 
-        foreach (var arg in args)
-            Console.WriteLine(Process(arg ?? ""));
+        return this;
     }
+}
 
-    static void PrintHelp()
+/// <summary>解析抽取池。内联 k:v 或 file:// 殊途同归。</summary>
+public static class PoolParser
+{
+    /// <summary>解析表达式或文件路径为名称-值字典。</summary>
+    public static Dictionary<string, int> Parse(ReadOnlySpan<char> arg)
     {
-        Console.WriteLine("pick — 区间约束随机抽取（过滤递归版）");
-        Console.WriteLine();
-        Console.WriteLine("用法:");
-        Console.WriteLine(@"  pick '(2,4)[5,8]{瘟疫:3,黑死:2,复活:4}'");
-        Console.WriteLine(@"  pick '(1,1)[10,10]{A:3,B:5,C:8}' -s");
-        Console.WriteLine(@"  pick '(2,3)[6,10]{file://pool.json}'");
-        Console.WriteLine();
-        Console.WriteLine("格式:");
-        Console.WriteLine("  (min,max)        数量范围");
-        Console.WriteLine("  [min,max]        点数总和范围");
-        Console.WriteLine("  {k:v,k:v,...}    抽取池（名称:点数）");
-        Console.WriteLine("  {file://路径}    从 JSON 文件读取抽取池");
-        Console.WriteLine("                     JSON 格式: {\"瘟疫\": 3, \"黑死\": 2}");
-        Console.WriteLine("  -s / -single     不放回（抽过的项不再出现）");
-        Console.WriteLine();
-        Console.WriteLine("示例:");
-        Console.WriteLine(@"  pick '(2,4)[5,8]{瘟疫:3,黑死:2,复活:4,黑洞:3}'");
-        Console.WriteLine(@"  pick '(3,4)[9,12]{丧尸:2,坦克:5,自爆:3}' -single");
-        Console.WriteLine(@"  pick '(2,3)[6,10]{file://pool.json}'");
-    }
-
-    static string Process(string expr)
-    {
-        bool single = false;
-        string body = expr;
-
-        var optMatch = Regex.Match(body, @"\s+(-s|-single)$", RegexOptions.IgnoreCase);
-        if (optMatch.Success) { single = true; body = body[..optMatch.Index]; }
-
-        var m = Regex.Match(body, @"^\((\d+),(\d+)\)\[(\d+),(\d+)\]\{(.+)\}$");
-        if (!m.Success) return $"无效表达式: {expr}";
-
-        int cMin = int.Parse(m.Groups[1].Value);
-        int cMax = int.Parse(m.Groups[2].Value);
-        int pMin = int.Parse(m.Groups[3].Value);
-        int pMax = int.Parse(m.Groups[4].Value);
-
-        var items = ParsePool(m.Groups[5].Value.Trim());
-        if (items.Count == 0) return $"因子池为空: {expr}";
-
-        var bag = new PickBag(items, single);
-        var result = bag.Pick(cMin, cMax, pMin, pMax, []);
-        if (result == null) return $"不可行: {expr}";
-
-        return $"{string.Join(", ", result)} = {result.Sum(n => bag.GetVal(n))}";
-    }
-
-    static List<(string name, int val)> ParsePool(string s)
-    {
-        var fileMatch = Regex.Match(s, @"^file://(.+)$", RegexOptions.IgnoreCase);
-        if (fileMatch.Success)
+        var s = arg.Trim();
+        if (s.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
         {
-            string path = fileMatch.Groups[1].Value;
-            if (!File.Exists(path)) { Console.Error.WriteLine($"文件不存在: {path}"); return []; }
+            var path = s["file://".Length..].Trim().ToString();
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException($"鏂囦欢涓嶅瓨鍦? {path}");
+            }
+
             try
             {
                 var json = File.ReadAllText(path);
-                var dict = JsonSerializer.Deserialize<Dictionary<string, int>>(json);
-                if (dict == null) return [];
-                return dict.Where(kv => kv.Key.Length > 0)
-                           .Select(kv => (kv.Key, kv.Value)).ToList();
+                return JsonSerializer.Deserialize<Dictionary<string, int>>(json)
+                    ?? throw new FormatException("JSON 涓虹┖");
             }
-            catch (Exception ex) { Console.Error.WriteLine($"读取文件失败: {ex.Message}"); return []; }
+            catch (JsonException ex)
+            {
+                throw new FormatException($"JSON 瑙ｆ瀽澶辫触: {ex.Message}");
+            }
         }
 
-        var result = new List<(string, int)>();
-        foreach (var part in s.Split(',', '，'))
+        var result = new Dictionary<string, int>();
+        Span<char> buf = stackalloc char[s.Length];
+        s.CopyTo(buf);
+        for (int i = 0; i < buf.Length; i++)
         {
-            var t = part.Trim();
-            if (t.Length == 0) continue;
-            var kv = t.Split(':', '：');
-            if (kv.Length != 2) continue;
-            if (int.TryParse(kv[1].Trim(), out int val) && kv[0].Trim().Length > 0)
-                result.Add((kv[0].Trim(), val));
+            if (buf[i] == '，')
+            {
+                buf[i] = ',';
+            }
+        }
+
+        Span<Range> ranges = stackalloc Range[buf.Length];
+        int count = buf.Split(ranges, ',');
+        for (int i = 0; i < count; i++)
+        {
+            var part = buf[ranges[i]].Trim();
+            if (part.IsEmpty)
+            {
+                continue;
+            }
+
+            var colonIdx = part.IndexOfAny(':', '：');
+            if (colonIdx < 0)
+            {
+                continue;
+            }
+
+            var name = part[..colonIdx].Trim();
+            var valStr = part[(colonIdx + 1)..].Trim();
+            if (name.Length > 0 && int.TryParse(valStr, out int val))
+            {
+                result[name.ToString()] = val;
+            }
         }
         return result;
     }
 }
 
-// ══════ ValueRange 记录 ══════
-
-record struct ValueRange(int Start, int End, int Count, int RunningTotal);
-
-// ══════ PickBag 核心类 ══════
-
-class PickBag
+/// <summary>区间约束随机抽取基类。外部循环：SetConstraints + 反复 Pick()。</summary>
+public abstract class BasePicker<T>
 {
-    readonly List<string> _names;
-    readonly SortedList<int, ValueRange> _valToRange;
-    readonly Dictionary<string, int> _nameToVal;
-    readonly bool _single;
+    /// <summary>所有项的名称列表（按 V 值升序）。</summary>
+    public abstract IReadOnlyList<T> Names { get; }
+    /// <summary>V 值到索引范围的映射。Key=V，Value=在 Names 中的范围。</summary>
+    public abstract IReadOnlyDictionary<int, ValueRange> ValueRanges { get; }
 
-    public PickBag(IEnumerable<(string name, int val)> items, bool single)
+    /// <summary>剩余可取数量下限。</summary>
+    public int CountMin { get; protected set; }
+    /// <summary>剩余可取数量上限。</summary>
+    public int CountMax { get; protected set; }
+    /// <summary>剩余点数和下限。</summary>
+    public int PointMin { get; protected set; }
+    /// <summary>剩余点数和上限。</summary>
+    public int PointMax { get; protected set; }
+
+    /// <summary>当前步可行 V 值下限（子类实现）。</summary>
+    public abstract int Low { get; }
+    /// <summary>当前步可行 V 值上限（子类实现）。</summary>
+    public abstract int High { get; }
+
+    protected int MinVal => ValueRanges.Keys.Min();
+    protected int MaxVal => ValueRanges.Keys.Max();
+
+    /// <summary>设置约束并开始一次新抽取。</summary>
+    public void SetConstraints(int cMin, int cMax, int pMin, int pMax)
     {
-        _single = single;
-        _nameToVal = [];
+        CountMin = cMin;
+        CountMax = cMax;
+        PointMin = pMin;
+        PointMax = pMax;
+    }
 
+    /// <summary>在 [Low, High] 中随机选一个 key（V 值）。</summary>
+    protected int SelectKey()
+    {
+        int lo = Low, hi = High;
+        var candidates = new List<int>();
+        foreach (var kvp in ValueRanges)
+        {
+            if (kvp.Key >= lo && kvp.Key <= hi)
+            {
+                candidates.Add(kvp.Key);
+            }
+        }
+
+        if (candidates.Count == 0)
+        {
+            throw new InvalidOperationException($"无可行候选 [Low={lo}, High={hi}]");
+        }
+
+        return candidates[Random.Shared.Next(candidates.Count)];
+    }
+
+    /// <summary>按当前约束随机抽取一项。内部自减约束值。</summary>
+    public virtual T Pick()
+    {
+        int key = SelectKey();
+        var range = ValueRanges[key];
+        int idx = Random.Shared.Next(range.Start, range.End);
+        T picked = Names[idx];
+        CountMin--;
+        CountMax--;
+        PointMin -= key;
+        PointMax -= key;
+        return picked;
+    }
+}
+
+/// <summary>可放回抽取。池不变，每次从全集中随机选。</summary>
+public class ReplacementPicker<T> : BasePicker<T>
+{
+    private readonly ImmutableList<T> _names;
+    private readonly SortedList<int, ValueRange> _ranges;
+
+    /// <summary>构造可放回抽取器。Key=名称，Value=V值。</summary>
+    public ReplacementPicker(IReadOnlyDictionary<T, int> items)
+    {
         var sorted = items
-            .Select(x => (x.name, x.val))
-            .OrderBy(x => x.val).ThenBy(x => x.name)
+            .Select(kvp => (kvp.Key, kvp.Value))
+            .OrderBy(x => x.Value).ThenBy(x => x.Key)
             .ToList();
 
-        _names = new(sorted.Count);
-        _valToRange = [];
-        int runningTotal = 0;
+        var names = new List<T>(sorted.Count);
+        var ranges = new SortedList<int, ValueRange>();
+        int start = 0;
+        int? lastVal = null;
+
+        for (int i = 0; i < sorted.Count; i++)
+        {
+            var (name, val) = sorted[i];
+            names.Add(name);
+            if (lastVal != null && val != lastVal)
+            {
+                ranges[lastVal.Value] = new ValueRange(start, i, i - start);
+                start = i;
+            }
+            lastVal = val;
+        }
+        if (sorted.Count > 0)
+        {
+            ranges[lastVal!.Value] = new ValueRange(start, sorted.Count, sorted.Count - start);
+        }
+
+        _names = names.ToImmutableList();
+        _ranges = ranges;
+    }
+
+    public override IReadOnlyList<T> Names => _names;
+    public override IReadOnlyDictionary<int, ValueRange> ValueRanges => _ranges;
+
+    public override int Low => PointMin - (CountMax - 1) * MaxVal;
+    public override int High => PointMax - (CountMin - 1) * MinVal;
+}
+
+/// <summary>不可放回抽取。每抽一项即从池中移除。</summary>
+public class NonReplacementPicker<T> : BasePicker<T>
+{
+    private List<T> _names;
+    private SortedList<int, ValueRange> _ranges;
+
+    /// <summary>构造不可放回抽取器。Key=名称，Value=V值。</summary>
+    public NonReplacementPicker(IReadOnlyDictionary<T, int> items)
+    {
+        var sorted = items
+            .Select(kvp => (kvp.Key, kvp.Value))
+            .OrderBy(x => x.Value).ThenBy(x => x.Key)
+            .ToList();
+
+        _names = new List<T>(sorted.Count);
+        _ranges = new SortedList<int, ValueRange>();
+        int start = 0;
         int? lastVal = null;
 
         for (int i = 0; i < sorted.Count; i++)
         {
             var (name, val) = sorted[i];
             _names.Add(name);
-            _nameToVal[name] = val;
-            runningTotal += val;
-
             if (lastVal != null && val != lastVal)
             {
-                var prev = _valToRange[lastVal.Value];
-                _valToRange[lastVal.Value] = prev with {
-                    End = i, Count = i - prev.Start
-                };
+                _ranges[lastVal.Value] = new ValueRange(start, i, i - start);
+                start = i;
             }
-
-            if (lastVal == null || val != lastVal)
-                _valToRange[val] = new(i, i + 1, 1, runningTotal);
-
             lastVal = val;
         }
-    }
-
-    // ── 公开属性 ──
-
-    public IList<int> Keys => _valToRange.Keys;
-    public int NameCount => _names.Count;
-    public int MinVal => Keys[0];
-    public int MaxVal => Keys[^1];
-    public int TotalSum => _valToRange.Values[^1].RunningTotal;
-    public int Lo { get; private set; }
-    public int Hi { get; private set; }
-    public int GetVal(string name) => _nameToVal[name];
-
-    // ── 计算宽边界 ──
-
-    public void ComputeBounds(int cMin, int cMax, int pMin, int pMax)
-    {
-        int effMin = cMin <= 0 ? 1 : cMin;
-
-        if (_single)
+        if (sorted.Count > 0)
         {
-            int maxRem = cMax <= 1 ? 0
-                : _names.TakeLast(Math.Min(cMax - 1, _names.Count)).Sum(n => _nameToVal[n]);
-            int minRem = effMin <= 1 ? 0
-                : _names.Take(Math.Min(effMin - 1, _names.Count)).Sum(n => _nameToVal[n]);
-            Lo = Math.Max(pMin - maxRem, MinVal);
-            Hi = Math.Min(pMax - minRem, MaxVal);
-        }
-        else
-        {
-            Lo = Math.Max(pMin - (cMax - 1) * MaxVal, MinVal);
-            Hi = Math.Min(pMax - (effMin - 1) * MinVal, MaxVal);
+            _ranges[lastVal!.Value] = new ValueRange(start, sorted.Count, sorted.Count - start);
         }
     }
 
-    // ── 二分查找 ──
+    public override IReadOnlyList<T> Names => _names;
+    public override IReadOnlyDictionary<int, ValueRange> ValueRanges => _ranges;
 
-    public int LowerBound(int val)
-    {
-        var k = Keys;
-        int lo = 0, hi = k.Count;
-        while (lo < hi) { int m = (lo + hi) / 2; if (k[m] < val) lo = m + 1; else hi = m; }
-        return lo;
-    }
-
-    public int UpperBound(int val)
-    {
-        var k = Keys;
-        int lo = 0, hi = k.Count;
-        while (lo < hi) { int m = (lo + hi) / 2; if (k[m] <= val) lo = m + 1; else hi = m; }
-        return lo;
-    }
-
-    // ── 不放回：移除一个怪物后重建 ──
-
-    public PickBag RemoveAt(int nameIdx)
-    {
-        var remaining = _names
-            .Select((n, i) => (n, _nameToVal[n], i))
-            .Where(x => x.i != nameIdx)
-            .Select(x => (x.n, x.Item2));
-        return new(remaining, true);
-    }
-
-    // ── 递归选取（无回溯） ──
-
-    public List<string>? Pick(int cMin, int cMax, int pMin, int pMax, List<string> chosen)
-    {
-        if (cMin <= 0 && pMin <= 0) return chosen;
-        if (cMax <= 0) return null;
-
-        ComputeBounds(cMin, cMax, pMin, pMax);
-        if (Lo > Hi) return null;
-
-        int leftKey = LowerBound(Lo), rightKey = UpperBound(Hi);
-        if (leftKey >= rightKey) return null;
-
-        var keys = Keys;
-        var safeIdxs = new List<int>();
-
-        for (int i = leftKey; i < rightKey; i++)
-        {
-            int v = keys[i];
-            int nCMin = cMin - 1, nCMax = cMax - 1;
-            int nPMin = pMin - v, nPMax = pMax - v;
-
-            if (nCMin <= 0 && nPMin <= 0) { safeIdxs.Add(i); continue; }
-            if (nCMax <= 0) continue;
-
-            int nEff = nCMin <= 0 ? (nPMin > 0 ? 1 : 0) : nCMin;
-            if (nEff == 0) { safeIdxs.Add(i); continue; }
-
-            int loN, hiN;
-            if (_single)
+    public override int Low {
+        get {
+            int needed = CountMax - 1;
+            if (needed <= 0)
             {
-                int maxVn = v == MaxVal && Keys.Count > 1 ? Keys[^2] : MaxVal;
-                int minVn = v == MinVal && Keys.Count > 1 ? Keys[1] : MinVal;
-                int maxRem = nCMax <= 1 ? 0
-                    : _names.TakeLast(Math.Min(nCMax - 1, _names.Count - 1)).Sum(n => _nameToVal[n]);
-                int minRem = nEff <= 1 ? 0
-                    : _names.Take(Math.Min(nEff - 1, _names.Count - 1)).Sum(n => _nameToVal[n]);
-                loN = Math.Max(nPMin - maxRem, minVn);
-                hiN = Math.Min(nPMax - minRem, maxVn);
-            }
-            else
-            {
-                loN = Math.Max(nPMin - (nCMax - 1) * MaxVal, MinVal);
-                hiN = Math.Min(nPMax - (nEff - 1) * MinVal, MaxVal);
+                return PointMin;
             }
 
-            int l = LowerBound(loN), r = UpperBound(hiN);
-            if (l < r) safeIdxs.Add(i);
+            int count = 0, sum = 0;
+            var keys = ValueRanges.Keys.ToList();
+            for (int i = keys.Count - 1; i >= 0 && count < needed; i--)
+            {
+                int v = keys[i];
+                int take = Math.Min(ValueRanges[v].Count, needed - count);
+                count += take;
+                sum += v * take;
+            }
+            return PointMin - sum;
+        }
+    }
+
+    public override int High {
+        get {
+            int needed = CountMin - 1;
+            if (needed <= 0)
+            {
+                return PointMax;
+            }
+
+            int count = 0, sum = 0;
+            foreach (var kvp in ValueRanges)
+            {
+                if (count >= needed)
+                {
+                    break;
+                }
+
+                int v = kvp.Key;
+                int take = Math.Min(kvp.Value.Count, needed - count);
+                count += take;
+                sum += v * take;
+            }
+            return PointMax - sum;
+        }
+    }
+
+    /// <summary>抽取一项并从池中移除。内部自减约束值。</summary>
+    public override T Pick()
+    {
+        int key = SelectKey();
+        var range = ValueRanges[key];
+        int idx = Random.Shared.Next(range.Start, range.End);
+        T picked = Names[idx];
+
+        _names.RemoveAt(idx);
+        var newRanges = new SortedList<int, ValueRange>(_ranges.Count);
+        foreach (var kvp in _ranges)
+        {
+            var shifted = kvp.Value.ShiftLeft(idx);
+            if (shifted.Count > 0)
+            {
+                newRanges.Add(kvp.Key, shifted);
+            }
+        }
+        _ranges = newRanges;
+
+        CountMin--;
+        CountMax--;
+        PointMin -= key;
+        PointMax -= key;
+        return picked;
+    }
+}
+
+// ── CLI 入口 ──
+
+public class Pick
+{
+    /// <summary>参数解析与执行入口。</summary>
+    public static void Main(string[] args)
+    {
+        if (args.Length == 0 || args.Any(a => a is "-?" or "-h" or "-help" or "--help"))
+        {
+            PrintHelp();
+            return;
         }
 
-        if (safeIdxs.Count == 0) return null;
+        bool single = args.Any(a => a is "-s" or "-single");
 
-        int keyIdx = safeIdxs[Random.Shared.Next(safeIdxs.Count)];
-        int chosenVal = keys[keyIdx];
-        var rng = _valToRange[chosenVal];
-        int nameIdx = Random.Shared.Next(rng.Start, rng.End);
-        string picked = _names[nameIdx];
+        foreach (var arg in args)
+        {
+            if (arg is "-s" or "-single")
+            {
+                continue;
+            }
 
-        var next = new List<string>(chosen) { picked };
+            try
+            {
+                var s = arg.AsSpan().Trim();
 
-        if (_single)
-            return RemoveAt(nameIdx).Pick(
-                cMin - 1, cMax - 1, pMin - _nameToVal[picked], pMax - _nameToVal[picked], next);
+                string expr = s.ToString();
+                if (expr.EndsWith("-single"))
+                {
+                    single = true;
+                    expr = expr[..^7];
+                }
+                else if (expr.EndsWith("-s"))
+                {
+                    single = true;
+                    expr = expr[..^2];
+                }
+                var m = System.Text.RegularExpressions.Regex.Match(expr,
+                    @"^\((\d+),(\d+)\)\[(\d+),(\d+)\]\{(.+)\}$");
+                int cMin, cMax, pMin, pMax;
+                if (m.Success)
+                {
+                    cMin = int.Parse(m.Groups[1].Value);
+                    cMax = int.Parse(m.Groups[2].Value);
+                    pMin = int.Parse(m.Groups[3].Value);
+                    pMax = int.Parse(m.Groups[4].Value);
+                }
+                else
+                {
+                    m = System.Text.RegularExpressions.Regex.Match(expr,
+                        @"^\((\d+)\)\[(\d+)\]\{(.+)\}$");
+                    if (!m.Success)
+                    {
+                        Console.Error.WriteLine($"鏃犳晥琛ㄨ揪寮? {arg}");
+                        continue;
+                    }
+                    int cv = int.Parse(m.Groups[1].Value);
+                    int pv = int.Parse(m.Groups[2].Value);
+                    cMin = cMax = cv;
+                    pMin = pMax = pv;
+                }
+                var pool = PoolParser.Parse(m.Groups[m.Groups.Count - 1].Value.AsSpan().Trim());
 
-        return Pick(cMin - 1, cMax - 1, pMin - _nameToVal[picked], pMax - _nameToVal[picked], next);
+                BasePicker<string> picker = single
+                    ? new NonReplacementPicker<string>(pool)
+                    : new ReplacementPicker<string>(pool);
+
+                picker.SetConstraints(cMin, cMax, pMin, pMax);
+
+                var result = new List<string>();
+                while (picker.CountMin > 0 && picker.PointMin > 0)
+                {
+                    var item = picker.Pick();
+                    result.Add(item);
+                }
+
+                int total = result.Sum(n => pool[n]);
+                Console.WriteLine($"{string.Join(", ", result)} = {total}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"閿欒: {ex.Message}");
+            }
+        }
+    }
+
+    static void PrintHelp()
+    {
+        Console.WriteLine("""
+pick 鈥?鍖洪棿绾︽潫闅忔満鎶藉彇锛堣繃婊ら掑綊鐗堬級
+
+鐢ㄦ硶:
+  pick '(2,4)[5,8]{鐦熺柅:3,榛戞:2,澶嶆椿:4}'
+  pick '(1,1)[10,10]{A:3,B:5,C:8}-single'
+  pick '(2,3)[6,10]{file://pool.json}'
+
+鏍煎紡:
+  (min,max)        鏁伴噺鑼冨洿
+  [min,max]        鐐规暟鎬诲拰鑼冨洿
+  {k:v,k:v,...}    鎶藉彇姹狅紙鍚嶇О:鐐规暟锛?  {file://璺緞}    浠?JSON 鏂囦欢璇诲彇鎶藉彇姹?  -s / -single     涓嶆斁鍥烇紙鎺ュ湪琛ㄨ揪寮忓悗鏃犵┖鏍硷級
+
+绀轰緥:
+  pick '(2,4)[5,8]{鐦熺柅:3,榛戞:2,澶嶆椿:4,榛戞礊:3}'
+  pick '(3,4)[9,12]{涓у案:2,鍧﹀厠:5,鑷垎:3}-single'
+  pick '(2,3)[6,10]{file://pool.json}'
+""");
     }
 }
