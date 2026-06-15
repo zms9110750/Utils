@@ -14,13 +14,15 @@ public class Dice
     {
         if (args.Length == 0)
         {
-            RunInteractive(); return;
+            RunInteractive();
+            return;
         }
         foreach (var arg in args)
         {
             if (arg.Trim().ToLowerInvariant() is "-?" or "-h" or "-help" or "--help")
             {
-                PrintHelp(); return;
+                PrintHelp();
+                return;
             }
         }
         foreach (var arg in args)
