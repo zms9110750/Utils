@@ -299,7 +299,7 @@ public abstract class NumExpr : Expr
             }
             else
             {
-                var right = ParseExpr(rest[1..], prec);
+                var right = ParseExpr(rest[1..], prec + 1);
                 int consumed = now.RawValue.Length + 1 + right.RawValue.Length;
                 now = new BinOpExpr(now, rest[0], right) { RawValue = s[..consumed].ToString() };
             }
