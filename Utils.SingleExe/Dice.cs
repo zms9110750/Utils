@@ -112,8 +112,7 @@ public abstract class Expr
             case 2:
                 return new CompareExpr(
                     NamedExpr.Parse(s[ranges[0]].Trim()),
-                    NamedExpr.Parse(s[ranges[1]].Trim()))
-                { RawValue = s.ToString() };
+                    NamedExpr.Parse(s[ranges[1]].Trim())) { RawValue = s.ToString() };
             default:
                 var items = new NamedExpr[count];
                 for (int i = 0; i < count; i++)
@@ -247,11 +246,18 @@ public abstract class NumExpr : Expr
     public static new NumExpr Parse(ReadOnlySpan<char> s)
     {
         s = s.Trim();
-        if (s.IsEmpty) throw new FormatException("表达式为空");
+        if (s.IsEmpty)
+        {
+            throw new FormatException("表达式为空");
+        }
+
         var result = ParseExpr(s, 0);
         var rest = s[result.RawValue.Length..].Trim();
         if (rest.Length > 0)
+        {
             throw new FormatException("多余的输入: " + new string(rest));
+        }
+
         return result;
     }
 
@@ -263,16 +269,21 @@ public abstract class NumExpr : Expr
         while (true)
         {
             var rest = s[now.RawValue.Length..];
-            if (rest.IsEmpty) break;
-
-            int prec = rest[0] switch
+            if (rest.IsEmpty)
             {
+                break;
+            }
+
+            int prec = rest[0] switch {
                 'd' => PREC_DICE,
                 '*' or '/' => PREC_MUL,
                 '+' or '-' => PREC_ADD,
                 _ => -1
             };
-            if (prec < minPrec) break;
+            if (prec < minPrec)
+            {
+                break;
+            }
 
             if (rest[0] == 'd')
             {
@@ -299,7 +310,10 @@ public abstract class NumExpr : Expr
     /// <summary>解析基本元素：数字 / 括号 / 括号列表 / 裸骰。s 不允许前导空白。</summary>
     private static NumExpr ParseAtomic(ReadOnlySpan<char> s)
     {
-        if (s.IsEmpty) throw new FormatException("表达式不完整");
+        if (s.IsEmpty)
+        {
+            throw new FormatException("表达式不完整");
+        }
 
         if (s is ['d', ..])
         {
@@ -315,8 +329,7 @@ public abstract class NumExpr : Expr
             return dice;
         }
 
-        return s[0] switch
-        {
+        return s[0] switch {
             >= '0' and <= '9' => ParseNumber(s),
             '(' => ParenExpr.ParseContent(s),
             '[' => MinExpr.Parse(s),
@@ -328,7 +341,11 @@ public abstract class NumExpr : Expr
     private static NumExpr ParseNumber(ReadOnlySpan<char> s)
     {
         int len = 0;
-        while (len < s.Length && char.IsAsciiDigit(s[len])) len++;
+        while (len < s.Length && char.IsAsciiDigit(s[len]))
+        {
+            len++;
+        }
+
         return new ConstExpr(int.Parse(s[..len])) { RawValue = s[..len].ToString() };
     }
 
@@ -341,7 +358,11 @@ public abstract class NumExpr : Expr
         if (after is [_, ..] && char.IsAsciiDigit(after[0]))
         {
             int len = 0;
-            while (len < after.Length && char.IsAsciiDigit(after[len])) len++;
+            while (len < after.Length && char.IsAsciiDigit(after[len]))
+            {
+                len++;
+            }
+
             groups = new ConstExpr(int.Parse(after[..len])) { RawValue = "" };
             suffixLen += len;
         }
@@ -352,7 +373,10 @@ public abstract class NumExpr : Expr
     {
         int end = FindMatchingClose(s, 1, open, close);
         var inner = s.Slice(1, end - 1);
-        if (inner.IsEmpty) throw new FormatException($"空列表 {open}{close}");
+        if (inner.IsEmpty)
+        {
+            throw new FormatException($"空列表 {open}{close}");
+        }
 
         var list = new List<NumExpr>();
         int depth = 0, start = 0;
@@ -367,7 +391,10 @@ public abstract class NumExpr : Expr
             }
         }
         if (start <= inner.Length)
+        {
             list.Add(ParseExpr(inner.Slice(start).Trim(), 0));
+        }
+
         return list.ToArray();
     }
 
@@ -376,9 +403,19 @@ public abstract class NumExpr : Expr
         int depth = 1;
         for (int i = start; i < s.Length; i++)
         {
-            if (s[i] == open) depth++;
-            else if (s[i] == close) depth--;
-            if (depth == 0) return i;
+            if (s[i] == open)
+            {
+                depth++;
+            }
+            else if (s[i] == close)
+            {
+                depth--;
+            }
+
+            if (depth == 0)
+            {
+                return i;
+            }
         }
         throw new FormatException("缺少匹配的 " + close);
     }
@@ -475,8 +512,7 @@ public class BinOpExpr : NumExpr
         Op = op;
         Right = right;
     }
-    public override int Value => Op switch
-    {
+    public override int Value => Op switch {
         '+' => Left.Value + Right.Value,
         '-' => Left.Value - Right.Value,
         '*' => Left.Value * Right.Value,
@@ -570,14 +606,19 @@ public class ParenExpr : NumExpr
         var result = ParseContent(s);
         var rest = s[result.RawValue.Length..].Trim();
         if (rest.Length > 0)
+        {
             throw new FormatException("括号后有多余内容: " + new string(rest));
+        }
+
         return result;
     }
 
     public static ParenExpr ParseContent(ReadOnlySpan<char> s)
     {
         if (s.IsEmpty || s[0] != '(')
+        {
             throw new FormatException("无效括号表达式: " + new string(s));
+        }
 
         int close = NumExpr.FindMatchingClose(s, 1, '(', ')');
         var inner = s.Slice(1, close - 1);
@@ -585,15 +626,22 @@ public class ParenExpr : NumExpr
         {
             int innerClose = NumExpr.FindMatchingClose(inner, 1, '(', ')');
             if (innerClose == inner.Length - 1)
+            {
                 inner = inner.Slice(1, innerClose - 1);
-            else break;
+            }
+            else
+            {
+                break;
+            }
         }
         var innerExpr = NumExpr.ParseExpr(inner, 0);
         if (inner.Length > innerExpr.RawValue.Length)
         {
             var check = inner[innerExpr.RawValue.Length..].Trim();
             if (check.Length > 0)
+            {
                 throw new FormatException("括号内有多余内容: " + new string(check));
+            }
         }
         return new ParenExpr(innerExpr) { RawValue = s[..(close + 1)].ToString() };
     }
