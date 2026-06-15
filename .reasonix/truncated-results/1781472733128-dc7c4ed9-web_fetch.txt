@@ -1,0 +1,1214 @@
+MemoryExtensions 类 (System) | Microsoft Learn
+https://learn.microsoft.com/zh-cn/dotnet/api/system.memoryextensions?view=net-10.0
+
+<!DOCTYPE html>
+
+MemoryExtensions 类 (System) | Microsoft Learn
+
+跳至主要内容
+
+跳到页内导航
+
+跳到 Ask Learn 聊天体验
+
+此浏览器不再受支持。
+
+请升级到 Microsoft Edge 以使用最新的功能、安全更新和技术支持。
+
+下载 Microsoft Edge
+
+有关 Internet Explorer 和 Microsoft Edge 的详细信息
+
+目录 
+
+退出编辑器模式
+
+询问 Learn
+
+询问 Learn
+
+语言
+
+csharp
+
+vb
+
+fsharp
+
+cpp
+
+读取模式
+
+目录
+
+使用英语阅读
+
+添加
+
+添加到计划
+
+复制 Markdown
+
+打印
+
+注意
+
+访问此页面需要授权。 可以尝试登录或更改目录。
+
+访问此页面需要授权。 可以尝试更改目录。
+
+MemoryExtensions 类
+
+定义
+
+命名空间:
+
+System 
+
+程序集:netstandard.dll, System.Memory.dll
+
+程序集:System.Memory.dll
+
+程序集:netstandard.dll
+
+Source:MemoryExtensions.cs
+
+Source:MemoryExtensions.cs
+
+Source:MemoryExtensions.cs
+
+Source:MemoryExtensions.cs
+
+Source:MemoryExtensions.cs
+
+重要
+
+一些信息与预发行产品相关，相应产品在发行之前可能会进行重大修改。 对于此处提供的信息，Microsoft 不作任何明示或暗示的担保。
+
+为与内存相关的和跨度相关的类型（例如Memory<T>，ReadOnlyMemory<T>和Span<T>ReadOnlySpan<T>）提供扩展方法。
+
+<code class="cpp lang-cpp" dir="ltr">public ref class MemoryExtensions abstract sealed</code>
+<code class="csharp lang-csharp" dir="ltr">public static class MemoryExtensions</code>
+<code class="fsharp lang-fsharp" dir="ltr">type MemoryExtensions = class</code>
+<code class="vb lang-vb" dir="ltr">Public Module MemoryExtensions</code>
+
+继承
+
+Object
+
+MemoryExtensions 
+
+方法
+
+名称
+说明
+
+AsMemory(String, Index)
+
+在从指定索引处开始的目标字符串的一部分上新建 ReadOnlyMemory<Char> 一个。
+
+AsMemory(String, Int32, Int32)
+
+在目标字符串的一部分上创建一个新 ReadOnlyMemory<Char> 值，以长度为长度的指定位置开始。
+
+AsMemory(String, Int32)
+
+从指定字符位置开始，在目标字符串的一部分上新建 ReadOnlyMemory<Char> 一个。
+
+AsMemory(String, Range)
+
+在目标字符串的指定范围内创建一个新 ReadOnlyMemory<Char> 值。
+
+AsMemory(String)
+
+在目标字符串部分新建一个 ReadOnlyMemory<Char> 。
+
+AsMemory<T>(ArraySegment<T>, Int32, Int32)
+
+在目标数组段部分上创建一个新的内存区域，该部分从具有指定长度的指定位置开始。
+
+AsMemory<T>(ArraySegment<T>, Int32)
+
+在目标数组段的一部分上创建一个新的内存区域，从指定位置开始到段的末尾。
+
+AsMemory<T>(ArraySegment<T>)
+
+在目标数组段的部分上创建新的内存区域。
+
+AsMemory<T>(T[], Index)
+
+在从指定索引开始到数组末尾的目标数组部分创建一个新的内存区域。
+
+AsMemory<T>(T[], Int32, Int32)
+
+基于目标数组部分创建一个新的内存区域，该部分从指定长度的指定位置开始。
+
+AsMemory<T>(T[], Int32)
+
+在目标数组的一部分上创建一个新的内存区域，从指定位置开始到数组的末尾。
+
+AsMemory<T>(T[], Range)
+
+在目标数组的一部分上创建一个新的内存区域，该区域从范围的非独占开始索引开始，以该范围的独占结束索引结束。
+
+AsMemory<T>(T[])
+
+在目标数组上创建新的内存区域。
+
+AsSpan(String, Index)
+
+在从指定位置到字符串末尾的目标字符串的一部分上新建 ReadOnlySpan<T> 一个。
+
+AsSpan(String, Int32, Int32)
+
+从指定数量的字符的指定位置创建一个新的只读跨度，覆盖目标字符串的一部分。
+
+AsSpan(String, Int32)
+
+从指定位置到字符串末尾，在目标字符串的一部分上创建新的只读范围。
+
+AsSpan(String, Range)
+
+使用范围起始索引和结束索引在目标字符串的一部分上新建 ReadOnlySpan<T> 一个。
+
+AsSpan(String)
+
+在字符串上创建新的只读范围。
+
+AsSpan<T>(ArraySegment<T>, Index)
+
+在目标数组段的一部分上创建一个新的跨度，该范围从指定的索引开始，并在段的末尾结束。
+
+AsSpan<T>(ArraySegment<T>, Int32, Int32)
+
+从指定长度的指定位置创建一个新范围，覆盖目标数组段的一部分。
+
+AsSpan<T>(ArraySegment<T>, Int32)
+
+在目标数组段的一部分（从指定位置到段末尾）上创建新跨度。
+
+AsSpan<T>(ArraySegment<T>, Range)
+
+使用范围开始和结束索引在目标数组段的一部分上创建新范围。
+
+AsSpan<T>(ArraySegment<T>)
+
+在目标数组段上创建新的跨度。
+
+AsSpan<T>(T[], Index)
+
+创建一个新的跨度，覆盖由 Index 值定义的目标数组部分。
+
+AsSpan<T>(T[], Int32, Int32)
+
+为指定长度从指定位置开始的目标数组部分创建一个新的跨度。
+
+AsSpan<T>(T[], Int32)
+
+在目标数组的一部分上创建新范围，该范围从指定位置开始到数组末尾。
+
+AsSpan<T>(T[], Range)
+
+创建一个新的跨度，覆盖由 Range 值定义的目标数组的一部分。
+
+AsSpan<T>(T[])
+
+在目标数组上创建新范围。
+
+BinarySearch<T,TComparable>(ReadOnlySpan<T>, TComparable)
+
+使用指定的ReadOnlySpan<T>泛型类型搜索整个排序TComparable的值。
+
+BinarySearch<T,TComparable>(Span<T>, TComparable)
+
+使用指定的Span<T>泛型类型搜索整个排序TComparable的值。
+
+BinarySearch<T,TComparer>(ReadOnlySpan<T>, T, TComparer)
+
+使用指定的泛型类型搜索整个已 ReadOnlySpan<T> 排序的指定 TComparer 值。
+
+BinarySearch<T,TComparer>(Span<T>, T, TComparer)
+
+使用指定的泛型类型搜索整个已 Span<T> 排序的指定 TComparer 值。
+
+BinarySearch<T>(ReadOnlySpan<T>, IComparable<T>)
+
+使用指定的ReadOnlySpan<T>泛型接口搜索整个排序IComparable<T>的值。
+
+BinarySearch<T>(Span<T>, IComparable<T>)
+
+使用指定的Span<T>泛型接口搜索整个排序IComparable<T>的值。
+
+CommonPrefixLength<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+确定之间spanother和之间共享的任何常见前缀的长度。
+
+CommonPrefixLength<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+查找之间spanother和之间共享的任何常见前缀的长度。
+
+CommonPrefixLength<T>(Span<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+查找之间spanother和之间共享的任何常见前缀的长度。
+
+CommonPrefixLength<T>(Span<T>, ReadOnlySpan<T>)
+
+查找之间spanother和之间共享的任何常见前缀的长度。
+
+CompareTo(ReadOnlySpan<Char>, ReadOnlySpan<Char>, StringComparison)
+
+使用指定的字符串比较将一个字符范围与另一个字符范围进行比较，并返回一个整数，该整数指示它们在排序顺序中的相对位置。
+
+Contains(ReadOnlySpan<Char>, ReadOnlySpan<Char>, StringComparison)
+
+指示指定的值是否在只读字符范围内发生。
+
+Contains<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+搜索指定的值，如果找到，则 true 返回。 如果未找到，则返回 false。
+
+Contains<T>(ReadOnlySpan<T>, T)
+
+指示是否在只读跨度中找到指定的值。
+
+Contains<T>(Span<T>, T)
+
+指示是否在范围中找到指定的值。
+
+ContainsAny(ReadOnlySpan<Char>, SearchValues<String>)
+
+搜索任何指定子字符串 values的任何匹配项。
+
+ContainsAny(Span<Char>, SearchValues<String>)
+
+搜索任何指定子字符串 values的任何匹配项。
+
+ContainsAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+搜索任何指定 values 项的任何匹配项，如果找到，则 true 返回。 如果未找到，则返回 false。
+
+ContainsAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+搜索任何指定 values项的匹配项。
+
+ContainsAny<T>(ReadOnlySpan<T>, SearchValues<T>)
+
+搜索任何指定 values项的匹配项。
+
+ContainsAny<T>(ReadOnlySpan<T>, T, T, IEqualityComparer<T>)
+
+搜索任一指定值的匹配项。
+
+ContainsAny<T>(ReadOnlySpan<T>, T, T, T, IEqualityComparer<T>)
+
+搜索指定范围中指定值的任何匹配项。
+
+ContainsAny<T>(ReadOnlySpan<T>, T, T, T)
+
+搜索指定范围或指定范围中的匹配项value0value1value2。
+
+ContainsAny<T>(ReadOnlySpan<T>, T, T)
+
+搜索匹配项 value0 或 value1。
+
+ContainsAny<T>(Span<T>, ReadOnlySpan<T>)
+
+搜索任何指定的 values 匹配项，如果找到，则返回 true 。 如果未找到，则返回 false。
+
+ContainsAny<T>(Span<T>, SearchValues<T>)
+
+搜索任何指定的 values 匹配项，如果找到，则返回 true 。 如果未找到，则返回 false。
+
+ContainsAny<T>(Span<T>, T, T, T)
+
+搜索指定范围或指定范围中的匹配项value0value1value2。
+
+ContainsAny<T>(Span<T>, T, T)
+
+搜索匹配项 value0 ， value1如果找到，则返回 true 。 如果未找到，则返回 false。
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+搜索指定范围中除指定 values值以外的任何值。
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+搜索指定范围中除指定 values值以外的任何值。
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, SearchValues<T>)
+
+搜索指定范围中除指定 values值以外的任何值。
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+搜索指定范围中除其他任何值之外 value的任何值。
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, T, T, IEqualityComparer<T>)
+
+搜索除或 . 以外的value0value1任何值。
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, T, T, T, IEqualityComparer<T>)
+
+搜索除 <a0/a0> 以外的任何值或 。</a0
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, T, T, T)
+
+搜索除 <a0/a0> 以外的任何值或 。</a0
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, T, T)
+
+搜索指定范围中除其他值以外的value0任何值。value1
+
+ContainsAnyExcept<T>(ReadOnlySpan<T>, T)
+
+搜索指定范围中除指定 value值以外的任何值。
+
+ContainsAnyExcept<T>(Span<T>, ReadOnlySpan<T>)
+
+搜索指定范围中除指定 values值以外的任何值。
+
+ContainsAnyExcept<T>(Span<T>, SearchValues<T>)
+
+搜索指定范围中除指定 values值以外的任何值。
+
+ContainsAnyExcept<T>(Span<T>, T, T, T)
+
+搜索除 <a0/a0> 以外的任何值或 。</a0
+
+ContainsAnyExcept<T>(Span<T>, T, T)
+
+搜索指定范围中除其他值以外的value0任何值。value1
+
+ContainsAnyExcept<T>(Span<T>, T)
+
+搜索指定范围中除指定 value值以外的任何值。
+
+ContainsAnyExceptInRange<T>(ReadOnlySpan<T>, T, T)
+
+搜索介于和非独占范围内lowInclusivehighInclusive的任何值。
+
+ContainsAnyExceptInRange<T>(Span<T>, T, T)
+
+搜索介于和非独占范围内lowInclusivehighInclusive的任何值。
+
+ContainsAnyInRange<T>(ReadOnlySpan<T>, T, T)
+
+搜索介于 lowInclusive 和 highInclusive（含）范围内的任何值。
+
+ContainsAnyInRange<T>(Span<T>, T, T)
+
+搜索介于 lowInclusive 和 highInclusive非独占范围内的任何值，如果找到，则返回 true 。 如果未找到，则返回 false。
+
+ContainsAnyWhiteSpace(ReadOnlySpan<Char>)
+
+为与内存相关的和跨度相关的类型（例如Memory<T>，ReadOnlyMemory<T>和Span<T>ReadOnlySpan<T>）提供扩展方法。
+
+CopyTo<T>(T[], Memory<T>)
+
+将数组的内容复制到内存区域中。
+
+CopyTo<T>(T[], Span<T>)
+
+将数组的内容复制到范围中。
+
+Count<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+计算指定 value 在 . span中发生的次数。
+
+Count<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+对发生的span次数value进行计数。
+
+Count<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+计算指定 value 在 . span中发生的次数。
+
+Count<T>(ReadOnlySpan<T>, T)
+
+计算指定 value 在 . span中发生的次数。
+
+Count<T>(Span<T>, ReadOnlySpan<T>)
+
+计算指定 value 在 . span中发生的次数。
+
+Count<T>(Span<T>, T)
+
+计算指定 value 在 . span中发生的次数。
+
+CountAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+计算任何指定 values 项在中 span发生的次数。
+
+CountAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+计算任何指定 values 项在中 span发生的次数。
+
+CountAny<T>(ReadOnlySpan<T>, SearchValues<T>)
+
+计算任何指定 values 项在中 span发生的次数。
+
+EndsWith(ReadOnlySpan<Char>, ReadOnlySpan<Char>, StringComparison)
+
+确定使用指定选项进行比较时，是否匹配指定的spanvalue结尾comparisonType。
+
+EndsWith<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+确定指定的序列是否出现在只读范围末尾。
+
+EndsWith<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+确定指定的序列是否出现在只读范围末尾。
+
+EndsWith<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+确定指定的值是否出现在范围末尾。
+
+EndsWith<T>(ReadOnlySpan<T>, T)
+
+确定指定的值是否出现在范围末尾。
+
+EndsWith<T>(Span<T>, ReadOnlySpan<T>)
+
+确定指定的序列是否出现在范围末尾。
+
+EnumerateLines(ReadOnlySpan<Char>)
+
+返回提供的跨度上的行的枚举。
+
+EnumerateLines(Span<Char>)
+
+返回提供的跨度上的行的枚举。
+
+EnumerateRunes(ReadOnlySpan<Char>)
+
+从提供的只读范围返回枚举 Rune 。
+
+EnumerateRunes(Span<Char>)
+
+从提供的跨度返回枚举 Rune 。
+
+Equals(ReadOnlySpan<Char>, ReadOnlySpan<Char>, StringComparison)
+
+确定使用指定span选项进行比较时，此other范围和指定的comparisonType范围是否具有相同的字符。
+
+IndexOf(ReadOnlySpan<Char>, ReadOnlySpan<Char>, StringComparison)
+
+报告当前value中指定的span第一个匹配项的从零开始的索引。
+
+IndexOf<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+搜索指定的序列并返回其第一个匹配项的索引。
+
+IndexOf<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+搜索指定的序列并返回其第一个匹配项的索引。
+
+IndexOf<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+搜索指定的值并返回其第一个匹配项的索引。
+
+IndexOf<T>(ReadOnlySpan<T>, T)
+
+搜索指定的值并返回其第一个匹配项的索引。
+
+IndexOf<T>(Span<T>, ReadOnlySpan<T>)
+
+搜索指定的序列并返回其第一个匹配项的索引。
+
+IndexOf<T>(Span<T>, T)
+
+搜索指定的值并返回其第一个匹配项的索引。
+
+IndexOfAny(ReadOnlySpan<Char>, SearchValues<String>)
+
+搜索任何指定子字符串值的第一个索引。
+
+IndexOfAny(Span<Char>, SearchValues<String>)
+
+搜索任何指定子字符串值的第一个索引。
+
+IndexOfAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(ReadOnlySpan<T>, SearchValues<T>)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(ReadOnlySpan<T>, T, T, IEqualityComparer<T>)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(ReadOnlySpan<T>, T, T, T, IEqualityComparer<T>)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(ReadOnlySpan<T>, T, T, T)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(ReadOnlySpan<T>, T, T)
+
+搜索任一指定值的第一个索引。
+
+IndexOfAny<T>(Span<T>, ReadOnlySpan<T>)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(Span<T>, SearchValues<T>)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(Span<T>, T, T, T)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAny<T>(Span<T>, T, T)
+
+搜索任何指定值的第一个索引。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+搜索指定值以外的 values任何值的第一个索引。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+搜索指定值以外的 values任何值的第一个索引。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, SearchValues<T>)
+
+搜索指定值以外的 values任何值的第一个索引。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+搜索指定值以外的 value任何值的第一个索引。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, T, T, IEqualityComparer<T>)
+
+搜索除两个指定值以外的任何值的第一个索引。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, T, T, T, IEqualityComparer<T>)
+
+搜索除任何值以外的 value0任何值的第一个索引， value1或者 value2。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, T, T, T)
+
+搜索除任何值以外的 value0任何值的第一个索引， value1或者 value2。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, T, T)
+
+搜索除两个指定值以外的任何值的第一个索引。
+
+IndexOfAnyExcept<T>(ReadOnlySpan<T>, T)
+
+搜索指定值以外的 value任何值的第一个索引。
+
+IndexOfAnyExcept<T>(Span<T>, ReadOnlySpan<T>)
+
+搜索指定值以外的 values任何值的第一个索引。
+
+IndexOfAnyExcept<T>(Span<T>, SearchValues<T>)
+
+搜索指定值以外的 values任何值的第一个索引。
+
+IndexOfAnyExcept<T>(Span<T>, T, T, T)
+
+搜索除任何值以外的 value0任何值的第一个索引， value1或者 value2。
+
+IndexOfAnyExcept<T>(Span<T>, T, T)
+
+搜索除两个指定值以外的任何值的第一个索引。
+
+IndexOfAnyExcept<T>(Span<T>, T)
+
+搜索指定值以外的 value任何值的第一个索引。
+
+IndexOfAnyExceptInRange<T>(ReadOnlySpan<T>, T, T)
+
+搜索介于和非独占范围内lowInclusivehighInclusive的任何值的第一个索引。
+
+IndexOfAnyExceptInRange<T>(Span<T>, T, T)
+
+搜索介于和非独占范围内lowInclusivehighInclusive的任何值的第一个索引。
+
+IndexOfAnyExceptWhiteSpace(ReadOnlySpan<Char>)
+
+为与内存相关的和跨度相关的类型（例如Memory<T>，ReadOnlyMemory<T>和Span<T>ReadOnlySpan<T>）提供扩展方法。
+
+IndexOfAnyInRange<T>(ReadOnlySpan<T>, T, T)
+
+搜索介于 lowInclusive 和 highInclusive非独占范围内任何值的第一个索引。
+
+IndexOfAnyInRange<T>(Span<T>, T, T)
+
+搜索介于 lowInclusive 和 highInclusive非独占范围内任何值的第一个索引。
+
+IndexOfAnyWhiteSpace(ReadOnlySpan<Char>)
+
+为与内存相关的和跨度相关的类型（例如Memory<T>，ReadOnlyMemory<T>和Span<T>ReadOnlySpan<T>）提供扩展方法。
+
+IsWhiteSpace(ReadOnlySpan<Char>)
+
+指示指定的范围是空的还是只包含空格字符。
+
+LastIndexOf(ReadOnlySpan<Char>, ReadOnlySpan<Char>, StringComparison)
+
+报告当前span中指定的value最后一个匹配项的从零开始的索引。
+
+LastIndexOf<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+搜索指定的序列并返回其最后一个匹配项的索引。 如果未找到，则返回 -1。
+
+LastIndexOf<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+搜索指定的序列并返回其最后一个匹配项的索引。
+
+LastIndexOf<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+搜索指定的值并返回其最后一个匹配项的索引。 如果未找到，则返回 -1。
+
+LastIndexOf<T>(ReadOnlySpan<T>, T)
+
+搜索指定的值并返回其最后一个匹配项的索引。
+
+LastIndexOf<T>(Span<T>, ReadOnlySpan<T>)
+
+搜索指定的序列并返回其最后一个匹配项的索引。
+
+LastIndexOf<T>(Span<T>, T)
+
+搜索指定的值并返回其最后一个匹配项的索引。
+
+LastIndexOfAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(ReadOnlySpan<T>, SearchValues<T>)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(ReadOnlySpan<T>, T, T, IEqualityComparer<T>)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(ReadOnlySpan<T>, T, T, T, IEqualityComparer<T>)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(ReadOnlySpan<T>, T, T, T)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(ReadOnlySpan<T>, T, T)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(Span<T>, ReadOnlySpan<T>)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(Span<T>, SearchValues<T>)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(Span<T>, T, T, T)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAny<T>(Span<T>, T, T)
+
+搜索任何指定值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+搜索指定值以外的 values任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+搜索指定值以外的 values任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, SearchValues<T>)
+
+搜索指定值以外的 values任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+搜索指定值以外的 value任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, T, T, IEqualityComparer<T>)
+
+搜索除指定value0value1值以外的任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, T, T, T, IEqualityComparer<T>)
+
+搜索指定 value0值以外的任何值的最后一个索引， value1或 value2。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, T, T, T)
+
+搜索指定 value0值以外的任何值的最后一个索引， value1或 value2。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, T, T)
+
+搜索除指定value0value1值以外的任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(ReadOnlySpan<T>, T)
+
+搜索指定值以外的 value任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(Span<T>, ReadOnlySpan<T>)
+
+搜索指定值以外的 values任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(Span<T>, SearchValues<T>)
+
+搜索指定值以外的 values任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(Span<T>, T, T, T)
+
+搜索指定 value0值以外的任何值的最后一个索引， value1或 value2。
+
+LastIndexOfAnyExcept<T>(Span<T>, T, T)
+
+搜索除指定value0value1值以外的任何值的最后一个索引。
+
+LastIndexOfAnyExcept<T>(Span<T>, T)
+
+搜索指定值以外的 value任何值的最后一个索引。
+
+LastIndexOfAnyExceptInRange<T>(ReadOnlySpan<T>, T, T)
+
+搜索介于和非独占范围内lowInclusivehighInclusive的任何值的最后一个索引。
+
+LastIndexOfAnyExceptInRange<T>(Span<T>, T, T)
+
+搜索介于和非独占范围内lowInclusivehighInclusive的任何值的最后一个索引。
+
+LastIndexOfAnyExceptWhiteSpace(ReadOnlySpan<Char>)
+
+为与内存相关的和跨度相关的类型（例如Memory<T>，ReadOnlyMemory<T>和Span<T>ReadOnlySpan<T>）提供扩展方法。
+
+LastIndexOfAnyInRange<T>(ReadOnlySpan<T>, T, T)
+
+搜索介于和highInclusive非独占范围内lowInclusive任何值的最后一个索引。
+
+LastIndexOfAnyInRange<T>(Span<T>, T, T)
+
+搜索介于和highInclusive非独占范围内lowInclusive任何值的最后一个索引。
+
+LastIndexOfAnyWhiteSpace(ReadOnlySpan<Char>)
+
+为与内存相关的和跨度相关的类型（例如Memory<T>，ReadOnlyMemory<T>和Span<T>ReadOnlySpan<T>）提供扩展方法。
+
+Overlaps<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, Int32)
+
+确定两个只读序列是否在内存中重叠，并输出元素偏移量。
+
+Overlaps<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+确定两个只读序列是否在内存中重叠。
+
+Overlaps<T>(Span<T>, ReadOnlySpan<T>, Int32)
+
+确定范围和只读跨度是否在内存中重叠，并输出元素偏移量。
+
+Overlaps<T>(Span<T>, ReadOnlySpan<T>)
+
+确定范围和只读跨度是否在内存中重叠。
+
+Replace<T>(ReadOnlySpan<T>, Span<T>, T, T, IEqualityComparer<T>)
+
+将所有匹配项替换为 的副本。
+
+Replace<T>(ReadOnlySpan<T>, Span<T>, T, T)
+
+将所有匹配项替换为 的副本。
+
+Replace<T>(Span<T>, T, T, IEqualityComparer<T>)
+
+将所有 oldValue 项都替换为 newValue。
+
+Replace<T>(Span<T>, T, T)
+
+将所有 oldValue 项都替换为 newValue。
+
+ReplaceAny<T>(ReadOnlySpan<T>, Span<T>, SearchValues<T>, T)
+
+source
+destination复制到其中的任何元素valuesnewValue的所有匹配项。
+
+ReplaceAny<T>(Span<T>, SearchValues<T>, T)
+
+span替换为任何元素valuesnewValue的所有匹配项。
+
+ReplaceAnyExcept<T>(ReadOnlySpan<T>, Span<T>, SearchValues<T>, T)
+
+source
+destination复制到其中的所有元素，并将除这些valuesnewValue元素以外的所有元素替换为 。
+
+ReplaceAnyExcept<T>(Span<T>, SearchValues<T>, T)
+
+span替换所有元素（而非其中的valuesnewValue元素）。
+
+Reverse<T>(Span<T>)
+
+反转整个跨度中的元素序列。
+
+SequenceCompareTo<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IComparer<T>)
+
+通过使用 IComparable{T} 比较元素来确定要比较的序列的相对顺序。CompareTo（T）。
+
+SequenceCompareTo<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+通过使用 IComparable{T} 比较两个只读序列的相对顺序。CompareTo（T）。
+
+SequenceCompareTo<T>(Span<T>, ReadOnlySpan<T>)
+
+通过使用 IComparable{T} 比较元素来确定范围和只读范围的相对顺序。CompareTo（T）。
+
+SequenceEqual<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+通过使用一个比较元素来确定两个 IEqualityComparer<T>序列是否相等。
+
+SequenceEqual<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+通过使用 IEquatable{T} 比较元素，确定两个只读序列是否相等。等于（T）。
+
+SequenceEqual<T>(Span<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+通过使用一个比较元素来确定两个 IEqualityComparer<T>序列是否相等。
+
+SequenceEqual<T>(Span<T>, ReadOnlySpan<T>)
+
+通过使用 IEquatable{T} 比较元素，确定范围和只读跨度是否相等。等于（T）。
+
+Sort<T,TComparer>(Span<T>, TComparer)
+
+使用 .. 对整个 Span<T> 元素进行 TComparer排序。
+
+Sort<T>(Span<T>, Comparison<T>)
+
+使用指定的Span<T>元素对整个Comparison<T>元素进行排序。
+
+Sort<T>(Span<T>)
+
+使用IComparable<T>每个元素的Span<T>实现对整个元素Span<T>进行排序。
+
+Sort<TKey,TValue,TComparer>(Span<TKey>, Span<TValue>, TComparer)
+
+根据第 Span<T> 一个使用指定的比较器中的键对范围（一个包含键，另一个包含相应项）进行排序。
+
+Sort<TKey,TValue>(Span<TKey>, Span<TValue>, Comparison<TKey>)
+
+根据第 Span<T> 一次使用指定比较的键对范围（一个包含键，另一个包含相应项）进行排序。
+
+Sort<TKey,TValue>(Span<TKey>, Span<TValue>)
+
+根据第 Span<T> 一次使用 IComparable<T> 每个键的实现，对一对范围（一个包含键，另一个包含相应项）进行排序。
+
+Split(ReadOnlySpan<Char>, Span<Range>, Char, StringSplitOptions)
+
+分析指定separator源ReadOnlySpan<T>，用表示分隔符之间的区域的实例填充destination范围Range。
+
+Split(ReadOnlySpan<Char>, Span<Range>, ReadOnlySpan<Char>, StringSplitOptions)
+
+分析指定separator源ReadOnlySpan<T>，用表示分隔符之间的区域的实例填充destination范围Range。
+
+Split<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+返回一种类型，该类型允许使用提供的分隔符跨度枚举拆分范围中的每个元素。
+
+Split<T>(ReadOnlySpan<T>, T)
+
+返回一种类型，该类型允许使用提供的分隔符枚举拆分范围中的每个元素。
+
+SplitAny(ReadOnlySpan<Char>, Span<Range>, ReadOnlySpan<Char>, StringSplitOptions)
+
+分析指定之一的源ReadOnlySpan<T>，用表示分隔符之间的区域的实例填充destination范围Range。separators
+
+SplitAny(ReadOnlySpan<Char>, Span<Range>, ReadOnlySpan<String>, StringSplitOptions)
+
+分析指定之一的源ReadOnlySpan<T>，用表示分隔符之间的区域的实例填充destination范围Range。separators
+
+SplitAny<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+返回一种类型，该类型允许使用任何提供的元素在拆分跨度内枚举每个元素。
+
+SplitAny<T>(ReadOnlySpan<T>, SearchValues<T>)
+
+返回一种类型，该类型允许使用提供的分隔符枚举拆分范围中的每个元素。
+
+StartsWith(ReadOnlySpan<Char>, ReadOnlySpan<Char>, StringComparison)
+
+确定使用指定值比较时，只读字符范围是否以指定 StringComparison 值开头。
+
+StartsWith<T>(ReadOnlySpan<T>, ReadOnlySpan<T>, IEqualityComparer<T>)
+
+确定指定的序列是否出现在只读范围开始时。
+
+StartsWith<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+确定指定的序列是否出现在只读范围开始时。
+
+StartsWith<T>(ReadOnlySpan<T>, T, IEqualityComparer<T>)
+
+确定指定值是否出现在范围开头。
+
+StartsWith<T>(ReadOnlySpan<T>, T)
+
+确定指定值是否出现在范围开头。
+
+StartsWith<T>(Span<T>, ReadOnlySpan<T>)
+
+确定指定的序列是否出现在范围开头。
+
+ToLower(ReadOnlySpan<Char>, Span<Char>, CultureInfo)
+
+使用指定区域性的大小写规则将源范围中的字符复制到目标中，将每个字符转换为小写。
+
+ToLowerInvariant(ReadOnlySpan<Char>, Span<Char>)
+
+使用固定区域性的大小写规则将源范围中的字符复制到目标，将每个字符转换为小写。
+
+ToUpper(ReadOnlySpan<Char>, Span<Char>, CultureInfo)
+
+使用指定区域性的大小写规则将源范围中的字符复制到目标，将每个字符转换为大写。
+
+ToUpperInvariant(ReadOnlySpan<Char>, Span<Char>)
+
+将源范围中的字符复制到目标，使用固定区域性的大小写规则将每个字符转换为大写。
+
+Trim(Memory<Char>)
+
+从字符内存区域中删除所有前导和尾随空格字符。
+
+Trim(ReadOnlyMemory<Char>)
+
+从只读字符内存区域中删除所有前导和尾随空格字符。
+
+Trim(ReadOnlySpan<Char>, Char)
+
+从只读字符范围中删除指定字符的所有前导和尾随匹配项。
+
+Trim(ReadOnlySpan<Char>, ReadOnlySpan<Char>)
+
+从只读字符范围中删除在只读范围中指定的一组字符的所有前导和尾随匹配项。
+
+Trim(ReadOnlySpan<Char>)
+
+从只读字符范围中删除所有前导和尾随空格字符。
+
+Trim(Span<Char>)
+
+从字符范围中删除所有前导和尾随空格字符。
+
+Trim<T>(Memory<T>, ReadOnlySpan<T>)
+
+从内存区域删除在只读跨度中指定的一组元素的所有前导和尾随匹配项。
+
+Trim<T>(Memory<T>, T)
+
+从内存区域中删除指定元素的所有前导和尾随匹配项。
+
+Trim<T>(ReadOnlyMemory<T>, ReadOnlySpan<T>)
+
+从只读内存区域中删除在只读跨度中指定的一组元素的所有前导和尾随匹配项。
+
+Trim<T>(ReadOnlyMemory<T>, T)
+
+从只读内存区域中删除指定元素的所有前导和尾随匹配项。
+
+Trim<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+从只读范围中移除一组在只读范围中指定的元素的所有前导和尾随匹配项。
+
+Trim<T>(ReadOnlySpan<T>, T)
+
+从只读跨度中删除指定元素的所有前导和尾随匹配项。
+
+Trim<T>(Span<T>, ReadOnlySpan<T>)
+
+从范围中移除在只读跨度中指定的一组元素的所有前导和尾随匹配项。
+
+Trim<T>(Span<T>, T)
+
+从范围中删除指定元素的所有前导和尾随匹配项。
+
+TrimEnd(Memory<Char>)
+
+从字符内存区域中删除所有尾随空格字符。
+
+TrimEnd(ReadOnlyMemory<Char>)
+
+从只读字符内存区域中删除所有尾随空格字符。
+
+TrimEnd(ReadOnlySpan<Char>, Char)
+
+从只读范围中删除指定字符的所有尾随匹配项。
+
+TrimEnd(ReadOnlySpan<Char>, ReadOnlySpan<Char>)
+
+从只读字符范围中删除在只读范围中指定的一组字符的所有尾随匹配项。
+
+TrimEnd(ReadOnlySpan<Char>)
+
+从只读字符范围中删除所有尾随空格字符。
+
+TrimEnd(Span<Char>)
+
+从字符范围中删除所有尾随空格字符。
+
+TrimEnd<T>(Memory<T>, ReadOnlySpan<T>)
+
+从内存区域中删除在只读跨度中指定的一组元素的所有尾随匹配项。
+
+TrimEnd<T>(Memory<T>, T)
+
+从字符内存区域中删除指定元素的所有尾随匹配项。
+
+TrimEnd<T>(ReadOnlyMemory<T>, ReadOnlySpan<T>)
+
+从只读内存区域中删除在只读跨度中指定的一组元素的所有尾随匹配项。
+
+TrimEnd<T>(ReadOnlyMemory<T>, T)
+
+从只读内存区域中删除指定元素的所有尾随匹配项。
+
+TrimEnd<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+从只读范围中删除在只读范围中指定的一组元素的所有尾随匹配项。
+
+TrimEnd<T>(ReadOnlySpan<T>, T)
+
+从只读范围中删除指定元素的所有尾随匹配项。
+
+TrimEnd<T>(Span<T>, ReadOnlySpan<T>)
+
+从范围中移除在只读跨度中指定的一组元素的所有尾随匹配项。
+
+TrimEnd<T>(Span<T>, T)
+
+从范围中删除指定元素的所有尾随匹配项。
+
+TrimStart(Memory<Char>)
+
+从内存区域中删除所有前导空格字符。
+
+TrimStart(ReadOnlyMemory<Char>)
+
+从只读内存区域中删除所有前导空格字符。
+
+TrimStart(ReadOnlySpan<Char>, Char)
+
+从范围中删除指定字符的所有前导匹配项。
+
+TrimStart(ReadOnlySpan<Char>, ReadOnlySpan<Char>)
+
+从范围中删除在只读跨度中指定的一组字符的所有前导匹配项。
+
+TrimStart(ReadOnlySpan<Char>)
+
+从只读范围中删除所有前导空格字符。
+
+TrimStart(Span<Char>)
+
+从范围中删除所有前导空格字符。
+
+TrimStart<T>(Memory<T>, ReadOnlySpan<T>)
+
+从内存区域中删除在只读跨度中指定的一组元素的所有前导事件。
+
+TrimStart<T>(Memory<T>, T)
+
+从内存区域中删除指定元素的所有前导事件。
+
+TrimStart<T>(ReadOnlyMemory<T>, ReadOnlySpan<T>)
+
+从内存区域中删除在只读跨度中指定的一组元素的所有前导事件。
+
+TrimStart<T>(ReadOnlyMemory<T>, T)
+
+从内存区域中删除指定元素的所有前导事件。
+
+TrimStart<T>(ReadOnlySpan<T>, ReadOnlySpan<T>)
+
+从范围中移除在只读跨度中指定的一组元素的所有前导事件。
+
+TrimStart<T>(ReadOnlySpan<T>, T)
+
+从范围中删除指定元素的所有前导匹配项。
+
+TrimStart<T>(Span<T>, ReadOnlySpan<T>)
+
+从范围中移除在只读跨度中指定的一组元素的所有前导事件。
+
+TrimStart<T>(Span<T>, T)
+
+从范围中删除指定元素的所有前导匹配项。
+
+TryWrite(Span<Char>, IFormatProvider, CompositeFormat, Int32, Object[])
+
+将 CompositeFormat 字符串写入字符范围，用相应参数的字符串表示形式替换格式项或项。
+
+TryWrite(Span<Char>, IFormatProvider, CompositeFormat, Int32, ReadOnlySpan<Object>)
+
+将 CompositeFormat 字符串写入字符范围，用相应参数的字符串表示形式替换格式项或项。
+
+TryWrite(Span<Char>, IFormatProvider, MemoryExtensions+TryWriteInterpolatedStringHandler, Int32)
+
+将指定的内插字符串写入字符范围。
+
+TryWrite(Span<Char>, MemoryExtensions+TryWriteInterpolatedStringHandler, Int32)
+
+将指定的内插字符串写入字符范围。
+
+TryWrite<TArg0,TArg1,TArg2>(Span<Char>, IFormatProvider, CompositeFormat, Int32, TArg0, TArg1, TArg2)
+
+将 CompositeFormat 字符串写入字符范围，用相应参数的字符串表示形式替换格式项或项。
+
+TryWrite<TArg0,TArg1>(Span<Char>, IFormatProvider, CompositeFormat, Int32, TArg0, TArg1)
+
+将 CompositeFormat 字符串写入字符范围，用相应参数的字符串表示形式替换格式项或项。
+
+TryWrite<TArg0>(Span<Char>, IFormatProvider, CompositeFormat, Int32, TArg0)
+
+将 CompositeFormat 字符串写入字符范围，用相应参数的字符串表示形式替换格式项或项。
+
+适用于
+
+在 GitHub 上与我们协作
+
+可以在 GitHub 上找到此内容的源，还可以在其中创建和查看问题和拉取请求。 有关详细信息，请参阅参与者指南。
+
+.NET
+
+提出文档问题
+
+提供产品反馈
+
+反馈
+
+此页面是否有帮助？
+
+是
+
+否
+
+否
+
+需要有关本主题的帮助？
+
+想要尝试使用 Ask Learn 阐明或指导你完成本主题？
+
+询问 Learn
+
+询问 Learn
+
+建议修复？

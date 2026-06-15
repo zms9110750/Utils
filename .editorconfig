@@ -1,0 +1,26 @@
+[*.cs]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = crlf
+
+# Allman 大括号：方法、控制块、lambda 换行；属性访问器 { get; set; } 不换行
+csharp_new_line_before_open_brace = types, methods, control_blocks, anonymous_methods, lambdas_expression_body
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+
+# 流程语句强制大括号
+csharp_prefer_braces = true:error
+
+# switch case 内展开
+csharp_new_line_between_query_expression_clauses = true
+
+# 空格
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+
+# 启用格式化分析
+dotnet_diagnostic.IDE0055.severity = warning

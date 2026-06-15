@@ -1,0 +1,152 @@
+$ dotnet clean "C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj" 2>&1 && dotnet build "C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj" 2>&1
+[exit 0]
+生成启动时间为 2026/6/13 1:59:07。
+     1>项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj”在节点 1 上(Clean 个目标)。
+     1>项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj”(1)正在节点 1 上生成“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj”(1:2) (Clean 个目标)。
+     1>CoreClean:
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\Test.exe”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\Test.deps.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\Test.runtimeconfig.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\Test.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\Test.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\Microsoft.CodeAnalysis.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\Microsoft.CodeAnalysis.CSharp.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\cs\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\de\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\es\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\fr\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\it\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\ja\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\ko\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\pl\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\pt-BR\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\ru\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\tr\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.InterfaceImplAsExtensionGenerator.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.MetaSourceGenerator.AttributeFactory.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.InterfaceImplAsExtensionGenerator.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.InterfaceImplAsExtensionGenerator.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.MetaSourceGenerator.AttributeFactory.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.MetaSourceGenerator.AttributeFactory.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.StaticMethodAsExtensionGenerator.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.StaticMethodAsExtensionGenerator.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\zms9110750.StaticMethodAsExtensionGenerator.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.csproj.AssemblyReference.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.GeneratedMSBuildEditorConfig.editorconfig”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.AssemblyInfoInputs.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.AssemblyInfo.cs”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.csproj.CoreCompileInputs.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.sourcelink.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\refint\Test.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\Test.genruntimeconfig.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\obj\Debug\.net10.0\ref\Test.dll”。
+   1:2>项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj”(1:2)正在节点 1 上生成“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj”(2:2) (Clean 个目标)。
+     2>CoreClean:
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.InterfaceImplAsExtensionGenerator.deps.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.InterfaceImplAsExtensionGenerator.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.InterfaceImplAsExtensionGenerator.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.InterfaceImplAsExtensionGenerator.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\InterfaceImplAsExtensionGenerator.csproj.AssemblyReference.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\InterfaceImplAsExtensionGenerator.GeneratedMSBuildEditorConfig.editorconfig”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\InterfaceImplAsExtensionGenerator.AssemblyInfoInputs.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\InterfaceImplAsExtensionGenerator.AssemblyInfo.cs”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\InterfaceImplAsExtensionGenerator.csproj.CoreCompileInputs.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\InterfaceImplAsExtensionGenerator.sourcelink.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\Interfac.6596A9FD.Up2Date”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.InterfaceImplAsExtensionGenerator.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.InterfaceImplAsExtensionGenerator.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.InterfaceImplAsExtensionGenerator.pdb”。
+   1:2>项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj”(1:2)正在节点 2 上生成“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\StaticMethodAsExtensionGenerator.csproj”(3:2) (Clean 个目标)。
+     3>CoreClean:
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.StaticMethodAsExtensionGenerator.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.StaticMethodAsExtensionGenerator.deps.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.StaticMethodAsExtensionGenerator.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.StaticMethodAsExtensionGenerator.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\StaticMethodAsExtensionGenerator.csproj.AssemblyReference.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\StaticMethodAsExtensionGenerator.GeneratedMSBuildEditorConfig.editorconfig”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\StaticMethodAsExtensionGenerator.AssemblyInfoInputs.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\StaticMethodAsExtensionGenerator.AssemblyInfo.cs”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\StaticMethodAsExtensionGenerator.csproj.CoreCompileInputs.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\StaticMethodAsExtensionGenerator.sourcelink.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.StaticMethodAsExtensionGenerator.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.StaticMethodAsExtensionGenerator.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.StaticMethodAsExtensionGenerator.pdb”。
+   2:2>项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj”(2:2)正在节点 1 上生成“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\MetaSourceGenerator.AttributeFactory.csproj”(4:2) (Clean 个目标)。
+     4>CoreClean:
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\bin\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.deps.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\bin\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\bin\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.pdb”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\bin\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\MetaSourceGenerator.AttributeFactory.csproj.AssemblyReference.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\MetaSourceGenerator.AttributeFactory.GeneratedMSBuildEditorConfig.editorconfig”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\MetaSourceGenerator.AttributeFactory.AssemblyInfoInputs.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\MetaSourceGenerator.AttributeFactory.AssemblyInfo.cs”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\MetaSourceGenerator.AttributeFactory.csproj.CoreCompileInputs.cache”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\MetaSourceGenerator.AttributeFactory.sourcelink.json”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.dll”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.xml”。
+         正在删除文件“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.pdb”。
+     3>已完成生成项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\StaticMethodAsExtensionGenerator.csproj”(Clean 个目标)的操作。
+     4>已完成生成项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\MetaSourceGenerator.AttributeFactory.csproj”(Clean 个目标)的操作。
+     2>已完成生成项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj”(Clean 个目标)的操作。
+     1>已完成生成项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj”(Clean 个目标)的操作。
+     1>已完成生成项目“C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\Test.csproj”(Clean 个目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.91
+  正在确定要还原的项目…
+  所有项目均是最新的，无法还原。
+CSC : warning RS2002: 规则“ZMS005”是下一个未提供的分析器版本的一部分，但它不是任何分析器支持的诊断 (https://github.com/dotnet/roslyn/blob/main/src/RoslynAnalyzers/Microsoft.CodeAnalysis.Analyzers/ReleaseTrackingAnalyzers.Help.md) [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\MetaSourceGenerator.AttributeFactory.csproj]
+  MetaSourceGenerator.AttributeFactory -> C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\bin\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory.dll
+  StaticMethodAsExtensionGenerator -> C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\StaticMethodAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.StaticMethodAsExtensionGenerator.dll
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(33,17): warning CS0162: 检测到无法访问的代码 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(38,29): warning CS0162: 检测到无法访问的代码 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(41,29): warning CS0162: 检测到无法访问的代码 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(44,29): warning CS0162: 检测到无法访问的代码 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(12,98): warning CS1591: 缺少对公共可见类型或成员“ExtensionForAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionGlobalConfigAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionGlobalConfigAttribute.g.cs(7,107): warning CS1591: 缺少对公共可见类型或成员“ExtensionGlobalConfigAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionIgnoreAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionIgnoreAttribute.g.cs(7,101): warning CS1591: 缺少对公共可见类型或成员“ExtensionIgnoreAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionIncludeAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionIncludeAttribute.g.cs(7,102): warning CS1591: 缺少对公共可见类型或成员“ExtensionIncludeAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionSourceAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionSourceAttribute.g.cs(7,101): warning CS1591: 缺少对公共可见类型或成员“ExtensionSourceAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+  InterfaceImplAsExtensionGenerator -> C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\bin\Debug\netstandard2.0\zms9110750.InterfaceImplAsExtensionGenerator.dll
+  Test -> C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\Test\bin\Debug\.net10.0\Test.dll
+
+已成功生成。
+
+CSC : warning RS2002: 规则“ZMS005”是下一个未提供的分析器版本的一部分，但它不是任何分析器支持的诊断 (https://github.com/dotnet/roslyn/blob/main/src/RoslynAnalyzers/Microsoft.CodeAnalysis.Analyzers/ReleaseTrackingAnalyzers.Help.md) [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\MetaSourceGenerator.AttributeFactory\MetaSourceGenerator.AttributeFactory.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(33,17): warning CS0162: 检测到无法访问的代码 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(38,29): warning CS0162: 检测到无法访问的代码 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(41,29): warning CS0162: 检测到无法访问的代码 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(44,29): warning CS0162: 检测到无法访问的代码 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionForAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionForAttribute.g.cs(12,98): warning CS1591: 缺少对公共可见类型或成员“ExtensionForAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionGlobalConfigAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionGlobalConfigAttribute.g.cs(7,107): warning CS1591: 缺少对公共可见类型或成员“ExtensionGlobalConfigAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionIgnoreAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionIgnoreAttribute.g.cs(7,101): warning CS1591: 缺少对公共可见类型或成员“ExtensionIgnoreAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionIncludeAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionIncludeAttribute.g.cs(7,102): warning CS1591: 缺少对公共可见类型或成员“ExtensionIncludeAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\obj\Debug\netstandard2.0\zms9110750.MetaSourceGenerator.AttributeFactory\zms9110750.MetaSourceGenerator.AttributeFactory.Gener.AutoFactoryClassGenerator\ExtensionSourceAttribute+zms9110750.InterfaceImplAsExtensionGenerator.ExtensionSourceAttribute.g.cs(7,101): warning CS1591: 缺少对公共可见类型或成员“ExtensionSourceAttribute.Create(AttributeData)”的 XML 注释 [C:\Users\16229\source\OpenSourceLibrary\SourceGenerator\InterfaceImplAsExtensionGenerator\InterfaceImplAsExtensionGenerator.csproj]
+    10 个警告
+    0 个错误
+
+已用时间 00:00:10.77

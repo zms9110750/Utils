@@ -1,0 +1,1092 @@
+edited Utils.SingleExe/Dice.cs (22606→18524 chars)
+@@ -1,790 +1,665 @@
+  #!/usr/bin/env -S dotnet --
+  
+  #:property TargetFramework=net10.0
+  #:property PublishAot=false
+  
+  using System.Text.RegularExpressions;
++ 
+  namespace zms9110750.Utils.SingleExe;
+- /// <summary>骰子表达式计算器的命令行入口。</summary>
++ 
+  public class Dice
+  {
+-     /// <summary>程序入口点。</summary>
+      public static void Main(string[] args)
+      {
+          if (args.Length == 0)
+          {
+              RunInteractive();
+              return;
+          }
+  
+          foreach (var arg in args)
+          {
+              if (arg.Trim().ToLowerInvariant() is "-?" or "-h" or "-help" or "--help")
+              {
+                  PrintHelp();
+                  return;
+              }
+          }
+  
+          foreach (var arg in args)
+          {
+              var expr = Expr.Parse(arg.Trim());
+              Console.WriteLine(expr);
+          }
+      }
+  
+-     /// <summary>进入交互模式，逐行读取表达式计算，空行退出。</summary>
+      public static void RunInteractive()
+      {
+          Console.WriteLine("骰子表达式计算器 (输入空行退出)");
+          while (true)
+          {
+              Console.Write("> ");
+              string? line = Console.ReadLine();
+              if (string.IsNullOrWhiteSpace(line))
+              {
+                  break;
+              }
+              if (line.Trim().ToLowerInvariant() is "-?" or "-h" or "-help" or "--help")
+              {
+                  PrintHelp();
+                  continue;
+              }
+              var expr = Expr.Parse(line.Trim());
+              Console.WriteLine(expr);
+          }
+      }
+  
+-     /// <summary>打印帮助信息，列出所有支持的表达式格式和示例。</summary>
+      public static void PrintHelp()
+      {
+          Console.WriteLine("骰子表达式计算器 — 用法");
+          Console.WriteLine("  dice <表达式> [表达式...]    计算一个或多个表达式");
+          Console.WriteLine("  dice                        交互模式（空行退出）");
+          Console.WriteLine("  dice -? | -h | -help | --help  显示此帮助");
+          Console.WriteLine();
+          Console.WriteLine("表达式格式：");
+          Console.WriteLine("  dN              一个 N 面骰子（骰）");
+          Console.WriteLine("  XdY             X 个 Y 面骰子（多骰）");
+          Console.WriteLine("  (Expr)          括号分组，优先计算");
+          Console.WriteLine("  N               直接数值");
+          Console.WriteLine("  + - * /         算术运算，* / 优先于 + -");
+          Console.WriteLine("  A v B           比较两个表达式大小");
+          Console.WriteLine("  名字:表达式      给表达式命名");
+          Console.WriteLine("  Dice[t/l][Z]    优势/劣势，Z 默认 2 组");
+          Console.WriteLine("  [A, B, ...]       取最小值（中括号）");
+          Console.WriteLine("  {A, B, ...}       取最大值（大括号）");
+          Console.WriteLine();
+          Console.WriteLine("示例：");
+          Console.WriteLine("  dice d20");
+          Console.WriteLine("  dice 4d6");
+          Console.WriteLine("  dice 4d6+2");
+          Console.WriteLine("  dice (4d6+2)*3");
+          Console.WriteLine("  dice (2+2)d6");
+          Console.WriteLine("  dice 4d(3+3)");
+          Console.WriteLine("  dice 4d6t2");
+          Console.WriteLine("  dice d20l");
+          Console.WriteLine("  dice 4d6+2v4d8+5");
+          Console.WriteLine("  dice 小明:4d6v小红:4d8+5");
+          Console.WriteLine("  dice [4d6, 8, 3+2]");
+          Console.WriteLine("  dice {3d8, 10}");
+      }
+  }
+-  
+- /// <summary>所有表达式类型的抽象基类。定义原始字符串和格式化输出。</summary>
++ 
+  public abstract class Expr
+  {
+-     /// <summary>原始输入字符串（用于调试/输出）。</summary>
+      public string RawValue { get; set; } = "";
+  
+-     /// <summary>格式化输出表达式结果。</summary>
+      public abstract override string ToString();
+  
+-     /// <summary>
+-     /// 表达式解析入口。将字符串解析为表达式树。
+-     /// 委托给 <see cref="CompareExpr.Parse"/>，按 v → : → 算术的优先级链解析。
+-     /// </summary>
+-     /// <param name="s">要解析的表达式字符串。</param>
+-     /// <exception cref="FormatException">字符串不合法时抛出。</exception>
+      public static Expr Parse(string s)
+      {
+-         var result = CompareExpr.Parse(s);
++         s = s.Trim();
++ 
++         int vCount = 0;
++         foreach (char c in s)
++         {
++             if (c == 'v')
++             {
++                 vCount++;
++             }
++         }
++ 
++         Expr result;
++         if (vCount == 0)
++         {
++             result = NamedExpr.Parse(s);
++         }
++         else if (vCount == 1)
++         {
++             string[] parts = s.Split('v');
++             var left = ParseAsNamed(parts[0].Trim(), 1);
++             var right = ParseAsNamed(parts[1].Trim(), 2);
++             result = new CompareExpr(left, right);
++         }
++         else
++         {
++             string[] parts = s.Split('v');
++             var items = new NamedExpr[parts.Length];
++             for (int i = 0; i < parts.Length; i++)
++             {
++                 items[i] = ParseAsNamed(parts[i].Trim(), i + 1);
++             }
++             result = new MulCompareExpr(items);
++         }
++ 
+          result.RawValue = s;
+          return result;
++     }
++ 
++     private static NamedExpr ParseAsNamed(string s, int index)
++     {
++         s = s.Trim();
++         int colonPos = s.IndexOf(':');
++         if (colonPos > 0 && !Regex.IsMatch(s[..colonPos], @"^\d*$"))
++         {
++             string name = s[..colonPos].Trim();
++             string body = s[(colonPos + 1)..].Trim();
++             return new NamedExpr(name, NumExpr.Parse(body), true, -1);
++         }
++         return new NamedExpr($"({index})", NumExpr.Parse(s), false, index);
+      }
+  }
+  
+-  /// <summary>
+- /// 比较表达式，处理 A v B 两路比较和 A v B v C ... 多路比较。
+- /// 输出规则：
+- /// <list type="bullet">
+- /// <item>2 路无命名 -> 左侧视角，如 "负 = 4 vs 5"</item>
+- /// <item>2 路单向命名 -> 命名方视角，如 "小明 负 = 4 vs 5"</item>
+- /// <item>2 路双命名 -> 胜者视角（平局取左），如 "小红 胜 = 8 vs 4"</item>
+- /// <item>3+ 路 -> 排序输出，如 "(4) =8> 小蝙蝠=7 > 哥布林=6 > 小明=4"</item>
+- /// </list>
+- /// </summary>
+  public class CompareExpr : Expr
+  {
+-     /// <summary>所有参与比较的命名表达式。</summary>
+-     public NamedExpr[] Items { get; }
++     public NamedExpr Left { get; }
++     public NamedExpr Right { get; }
+  
+-     /// <param name="items">参与比较的命名表达式列表。</param>
+-     public CompareExpr(NamedExpr[] items)
++     public CompareExpr(NamedExpr left, NamedExpr right)
+      {
+-         Items = items;
++         Left = left;
++         Right = right;
+      }
+  
+-     /// <inheritdoc/>
+      public override string ToString()
+      {
++         var l = Left;
++         var r = Right;
++         int lv = l.Inner.Value;
++         int rv = r.Inner.Value;
+  
+-         if (Items.Length == 2)
++         if (l.IsExplicitName || r.IsExplicitName)
+          {
+-             var l = Items[0];
+-             var r = Items[1];
+-             int lv = l.Inner.Value;
+-             int rv = r.Inner.Value;
++             NamedExpr perspective;
++             int selfVal;
++             int otherVal;
+  
+-             if (l.IsExplicitName || r.IsExplicitName)
++             if (l.IsExplicitName && r.IsExplicitName)
+              {
+-                 NamedExpr perspective;
+-                 int selfVal, otherVal;
+- 
+-                 if (l.IsExplicitName && r.IsExplicitName)
+-                 {
+-                     if (lv > rv)
+-                     {
+-                         perspective = l;
+-                         selfVal = lv;
+-                         otherVal = rv;
+-                     }
+-                     else if (rv > lv)
+-                     {
+-                         perspective = r;
+-                         selfVal = rv;
+-                         otherVal = lv;
+-                     }
+-                     else
+-                     {
+-                         perspective = l;
+-                         selfVal = lv;
+-                         otherVal = rv;
+-                     }
+-                 }
+-                 else if (l.IsExplicitName)
++                 if (lv > rv)
+                  {
+                      perspective = l;
+                      selfVal = lv;
+                      otherVal = rv;
+                  }
+-                 else
++                 else if (rv > lv)
+                  {
+                      perspective = r;
+                      selfVal = rv;
+                      otherVal = lv;
+                  }
+- 
+-                 string result = selfVal > otherVal ? "胜"
+-                              : otherVal > selfVal ? "负" : "平";
+-                 return $"{perspective.Name} {result} = {selfVal} vs {otherVal}";
++                 else
++                 {
++                     perspective = l;
++                     selfVal = lv;
++                     otherVal = rv;
++                 }
++             }
++             else if (l.IsExplicitName)
++             {
++                 perspective = l;
++                 selfVal = lv;
++                 otherVal = rv;
++             }
++             else
++             {
++                 perspective = r;
++                 selfVal = rv;
++                 otherVal = lv;
+              }
+  
+-             string msg = lv > rv ? "胜" : rv > lv ? "负" : "平";
+-             return $"{msg} = {lv} vs {rv}";
++             string result = selfVal > otherVal ? "胜"
++                          : otherVal > selfVal ? "负" : "平";
++             return $"{perspective.Name} {result} = {selfVal} vs {otherVal}";
+          }
+  
+-         // 3+ 路：按值降序排列输出
++         string msg = lv > rv ? "胜" : rv > lv ? "负" : "平";
++         return $"{msg} = {lv} vs {rv}";
++     }
++ }
++ 
++ public class MulCompareExpr : Expr
++ {
++     public NamedExpr[] Items { get; }
++ 
++     public MulCompareExpr(NamedExpr[] items)
++     {
++         Items = items;
++     }
++ 
++     public override string ToString()
++     {
+          var ranked = Items
+              .Select((item, idx) => (item, idx))
+              .OrderByDescending(x => x.item.Inner.Value)
+              .ThenBy(x => x.idx)
+              .ToArray();
+  
+          string first = $"{ranked[0].item.Name} ={ranked[0].item.Inner.Value}";
+          var rest = ranked.Skip(1).Select(r => $" {r.item.Name}={r.item.Inner.Value}");
+          return $"{first}>{string.Join(" >", rest)}";
+-     }
+- 
+-     /// <summary>
+-     /// 扫描字符串中所有顶层 v（不在 ()[]{} 嵌套内），
+-     /// 按 v 分割后每段交给 <see cref="NamedExpr.Parse"/>。
+-     /// 无 v 则直接委托给 <see cref="NamedExpr.Parse"/>。
+-     /// </summary>
+-     public static new Expr Parse(string s)
+-     {
+-         var vPositions = FindTopLevelV(s);
+-         if (vPositions.Count < 1)
+-         {
+-             return NamedExpr.Parse(s);
+-         }
+- 
+-         var parts = SplitAtPositions(s, vPositions);
+-         var namedParts = parts
+-             .Select((p, i) => ParseNamedPart(p, i + 1))
+-             .ToArray();
+- 
+-         var result = new CompareExpr(namedParts);
+-         result.RawValue = s;
+-         return result;
+-     }
+- 
+-     /// <summary>解析一段 v 分隔的表达式，加上位置名称或显式名称。</summary>
+-     static NamedExpr ParseNamedPart(string s, int position)
+-     {
+-         int colon = s.IndexOf(':');
+-         if (colon > 0 && !Regex.IsMatch(s[..colon], @"^\d*$"))
+-         {
+-             string name = s[..colon].Trim();
+-             string body = s[(colon + 1)..].Trim();
+-             return new NamedExpr(name, ValueExpr.Parse(body), true);
+-         }
+-         return new NamedExpr($"({position})", ValueExpr.Parse(s), false);
+-     }
+- 
+-     /// <summary>找到字符串中所有顶层 v 的位置。括号内的 v 直接报错。</summary>
+-     static List<int> FindTopLevelV(string s)
+-     {
+-         var positions = new List<int>();
+-         int depth = 0;
+-         for (int i = 0; i < s.Length; i++)
+-         {
+-             if (s[i] is '(' or '[' or '{')
+-             {
+-                 depth++;
+-             }
+-             else if (s[i] is ')' or ']' or '}')
+-             {
+-                 depth--;
+-             }
+-             else if (s[i] == 'v')
+-             {
+-                 if (depth > 0)
+-                 {
+-                     throw new FormatException($"v 不能出现在括号/中括号/花括号内部: '{s[i..]}'");
+-                 }
+- 
+-                 positions.Add(i);
+-             }
+-         }
+-         return positions;
+-     }
+- 
+-     /// <summary>按位置列表将字符串分割为多段。</summary>
+-     static string[] SplitAtPositions(string s, List<int> positions)
+-     {
+-         var parts = new List<string>();
+-         int start = 0;
+-         foreach (int pos in positions)
+-         {
+-             parts.Add(s[start..pos].Trim());
+-             start = pos + 1;
+-         }
+-         parts.Add(s[start..].Trim());
+-         return parts.ToArray();
+      }
+  }
+  
+-  
+- /// <summary>命名表达式，为运算表达式附加一个显示名称，如 "小明:4d6"。</summary>
+  public class NamedExpr : Expr
+  {
+-     /// <summary>显示名称。</summary>
+      public string Name { get; }
+- 
+-     /// <summary>被包装的运算表达式。</summary>
+-     public ValueExpr Inner { get; }
+- 
+-     /// <summary>
+-     /// 是否为用户显式命名的（true），
+-     /// false 表示 v 比较时按位置自动生成的名称如 "(1)"。
+-     /// </summary>
++     public NumExpr Inner { get; }
++     public int Index { get; }
+      public bool IsExplicitName { get; }
+  
+-     /// <param name="name">显示名称。</param>
+-     /// <param name="inner">被包装的运算表达式。</param>
+-     /// <param name="isExplicitName">是否为用户显式命名。</param>
+-     public NamedExpr(string name, ValueExpr inner, bool isExplicitName)
++     public NamedExpr(string name, NumExpr inner, bool isExplicitName, int index)
+      {
+          Name = name;
+          Inner = inner;
+          IsExplicitName = isExplicitName;
++         Index = index;
+      }
+  
+-     /// <inheritdoc/>
+      public override string ToString()
+      {
+          return $"{Name} = {Inner}";
+      }
+  
+-     /// <summary>
+-     /// 检查字符串中是否有顶层 :（且左边不是纯数字），
+-     /// 有则拆分为 NamedExpr + ValueExpr，无则直接交给 <see cref="ValueExpr.Parse"/>。
+-     /// </summary>
+      public static new Expr Parse(string s)
+      {
+-         int colon = s.IndexOf(':');
+-         if (colon > 0 && !Regex.IsMatch(s[..colon], @"^\d*$"))
++         s = s.Trim();
++         int colonPos = s.IndexOf(':');
++         if (colonPos > 0 && !Regex.IsMatch(s[..colonPos], @"^\d*$"))
+          {
+-             string name = s[..colon].Trim();
+-             string body = s[(colon + 1)..].Trim();
+-             return new NamedExpr(name, ValueExpr.Parse(body), true);
++             string name = s[..colonPos].Trim();
++             string body = s[(colonPos + 1)..].Trim();
++             return new NamedExpr(name, NumExpr.Parse(body), true, -1) { RawValue = s };
+          }
+-         return ValueExpr.Parse(s);
++         return NumExpr.Parse(s);
+      }
+  }
+  
+-  
+- /// <summary>
+- /// 所有可以计算出一个整数值的表达式类型的抽象基类。
+- /// 子类包括 <see cref="NumExpr"/>、<see cref="BinOpExpr"/>、<see cref="DiceExpr"/>、
+- /// <see cref="MinExpr"/> 和 <see cref="MaxExpr"/>。
+- /// </summary>
+- public abstract class ValueExpr : Expr
++ public abstract class NumExpr : Expr
+  {
+-     /// <summary>表达式的计算结果值。</summary>
+      public abstract int Value { get; }
+- 
+-     /// <summary>表达式的详细计算过程描述。</summary>
+      public abstract string Detail { get; }
+  
+-     /// <summary>默认格式：Detail = Value。</summary>
+      public override string ToString()
+      {
+          return $"{Detail} = {Value}";
+-     }
+- 
+-     // ── 递归下降解析入口 ──
+- 
+-     /// <summary>
+-     /// 解析算术/骰子/取小取大/括号表达式字符串，
+-     /// 运算符优先级从低到高：+ -, * /, d, ( ) / [ ] / { }。
+-     /// </summary>
+-     /// <param name="s">表达式字符串。</param>
+-     /// <exception cref="FormatException">字符串不合法时抛出。</exception>
+-     public static new ValueExpr Parse(string s)
+-     {
+-         int pos = 0;
+-         var result = ParseAddSub(s, ref pos);
+-         if (pos < s.Length)
+-         {
+-             throw new FormatException($"表达式尾部有多余内容: '{s[pos..]}'");
+-         }
+-         return result;
+-     }
+- 
+-     // ── 加减（最低算术优先级） ──
+- 
+-     static ValueExpr ParseAddSub(string s, ref int pos)
+-     {
+-         var left = ParseMulDiv(s, ref pos);
+-         while (pos < s.Length && (s[pos] == '+' || s[pos] == '-'))
+-         {
+-             char op = s[pos++];
+-             var right = ParseMulDiv(s, ref pos);
+-             left = new BinOpExpr(left, op, right);
+-         }
+-         return left;
+-     }
+- 
+-     // ── 乘除（中等算术优先级） ──
+- 
+-     static ValueExpr ParseMulDiv(string s, ref int pos)
+-     {
+-         var left = ParseDice(s, ref pos);
+-         while (pos < s.Length && (s[pos] == '*' || s[pos] == '/'))
+-         {
+-             char op = s[pos++];
+-             var right = ParseDice(s, ref pos);
+-             left = new BinOpExpr(left, op, right);
+-         }
+-         return left;
+      }
+- 
+-     // ── 骰子运算符 d（优先级在乘除和原子之间） ──
+  
+-     static ValueExpr ParseDice(string s, ref int pos)
++     public static new NumExpr Parse(string s)
+      {
+-         SkipWS(s, ref pos);
+- 
+-         // 裸 d -> 无计数的骰子（骰，Count 默认 1）
+-         if (pos < s.Length && s[pos] == 'd')
+-         {
+-             pos++;
+-             var sides = ParseDice(s, ref pos);
+-             return BuildDice(new NumExpr(1), sides, s, ref pos);
+-         }
+- 
+-         // 有计数：先解析左侧表达式作为 Count
+-         var count = ParsePrimary(s, ref pos);
+-         SkipWS(s, ref pos);
+- 
+-         if (pos < s.Length && s[pos] == 'd')
++         s = s.Trim();
++         if (string.IsNullOrEmpty(s))
+          {
+-             pos++;
+-             var sides = ParseDice(s, ref pos);
+-             return BuildDice(count, sides, s, ref pos);
++             throw new FormatException("表达式为空");
+          }
+- 
+-         return count;
+-     }
+  
+-     /// <summary>创建 DiceExpr 节点，并检查后续是否有 t/l 优势/劣势后缀。</summary>
+-     static DiceExpr BuildDice(ValueExpr count, ValueExpr sides, string s, ref int pos)
+-     {
+-         SkipWS(s, ref pos);
+-         if (pos < s.Length && (s[pos] == 't' || s[pos] == 'l'))
++         if (s[0] == '(')
+          {
+-             char mode = s[pos++];
+-             SkipWS(s, ref pos);
+-             var nm = Regex.Match(pos < s.Length ? s[pos..] : "", @"^\d+");
+-             if (nm.Success)
++             int close = FindMatchingClose(s, 1, '(', ')');
++             string innerContent = s[1..close];
++             string after = s[(close + 1)..].Trim();
++             if (after.Length > 0)
+              {
+-                 int groups = int.Parse(nm.Value);
+-                 pos += nm.Length;
+-                 return new DiceExpr(count, sides, mode, groups);
++                 throw new FormatException($"括号后有多余内容: '{after}'");
+              }
+-             return new DiceExpr(count, sides, mode, 2);
++             var result = ParenExpr.Parse(innerContent);
++             result.RawValue = s;
++             return result;
+          }
+-         return new DiceExpr(count, sides);
+-     }
+- 
+-     // ── 原子项 ──
+  
+-     static ValueExpr ParsePrimary(string s, ref int pos)
+-     {
+-         SkipWS(s, ref pos);
+-         if (pos >= s.Length)
++         if (s[0] == '[')
+          {
+-             throw new FormatException("表达式不完整");
++             int close = FindMatchingClose(s, 1, '[', ']');
++             string innerContent = s[1..close];
++             string after = s[(close + 1)..].Trim();
++             if (after.Length > 0)
++             {
++                 throw new FormatException($"中括号后有多余内容: '{after}'");
++             }
++             var items = SplitTopLevel(innerContent, ',')
++                 .Select(p => NumExpr.Parse(p.Trim()))
++                 .ToArray();
++             return new MinExpr(items) { RawValue = s };
+          }
+  
+-         // ( ) 括号分组
+-         if (s[pos] == '(')
++         if (s[0] == '{')
+          {
+-             pos++;
+-             var inner = ParseAddSub(s, ref pos);
+-             SkipWS(s, ref pos);
+-             if (pos >= s.Length || s[pos] != ')')
++             int close = FindMatchingClose(s, 1, '{', '}');
++             string innerContent = s[1..close];
++             string after = s[(close + 1)..].Trim();
++             if (after.Length > 0)
+              {
+-                 throw new FormatException("缺少匹配的 ')'");
++                 throw new FormatException($"花括号后有多余内容: '{after}'");
+              }
+- 
+-             pos++;
+-             return inner;
++             var items = SplitTopLevel(innerContent, ',')
++                 .Select(p => NumExpr.Parse(p.Trim()))
++                 .ToArray();
++             return new MaxExpr(items) { RawValue = s };
+          }
+  
+-         // [ ] -- 取最小值
+-         if (s[pos] == '[')
++         if (int.TryParse(s, out int val))
+          {
+-             pos++;
+-             var items = ParseBracketList(s, ref pos, '[', ']');
+-             return new MinExpr(items);
++             return new ConstExpr(val) { RawValue = s };
+          }
+  
+-         // { } -- 取最大值
+-         if (s[pos] == '{')
++         int opPos = FindRightmostTopLevelOp(s, '+', '-');
++         if (opPos != -1)
+          {
+-             pos++;
+-             var items = ParseBracketList(s, ref pos, '{', '}');
+-             return new MaxExpr(items);
++             char op = s[opPos];
++             var left = NumExpr.Parse(s[..opPos]);
++             var right = NumExpr.Parse(s[(opPos + 1)..]);
++             return new BinOpExpr(left, op, right) { RawValue = s };
+          }
+  
+-         // 数字字面量
+-         var nm = Regex.Match(s[pos..], @"^\d+");
+-         if (nm.Success)
++         opPos = FindRightmostTopLevelOp(s, '*', '/');
++         if (opPos != -1)
+          {
+-             int val = int.Parse(nm.Value);
+-             pos += nm.Length;
+-             return new NumExpr(val);
++             char op = s[opPos];
++             var left = NumExpr.Parse(s[..opPos]);
++             var right = NumExpr.Parse(s[(opPos + 1)..]);
++             return new BinOpExpr(left, op, right) { RawValue = s };
+          }
+  
+-         throw new FormatException($"无效表达式: '{s[pos..]}'");
+-     }
++         opPos = FindRightmostTopLevelOp(s, 'd');
++         if (opPos != -1)
++         {
++             var count = NumExpr.Parse(s[..opPos]);
++             string rightPart = s[(opPos + 1)..].Trim();
+  
+-     // ── 括号内逗号分隔列表 ──
++             char? mode = null;
++             NumExpr groupsExpr = DiceExpr.DefaultGroups;
++             string sidesStr = rightPart;
+  
+-     /// <summary>解析中括号/大括号内的逗号分隔表达式列表，处理嵌套。</summary>
+-     static ValueExpr[] ParseBracketList(string s, ref int pos, char open, char close)
+-     {
+-         SkipWS(s, ref pos);
+-         int end = FindMatchingClose(s, pos, open, close);
+-         string content = s[pos..end];
+-         pos = end + 1;
++             int suffixPos = -1;
++             int depth = 0;
++             for (int i = rightPart.Length - 1; i >= 0; i--)
++             {
++                 char c = rightPart[i];
++                 if (c == ')' || c == ']' || c == '}')
++                 {
++                     depth++;
++                 }
++                 else if (c == '(' || c == '[' || c == '{')
++                 {
++                     depth--;
++                 }
++                 else if (depth == 0 && (c == 't' || c == 'l'))
++                 {
++                     suffixPos = i;
++                     break;
++                 }
++             }
+  
+-         var parts = SplitTopLevel(content, ',');
+-         return parts.Select(p => Parse(p.Trim())).ToArray();
+-     }
++             if (suffixPos != -1)
++             {
++                 mode = rightPart[suffixPos];
++                 sidesStr = rightPart[..suffixPos].Trim();
++                 string after = rightPart[(suffixPos + 1)..].Trim();
++                 if (after.Length > 0)
++                 {
++                     groupsExpr = NumExpr.Parse(after);
++                 }
++             }
+  
+-     // ── 工具 ──
++             var sides = NumExpr.Parse(sidesStr);
+  
+-     static void SkipWS(string s, ref int pos)
+-     {
+-         while (pos < s.Length && char.IsWhiteSpace(s[pos]))
+-         {
+-             pos++;
++             if (mode != null)
++             {
++                 return new DiceExpr(count, sides, mode.Value, groupsExpr) { RawValue = s };
++             }
++             return new DiceExpr(count, sides) { RawValue = s };
+          }
++ 
++         throw new FormatException($"无效表达式: '{s}'");
+      }
+  
+-     /// <summary>从 start 开始找匹配的 close 括号，跟踪嵌套深度。</summary>
+-     static int FindMatchingClose(string s, int start, char open, char close)
++     private static int FindMatchingClose(string s, int start, char open, char close)
+      {
+          int depth = 1;
+          for (int i = start; i < s.Length; i++)
+          {
+              if (s[i] == open)
+              {
+                  depth++;
+              }
+              else if (s[i] == close)
+              {
+                  depth--;
+-                 if (depth == 0)
+-                 {
+-                     return i;
+-                 }
++             }
++             if (depth == 0)
++             {
++                 return i;
+              }
+          }
+          throw new FormatException($"缺少匹配的 '{close}'");
+      }
+  
+-     /// <summary>只在顶层（嵌套深度 0）按分隔符分割。</summary>
+-     static string[] SplitTopLevel(string s, char separator)
++     private static string[] SplitTopLevel(string s, char separator)
+      {
+          var parts = new List<string>();
+          int depth = 0;
+          int start = 0;
+          for (int i = 0; i < s.Length; i++)
+          {
+              if (s[i] is '(' or '[' or '{')
+              {
+                  depth++;
+              }
+              else if (s[i] is ')' or ']' or '}')
+              {
+                  depth--;
+              }
+              else if (s[i] == separator && depth == 0)
+              {
+                  parts.Add(s[start..i].Trim());
+                  start = i + 1;
+              }
+          }
+          parts.Add(s[start..].Trim());
+          return parts.ToArray();
++     }
++ 
++     private static int FindRightmostTopLevelOp(string s, params char[] ops)
++     {
++         int depth = 0;
++         for (int i = s.Length - 1; i >= 0; i--)
++         {
++             if (s[i] == ')' || s[i] == ']' || s[i] == '}')
++             {
++                 depth++;
++             }
++             else if (s[i] == '(' || s[i] == '[' || s[i] == '{')
++             {
++                 depth--;
++             }
++             else if (depth == 0)
++             {
++                 foreach (char op in ops)
++                 {
++                     if (s[i] == op)
++                     {
++                         return i;
++                     }
++                 }
++             }
++         }
++         return -1;
+      }
+  }
+  
+-  
+- /// <summary>表示一个直接整数常量。</summary>
+- public class NumExpr : ValueExpr
++ public class ConstExpr : NumExpr
+  {
+-     /// <summary>数值。</summary>
+-     public int Val { get; }
++     public override int Value { get; }
++     public override string Detail => Value.ToString();
+  
+-     /// <param name="val">整数值。</param>
+-     public NumExpr(int val)
++     public ConstExpr(int value)
+      {
+-         Val = val;
++         Value = value;
+      }
+- 
+-     /// <inheritdoc/>
+-     public override int Value => Val;
+- 
+-     /// <inheritdoc/>
+-     public override string Detail => Val.ToString();
+  }
+  
+-  
+- /// <summary>+ - * / 二元算术运算，* / 优先于 + -。</summary>
+- public class BinOpExpr : ValueExpr
++ public class BinOpExpr : NumExpr
+  {
+-     /// <summary>左操作数。</summary>
+-     public ValueExpr Left { get; }
+- 
+-     /// <summary>运算符：'+' '-' '*' '/'。</summary>
++     public NumExpr Left { get; }
+      public char Op { get; }
+- 
+-     /// <summary>右操作数。</summary>
+-     public ValueExpr Right { get; }
++     public NumExpr Right { get; }
+  
+-     /// <param name="left">左操作数。</param>
+-     /// <param name="op">运算符。</param>
+-     /// <param name="right">右操作数。</param>
+-     public BinOpExpr(ValueExpr left, char op, ValueExpr right)
++     public BinOpExpr(NumExpr left, char op, NumExpr right)
+      {
+          Left = left;
+          Op = op;
+          Right = right;
+      }
+  
+-     /// <inheritdoc/>
+-     /// <exception cref="InvalidOperationException">运算符不是 + - * / 之一时抛出。</exception>
+-     public override int Value => Op switch {
++     public override int Value => Op switch
++     {
+          '+' => Left.Value + Right.Value,
+          '-' => Left.Value - Right.Value,
+          '*' => Left.Value * Right.Value,
+          '/' => Left.Value / Right.Value,
+          _ => throw new InvalidOperationException($"未知运算符: {Op}")
+      };
+  
+-     /// <inheritdoc/>
+      public override string Detail => $"{Left.Detail} {Op} {Right.Detail}";
+  }
+  
+-  
+- /// <summary>
+- /// 骰子掷法表达式。覆盖三种情况：
+- /// <list type="bullet">
+- /// <item>普通掷骰：XdY，如 4d6</item>
+- /// <item>优势（取高）：XdYtZ，如 4d6t3，Z 默认 2</item>
+- /// <item>劣势（取低）：XdYlZ，如 d20l，Z 默认 2</item>
+- /// </list>
+- /// Count 和 Sides 均为 <see cref="ValueExpr"/>，支持表达式如 (2+2)d(3+3)。
+- /// 掷骰结果惰性求值并缓存，首次访问 <see cref="Value"/> 或 <see cref="Detail"/> 时生成。
+- /// </summary>
+- public class DiceExpr : ValueExpr
++ public class DiceExpr : NumExpr
+  {
+-     /// <summary>骰子个数的表达式源。</summary>
+-     public ValueExpr CountExpr { get; }
+- 
+-     /// <summary>骰子面数的表达式源。</summary>
+-     public ValueExpr SidesExpr { get; }
++     public static readonly NumExpr DefaultGroups = new ConstExpr(2);
+  
+-     /// <summary>
+-     /// 优势/劣势模式。null = 普通掷骰；'t' = 取高（优势）；'l' = 取低（劣势）。
+-     /// </summary>
++     public NumExpr CountExpr { get; }
++     public NumExpr SidesExpr { get; }
+      public char? Mode { get; }
+- 
+-     /// <summary>优势/劣势的掷骰组数 Z，默认 2。</summary>
+-     public int Groups { get; }
++     public NumExpr Groups { get; }
+  
+      int? _resolvedCount;
+      int? _resolvedSides;
+      (int value, string detail)? _result;
+  
+-     /// <summary>创建普通骰子表达式。</summary>
+-     /// <param name="count">骰子个数表达式。</param>
+-     /// <param name="sides">骰子面数表达式。</param>
+-     public DiceExpr(ValueExpr count, ValueExpr sides)
++     public DiceExpr(NumExpr count, NumExpr sides)
+      {
+          CountExpr = count;
+          SidesExpr = sides;
++         Groups = DefaultGroups;
+      }
+  
+-     /// <summary>创建优势/劣势骰子表达式。</summary>
+-     /// <param name="count">骰子个数表达式。</param>
+-     /// <param name="sides">骰子面数表达式。</param>
+-     /// <param name="mode">'t'=取高, 'l'=取低。</param>
+-     /// <param name="groups">投掷组数。</param>
+-     public DiceExpr(ValueExpr count, ValueExpr sides, char mode, int groups)
++     public DiceExpr(NumExpr count, NumExpr sides, char mode, NumExpr groups)
+      {
+          CountExpr = count;
+          SidesExpr = sides;
+          Mode = mode;
+          Groups = groups;
+      }
+  
+      int ResolvedCount => _resolvedCount ??= CountExpr.Value;
+      int ResolvedSides => _resolvedSides ??= SidesExpr.Value;
+  
+      void EnsureRolled()
+      {
+          if (_result != null)
+          {
+              return;
+          }
+  
+-         int c = ResolvedCount, s = ResolvedSides;
++         int c = ResolvedCount;
++         int s = ResolvedSides;
+  
+          if (Mode == null)
+          {
+              var rolls = new List<int>(c);
+              for (int i = 0; i < c; i++)
+              {
+                  rolls.Add(Random.Shared.Next(1, s + 1));
+              }
+  
+              int sum = rolls.Sum();
+              string fmt = c <= 10
+                  ? $"[{string.Join(", ", rolls)}]"
+                  : $"[{string.Join(", ", rolls.Take(5))}, ... {c - 5} more]";
+              _result = (sum, fmt);
+          }
+          else
+          {
+-             var allSums = new List<int>(Groups);
+-             for (int g = 0; g < Groups; g++)
++             int groups = Groups.Value;
++             var allSums = new List<int>(groups);
++             for (int g = 0; g < groups; g++)
+              {
+                  int gsum = 0;
+                  for (int i = 0; i < c; i++)
+                  {
+                      gsum += Random.Shared.Next(1, s + 1);
+                  }
+- 
+                  allSums.Add(gsum);
+              }
+              int best = Mode == 't' ? allSums.Max() : allSums.Min();
+              string label = Mode == 't' ? "取高" : "取低";
+-             _result = (best, $"掷{Groups}次: [{string.Join(", ", allSums)}] {label}");
++             _result = (best, $"掷{groups}次: [{string.Join(", ", allSums)}] {label}");
+          }
+      }
+  
+-     /// <inheritdoc/>
+-     public override int Value {
+-         get {
++     public override int Value
++     {
++         get
++         {
+              EnsureRolled();
+              return _result!.Value.value;
+          }
+      }
+  
+-     /// <inheritdoc/>
+-     public override string Detail {
+-         get {
++     public override string Detail
++     {
++         get
++         {
+              EnsureRolled();
+              return _result!.Value.detail;
+          }
+      }
+  }
+  
+-  
+- /// <summary>取最小值表达式，语法 [expr, expr, ...]，返回列表中值最小的一个。</summary>
+- public class MinExpr : ValueExpr
++ public class MinExpr : NumExpr
+  {
+-     /// <summary>参与比较的表达式列表。</summary>
+-     public ValueExpr[] Items { get; }
++     public NumExpr[] Items { get; }
+  
+-     /// <param name="items">表达式列表。</param>
+-     public MinExpr(ValueExpr[] items)
++     public MinExpr(NumExpr[] items)
+      {
+          Items = items;
+      }
+  
+-     /// <inheritdoc/>
+      public override int Value => Items.Min(e => e.Value);
+  
+-     /// <inheritdoc/>
+      public override string Detail =>
+          $"[{string.Join(", ", Items.Select(i => i.Detail))}]";
+  }
+  
+-  
+- /// <summary>取最大值表达式，语法 {expr, expr, ...}，返回列表中值最大的一个。</summary>
+- public class MaxExpr : ValueExpr
++ public class MaxExpr : NumExpr
+  {
+-     /// <summary>参与比较的表达式列表。</summary>
+-     public ValueExpr[] Items { get; }
++     public NumExpr[] Items { get; }
+  
+-     /// <param name="items">表达式列表。</param>
+-     public MaxExpr(ValueExpr[] items)
++     public MaxExpr(NumExpr[] items)
+      {
+          Items = items;
+      }
+  
+-     /// <inheritdoc/>
+      public override int Value => Items.Max(e => e.Value);
+  
+-     /// <inheritdoc/>
+      public override string Detail =>
+          $"{{{string.Join(", ", Items.Select(i => i.Detail))}}}";
++ }
++ 
++ public class ParenExpr : NumExpr
++ {
++     public NumExpr Inner { get; }
++ 
++     public ParenExpr(NumExpr inner)
++     {
++         Inner = inner;
++     }
++ 
++     public override int Value => Inner.Value;
++     public override string Detail => $"({Inner.Detail})";
++ 
++     public static ParenExpr Parse(string s)
++     {
++         var inner = NumExpr.Parse(s);
++         return new ParenExpr(inner);
++     }
+  }

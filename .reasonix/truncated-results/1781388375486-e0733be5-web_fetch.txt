@@ -1,0 +1,1374 @@
+NuGet Gallery | Microsoft.Extensions.ObjectPool.DependencyInjection 10.7.0
+https://www.nuget.org/packages/Microsoft.Extensions.ObjectPool.DependencyInjection/10.7.0
+
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NuGet Gallery
+| Microsoft.Extensions.ObjectPool.DependencyInjection 10.7.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+﻿
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Microsoft.Extensions.ObjectPool.DependencyInjection
+
+
+10.7.0
+
+
+
+
+
+
+
+Prefix Reserved
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.NET 8.0
+
+
+
+
+
+This package targets .NET 8.0. The package is compatible with this framework or higher.
+
+
+
+
+
+
+.NET Framework 4.6.2
+
+
+
+
+
+This package targets .NET Framework 4.6.2. The package is compatible with this framework or higher.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.NET CLI
+
+
+
+
+
+
+PMC
+
+
+
+
+
+
+PackageReference
+
+
+
+
+
+
+CPM
+
+
+
+
+
+
+Paket CLI
+
+
+
+
+
+
+Script & Interactive
+
+
+
+
+
+
+File-Based Apps
+
+
+
+
+
+
+Cake
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="install-command-row">dotnet add package Microsoft.Extensions.ObjectPool.DependencyInjection --version 10.7.0</span>
+<div class="copy-button">
+<button id="dotnet-cli-0001-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the .NET CLI command" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+
+
+
+
+<span class="install-command-row">NuGet\Install-Package Microsoft.Extensions.ObjectPool.DependencyInjection -Version 10.7.0</span>
+<div class="copy-button">
+<button id="package-manager-0001-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the PMC command" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+
+This command is intended to be used within the Package Manager Console in Visual Studio, as it uses the NuGet module's version of Install-Package.
+
+
+
+
+
+
+
+
+
+
+<span class="install-command-row"><PackageReference Include="Microsoft.Extensions.ObjectPool.DependencyInjection" Version="10.7.0" /></span>
+<div class="copy-button">
+<button id="package-reference-0001-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the PackageReference XML node" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+
+For projects that support PackageReference, copy this XML node into the project file to reference the package.
+
+
+
+
+
+
+
+
+
+
+<span class="install-command-row"><PackageVersion Include="Microsoft.Extensions.ObjectPool.DependencyInjection" Version="10.7.0" /></span>
+<div class="copy-button">
+<span class="package-manager-command-header">
+Directory.Packages.props
+</span>
+<button id="package-version-0001-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the PackageVersion XML node" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+<span class="install-command-row"><PackageReference Include="Microsoft.Extensions.ObjectPool.DependencyInjection" /></span>
+<div class="copy-button">
+<span class="package-manager-command-header">
+Project file
+</span>
+<button id="package-version-0002-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the PackageVersion XML node" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+
+For projects that support Central Package Management (CPM), copy this XML node into the solution Directory.Packages.props file to version the package.
+
+
+
+
+
+
+
+
+
+
+<span class="install-command-row">paket add Microsoft.Extensions.ObjectPool.DependencyInjection --version 10.7.0</span>
+<div class="copy-button">
+<button id="paket-cli-0001-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the Paket CLI command" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+
+The NuGet Team does not provide support for this client. Please contact its maintainers for support.
+
+
+
+
+
+
+
+
+
+
+<span class="install-command-row">#r "nuget: Microsoft.Extensions.ObjectPool.DependencyInjection, 10.7.0"</span>
+<div class="copy-button">
+<button id="script-interactive-0001-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the Script & Interactive command" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+
+#r directive can be used in F# Interactive and Polyglot Notebooks. Copy this into the interactive tool or source code of the script to reference the package.
+
+
+
+
+
+
+
+
+
+
+<span class="install-command-row">#:package Microsoft.Extensions.ObjectPool.DependencyInjection@10.7.0</span>
+<div class="copy-button">
+<button id="dotnet-run-file-0001-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the File-Based Apps command" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+
+#:package directive can be used in C# file-based apps starting in .NET 10 preview 4. Copy this into a .cs file before any lines of code to reference the package.
+
+
+
+
+
+
+
+
+
+
+<span class="install-command-row">#addin nuget:?package=Microsoft.Extensions.ObjectPool.DependencyInjection&version=10.7.0</span>
+<div class="copy-button">
+<span class="package-manager-command-header">
+Install as a Cake Addin
+</span>
+<button id="cake-0001-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the Cake command" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+<span class="install-command-row">#tool nuget:?package=Microsoft.Extensions.ObjectPool.DependencyInjection&version=10.7.0</span>
+<div class="copy-button">
+<span class="package-manager-command-header">
+Install as a Cake Tool
+</span>
+<button id="cake-0002-button" class="btn btn-brand-icon" type="button"
+data-toggle="popover" data-placement="bottom" data-content="Copied."
+aria-label="Copy the Cake command" role="button">
+<span class="ms-Icon ms-Icon--Copy" aria-hidden="true"></span>
+<span>Copy</span>
+</button>
+</div>
+
+
+
+
+
+
+
+The NuGet Team does not provide support for this client. Please contact its maintainers for support.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+README
+
+
+
+
+
+
+
+Frameworks
+
+
+
+
+
+
+
+Dependencies
+
+
+
+
+
+
+
+
+Used By
+
+
+
+
+
+
+
+
+
+Versions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Microsoft.Extensions.ObjectPool.DependencyInjection
+
+This provides the ability to retrieve pooled instances that can be initialized using dependency injection.
+
+Install the package
+
+From the command-line:
+
+<code class="language-console">dotnet add package Microsoft.Extensions.ObjectPool.DependencyInjection
+</code>
+
+Or directly in the C# project file:
+
+<code class="language-xml"><ItemGroup>
+<PackageReference Include="Microsoft.Extensions.ObjectPool.DependencyInjection" Version="[CURRENTVERSION]" />
+</ItemGroup>
+</code>
+
+Usage Example
+
+Registering Pools
+
+The object pools can be registered using the following methods:
+
+<code class="language-csharp">public static IServiceCollection AddPooled<TService>(this IServiceCollection services, Action<DependencyInjectionPoolOptions>? configure = null)
+public static IServiceCollection AddPooled<TService, TImplementation>(this IServiceCollection services, Action<DependencyInjectionPoolOptions>? configure = null)
+</code>
+
+For example:
+
+<code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<MyService>();
+builder.Services.AddPooled<MyPooledClass>();
+
+var app = builder.Build();
+</code>
+
+Consuming Pools
+
+Once registered, pools can be resolved using dependency injection. For example:
+
+<code class="language-csharp">var pool = context.RequestServices.GetRequiredService<ObjectPool<MyPooledClass>>();
+
+var obj = pool.Get();
+
+// Use the pooled object ...
+
+pool.Return(obj);
+</code>
+
+Pooled instances will be resolved from the root dependency injection container and can only
+use singleton dependencies.
+
+Pooled instances can implement Microsoft.Extensions.ObjectPool.IResettable in order to
+be initialized when they are returned to the pool.
+
+<code class="language-csharp">public class MyPooledClass : IResettable
+{
+private MyService _myService;
+
+public MyPooledClass(MyService myService)
+{
+_myService = myService;
+}
+
+public bool TryReset()
+{
+// Clean instance here
+return true;
+}
+}
+</code>
+
+Options
+
+The DependencyInjectionPoolOptions.Capacity property is used to configure the maximum capacity of each pool. The default value is 1024.
+
+This value can also be set during the pool registration:
+
+<code class="language-csharp">builder.Services.AddPooled<MyPooledClass>(options => options.Capacity = 64);
+</code>
+
+Feedback & Contributing
+
+We welcome feedback and contributions in our GitHub repo.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Product
+
+Versions
+Compatible and additional computed target framework versions.
+
+
+
+
+
+
+
+
+.NET
+
+
+
+net8.0
+net8.0 is compatible. 
+net8.0-android
+net8.0-android was computed. 
+net8.0-browser
+net8.0-browser was computed. 
+net8.0-ios
+net8.0-ios was computed. 
+net8.0-maccatalyst
+net8.0-maccatalyst was computed. 
+net8.0-macos
+net8.0-macos was computed. 
+net8.0-tvos
+net8.0-tvos was computed. 
+net8.0-windows
+net8.0-windows was computed. 
+net9.0
+net9.0 is compatible. 
+net9.0-android
+net9.0-android was computed. 
+net9.0-browser
+net9.0-browser was computed. 
+net9.0-ios
+net9.0-ios was computed. 
+net9.0-maccatalyst
+net9.0-maccatalyst was computed. 
+net9.0-macos
+net9.0-macos was computed. 
+net9.0-tvos
+net9.0-tvos was computed. 
+net9.0-windows
+net9.0-windows was computed. 
+net10.0
+net10.0 is compatible. 
+net10.0-android
+net10.0-android was computed. 
+net10.0-browser
+net10.0-browser was computed. 
+net10.0-ios
+net10.0-ios was computed. 
+net10.0-maccatalyst
+net10.0-maccatalyst was computed. 
+net10.0-macos
+net10.0-macos was computed. 
+net10.0-tvos
+net10.0-tvos was computed. 
+net10.0-windows
+net10.0-windows was computed. 
+
+
+
+
+
+
+.NET Framework
+
+
+
+net462
+net462 is compatible. 
+net463
+net463 was computed. 
+net47
+net47 was computed. 
+net471
+net471 was computed. 
+net472
+net472 was computed. 
+net48
+net48 was computed. 
+net481
+net481 was computed. 
+
+
+
+
+
+
+
+
+
+
+Compatible target framework(s)
+
+
+
+
+
+Included target framework(s) (in package)
+
+
+Learn more about Target Frameworks and .NET Standard.
+
+
+
+
+
+
+
+
+
+
+.NETFramework 4.6.2
+
+
+
+
+Microsoft.Extensions.Configuration
+(>= 8.0.0)
+
+
+
+
+Microsoft.Extensions.ObjectPool
+(>= 8.0.28)
+
+
+
+
+Microsoft.Extensions.Options
+(>= 8.0.2)
+
+
+
+
+
+
+
+
+net10.0
+
+
+
+
+Microsoft.Extensions.Configuration
+(>= 10.0.9)
+
+
+
+
+Microsoft.Extensions.ObjectPool
+(>= 10.0.9)
+
+
+
+
+Microsoft.Extensions.Options
+(>= 10.0.9)
+
+
+
+
+
+
+
+
+net8.0
+
+
+
+
+Microsoft.Extensions.Configuration
+(>= 8.0.0)
+
+
+
+
+Microsoft.Extensions.ObjectPool
+(>= 8.0.28)
+
+
+
+
+Microsoft.Extensions.Options
+(>= 8.0.2)
+
+
+
+
+
+
+
+
+net9.0
+
+
+
+
+Microsoft.Extensions.Configuration
+(>= 9.0.17)
+
+
+
+
+Microsoft.Extensions.ObjectPool
+(>= 9.0.17)
+
+
+
+
+Microsoft.Extensions.Options
+(>= 9.0.17)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NuGet packages (3)
+
+
+
+
+Showing the top 3 NuGet packages that depend on Microsoft.Extensions.ObjectPool.DependencyInjection:
+
+
+
+
+
+
+Package
+Downloads
+
+
+
+
+
+
+
+
+Shinya.Core
+
+
+
+Shinya.Framework
+
+
+
+102.1K
+
+
+
+
+
+
+
+Microsoft.AspNetCore.HeaderParsing
+
+
+
+Strong type header parsing
+
+
+
+16.2K
+
+
+
+
+
+
+
+xSdk.Data
+
+
+xSdk.Data - Base data layer abstractions and common utilities for the xSdk project.
+
+
+
+4.0K
+
+
+
+
+
+
+
+
+GitHub repositories
+
+
+
+
+This package is not used by any popular GitHub repositories.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Include prerelease
+
+
+
+
+
+
+
+Include vulnerable
+
+
+
+
+
+
+
+Include deprecated
+
+
+
+
+
+
+
+
+
+
+Version
+Downloads
+
+Last Updated
+
+
+
+
+
+
+
+
+
+
+
+10.7.0
+
+
+
+149
+
+
+6/9/2026
+
+
+
+
+
+
+
+
+
+
+10.6.0
+
+
+
+2,207
+
+
+5/12/2026
+
+
+
+
+
+
+
+
+
+
+10.5.0
+
+
+
+2,848
+
+
+4/15/2026
+
+
+
+
+
+
+
+
+
+
+10.4.0
+
+
+
+550
+
+
+3/10/2026
+
+
+
+
+
+
+
+
+
+
+10.3.0
+
+
+
+717
+
+
+2/10/2026
+
+
+
+
+
+
+
+
+
+
+10.2.0
+
+
+
+1,452
+
+
+1/13/2026
+
+
+
+
+
+
+
+
+
+
+10.1.0
+
+
+
+1,503
+
+
+12/9/2025
+
+
+
+
+
+
+
+
+
+
+10.0.0
+
+
+
+898
+
+
+11/11/2025
+
+
+
+
+
+
+
+
+
+
+9.10.0
+
+
+
+1,108
+
+
+10/14/2025
+
+
+
+
+
+
+
+
+
+
+9.9.0
+
+
+
+1,049
+
+
+9/9/2025
+
+
+
+
+
+
+
+
+
+
+9.8.0
+
+
+
+463
+
+
+8/12/2025
+
+
+
+
+
+
+
+
+
+
+9.7.0
+
+
+
+560
+
+
+7/8/2025
+
+
+
+
+
+
+
+
+
+
+9.6.0
+
+
+
+685
+
+
+6/10/2025
+
+
+
+
+
+
+
+
+
+
+9.5.0
+
+
+
+676
+
+
+5/13/2025
+
+
+
+
+
+
+
+
+
+
+9.4.0
+
+
+
+2,037
+
+
+4/8/2025
+
+
+
+
+
+
+
+
+
+
+9.3.0
+
+
+
+727
+
+
+3/11/2025
+
+
+
+
+
+
+
+
+
+
+9.2.0
+
+
+
+9,328
+
+
+2/11/2025
+
+
+
+
+
+
+
+
+
+
+9.1.0
+
+
+
+850
+
+
+1/14/2025
+
+
+
+
+
+
+
+
+
+
+9.0.0
+
+
+
+2,047
+
+
+11/12/2024
+
+
+
+
+
+
+
+
+
+
+8.10.0
+
+
+
+4,559
+
+
+10/8/2024
+
+
+
+
+
+
+
+
+
+
+
+
+Load more
+
+Loading failed

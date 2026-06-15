@@ -1,3 +1,9 @@
 <Solution>
-  <Project Path="Utils/Utils.csproj" />
+  <Project Path="Utils.Adapters/Utils.Adapters.csproj" />
+  <Project Path="Utils.Adapters.Demo/Utils.Adapters.Demo.csproj" />
+  <Project Path="Utils.Canalot/Utils.Canalot.csproj" />
+  <Project Path="Utils.Core/Utils.Core.csproj" />
+  <Project Path="Utils.Extensions/Utils.Extensions.csproj" />
+  <Project Path="Utils.SingleExe/Utils.SingleExe.csproj" />
+  <Project Path="Utils.Test/Utils.Test.csproj" />
 </Solution>

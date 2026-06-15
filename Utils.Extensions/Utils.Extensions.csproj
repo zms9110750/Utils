@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<LangVersion>preview</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>zms9110750.Extensions.Utils</RootNamespace>
+		<AssemblyName>zms9110750.Utils.Extensions</AssemblyName>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+ 
+
+	<ItemGroup>
+		<PackageReference Include="zms9110750.StaticMethodAsExtensionGenerator" Version="0.1.1.0" PrivateAssets="all" OutputItemType="Analyzer" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="TupleTaskGetAwaiter.tt">
+			<LastGenOutput>TupleTaskGetAwaiter.cs</LastGenOutput>
+			<Generator>TextTemplatingFileGenerator</Generator>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="TupleTaskGetAwaiter.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>TupleTaskGetAwaiter.tt</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+</Project>

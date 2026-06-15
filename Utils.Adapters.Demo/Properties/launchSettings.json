@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "Program.cs": {
+      "commandName": "Project"
+    },
+    "polly.cs": {
+      "commandName": "Project"
+    },
+    "Utils.Adapters.Demo": {
+      "commandName": "Project"
+    },
+    "AutofacPoolTest.cs": {
+      "commandName": "Project"
+    },
+    "NeverRejectPolicy.cs": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<LangVersion>preview</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>zms9110750.Utils.Adapters</RootNamespace>
+		<AssemblyName>zms9110750.Utils.Adapters</AssemblyName>
+		<Nullable>enable</Nullable>
+		<NoWarn>$(NoWarn);IDE0130</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.8" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="10.0.8" PrivateAssets="all" />
+		<PackageReference Include="Autofac.Pooling" Version="*" PrivateAssets="all" />
+		<PackageReference Include="Autofac" Version="9.1.0" />
+		<PackageReference Include="Polly.Core" Version="8.4.2" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
+		<PackageReference Include="NeoSmart.Caching.Sqlite.AspNetCore" Version="9.*" PrivateAssets="all" />
+		<PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" Version="2.6.0" PrivateAssets="all" />
+	</ItemGroup>
+
+</Project>
