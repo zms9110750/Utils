@@ -14,15 +14,13 @@ public class Dice
     {
         if (args.Length == 0)
         {
-            RunInteractive();
-            return;
+            RunInteractive(); return;
         }
         foreach (var arg in args)
         {
             if (arg.Trim().ToLowerInvariant() is "-?" or "-h" or "-help" or "--help")
             {
-                PrintHelp();
-                return;
+                PrintHelp(); return;
             }
         }
         foreach (var arg in args)
@@ -49,7 +47,11 @@ public class Dice
                 break;
             }
 
-            if (line.Trim().ToLowerInvariant() is "-?" or "-h" or "-help" or "--help") { PrintHelp(); continue; }
+            if (line.Trim().ToLowerInvariant() is "-?" or "-h" or "-help" or "--help")
+            {
+                PrintHelp();
+                continue;
+            }
             Console.WriteLine(Expr.Parse(line.Trim()));
         }
     }
@@ -110,7 +112,8 @@ public abstract class Expr
             case 2:
                 return new CompareExpr(
                     NamedExpr.Parse(s[ranges[0]].Trim()),
-                    NamedExpr.Parse(s[ranges[1]].Trim())) { RawValue = s.ToString() };
+                    NamedExpr.Parse(s[ranges[1]].Trim()))
+                { RawValue = s.ToString() };
             default:
                 var items = new NamedExpr[count];
                 for (int i = 0; i < count; i++)
@@ -125,12 +128,8 @@ public abstract class Expr
 /// <summary>两路比较表达式：A v B。按命名情况决定输出视角。</summary>
 public class CompareExpr : Expr
 {
-    /// <summary>左侧表达式。</summary>
     public Expr Left { get; }
-    /// <summary>右侧表达式。</summary>
     public Expr Right { get; }
-    /// <param name="left">左侧表达式。</param>
-    /// <param name="right">右侧表达式。</param>
     public CompareExpr(Expr left, Expr right)
     {
         Left = left;
@@ -174,9 +173,7 @@ public class CompareExpr : Expr
 /// <summary>多路比较表达式：A v B v C ...。按值降序排列输出。</summary>
 public class MulCompareExpr : Expr
 {
-    /// <summary>所有参与比较的命名表达式。</summary>
     public NamedExpr[] Items { get; }
-    /// <param name="items">参与比较的表达式数组。</param>
     public MulCompareExpr(NamedExpr[] items)
     {
         Items = items;
@@ -184,19 +181,24 @@ public class MulCompareExpr : Expr
     public override string ToString()
     {
         var r = Items.OrderByDescending(x => x.Inner.Value).ToArray();
-        return $"{r[0].Name} ={r[0].Inner.Value}>{string.Join(" >", r.Skip(1).Select(x => $" {x.Name}={x.Inner.Value}"))}";
+        var sb = new StringBuilder();
+        for (int i = 0; i < r.Length; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append(r[i - 1].Inner.Value > r[i].Inner.Value ? " > " : " = ");
+            }
+            sb.Append(r[i].Name).Append('[').Append(r[i].Inner.Value).Append(']');
+        }
+        return sb.ToString();
     }
 }
 
 /// <summary>命名表达式，为运算表达式附加一个显示名称。</summary>
 public class NamedExpr : Expr
 {
-    /// <summary>显示名称（显式或自动生成的索引名）。</summary>
     public string Name { get; }
-    /// <summary>被包装的运算表达式。</summary>
     public NumExpr Inner { get; }
-    /// <param name="name">显示名称。</param>
-    /// <param name="inner">被包装的运算表达式。</param>
     public NamedExpr(string name, NumExpr inner)
     {
         Name = name;
@@ -207,7 +209,6 @@ public class NamedExpr : Expr
         return $"{Name} = {Inner}";
     }
 
-    /// <summary>解析表达式，可选索引用于自动命名。</summary>
     public static Expr Parse(ReadOnlySpan<char> s, int index = -1)
     {
         s = s.Trim();
@@ -227,45 +228,96 @@ public class NamedExpr : Expr
 /// <summary>所有可以计算出一个整数值的表达式类型的抽象基类。</summary>
 public abstract class NumExpr : Expr
 {
-    /// <summary>表达式的计算结果值。</summary>
+    private const int PREC_ADD = 10;
+    private const int PREC_MUL = 20;
+    private const int PREC_DICE = 30;
+
     public abstract int Value { get; }
-    /// <summary>将计算过程描述追加到 StringBuilder 中。</summary>
     public abstract StringBuilder BuildDetail(StringBuilder sb);
     public override string ToString()
     {
-        var sb = new StringBuilder(); BuildDetail(sb); sb.Append(" = "); sb.Append(Value); return sb.ToString();
+        var sb = new StringBuilder();
+        BuildDetail(sb);
+        sb.Append(" = ");
+        sb.Append(Value);
+        return sb.ToString();
     }
 
     /// <summary>入口：整体解析一个数值表达式。调用方需传入已 trim 的 span。</summary>
     public static new NumExpr Parse(ReadOnlySpan<char> s)
     {
         s = s.Trim();
-        if (s.IsEmpty)
-        {
-            throw new FormatException("表达式为空");
-        }
-
-        var result = BinOpExpr.ParseAddSub(s);
+        if (s.IsEmpty) throw new FormatException("表达式为空");
+        var result = ParseExpr(s, 0);
         var rest = s[result.RawValue.Length..].Trim();
         if (rest.Length > 0)
-        {
             throw new FormatException("多余的输入: " + new string(rest));
-        }
-
         return result;
     }
 
-    /// <summary>解析基本元素（常量、括号、列表）。调用方需传入已 trim 的 span。</summary>
-    internal static NumExpr ParsePrimary(ReadOnlySpan<char> s)
+    /// <summary>Pratt 解析主循环。s 需已 trim（无前导空白）。</summary>
+    internal static NumExpr ParseExpr(ReadOnlySpan<char> s, int minPrec)
     {
-        s = s.TrimStart();
-        if (s.IsEmpty)
+        var now = ParseAtomic(s);
+
+        while (true)
         {
-            throw new FormatException("表达式不完整");
+            var rest = s[now.RawValue.Length..];
+            if (rest.IsEmpty) break;
+
+            int prec = rest[0] switch
+            {
+                'd' => PREC_DICE,
+                '*' or '/' => PREC_MUL,
+                '+' or '-' => PREC_ADD,
+                _ => -1
+            };
+            if (prec < minPrec) break;
+
+            if (rest[0] == 'd')
+            {
+                var sides = ParseExpr(rest[1..], PREC_MUL);
+                int diceLen = now.RawValue.Length + 1 + sides.RawValue.Length;
+                now = new DiceExpr(now, sides) { RawValue = s[..diceLen].ToString() };
+
+                var after = s[diceLen..];
+                if (after is ['t' or 'l', ..])
+                {
+                    now = ParseAdvantageSuffix(s, (DiceExpr)now, diceLen, after);
+                }
+            }
+            else
+            {
+                var right = ParseExpr(rest[1..], prec);
+                int consumed = now.RawValue.Length + 1 + right.RawValue.Length;
+                now = new BinOpExpr(now, rest[0], right) { RawValue = s[..consumed].ToString() };
+            }
+        }
+        return now;
+    }
+
+    /// <summary>解析基本元素：数字 / 括号 / 括号列表 / 裸骰。s 不允许前导空白。</summary>
+    private static NumExpr ParseAtomic(ReadOnlySpan<char> s)
+    {
+        if (s.IsEmpty) throw new FormatException("表达式不完整");
+
+        if (s is ['d', ..])
+        {
+            var sides = ParseExpr(s[1..], PREC_MUL);
+            int diceLen = 1 + sides.RawValue.Length;
+            var dice = new DiceExpr(new ConstExpr(1) { RawValue = "" }, sides) { RawValue = s[..diceLen].ToString() };
+
+            var after = s[diceLen..];
+            if (after is ['t' or 'l', ..])
+            {
+                return ParseAdvantageSuffix(s, dice, diceLen, after);
+            }
+            return dice;
         }
 
-        return s[0] switch {
-            >= '0' and <= '9' => ConstExpr.Parse(s),
+        return s[0] switch
+        {
+            >= '0' and <= '9' => ParseNumber(s),
             '(' => ParenExpr.ParseContent(s),
             '[' => MinExpr.Parse(s),
             '{' => MaxExpr.Parse(s),
@@ -273,15 +325,34 @@ public abstract class NumExpr : Expr
         };
     }
 
-    /// <summary>解析括号/方括号/花括号内逗号分隔的条目列表，返回 NumExpr 数组。</summary>
+    private static NumExpr ParseNumber(ReadOnlySpan<char> s)
+    {
+        int len = 0;
+        while (len < s.Length && char.IsAsciiDigit(s[len])) len++;
+        return new ConstExpr(int.Parse(s[..len])) { RawValue = s[..len].ToString() };
+    }
+
+    private static NumExpr ParseAdvantageSuffix(ReadOnlySpan<char> fullSpan, DiceExpr dice, int diceLen, ReadOnlySpan<char> after)
+    {
+        bool takeHighest = after[0] == 't';
+        after = after[1..];
+        NumExpr groups = AdvExpr.DefaultGroups;
+        int suffixLen = 1;
+        if (after is [_, ..] && char.IsAsciiDigit(after[0]))
+        {
+            int len = 0;
+            while (len < after.Length && char.IsAsciiDigit(after[len])) len++;
+            groups = new ConstExpr(int.Parse(after[..len])) { RawValue = "" };
+            suffixLen += len;
+        }
+        return new AdvExpr(dice, takeHighest, groups) { RawValue = fullSpan[..(diceLen + suffixLen)].ToString() };
+    }
+
     internal static NumExpr[] ParseBracketItems(ReadOnlySpan<char> s, char open, char close)
     {
         int end = FindMatchingClose(s, 1, open, close);
         var inner = s.Slice(1, end - 1);
-        if (inner.IsEmpty)
-        {
-            throw new FormatException($"空列表 {open}{close}");
-        }
+        if (inner.IsEmpty) throw new FormatException($"空列表 {open}{close}");
 
         var list = new List<NumExpr>();
         int depth = 0, start = 0;
@@ -292,15 +363,11 @@ public abstract class NumExpr : Expr
                 case '(' or '[' or '{': depth++; break;
                 case ')' or ']' or '}': depth--; break;
                 case ',' when depth == 0:
-                    list.Add(BinOpExpr.ParseAddSub(inner.Slice(start, i - start).Trim()));
-                    start = i + 1; break;
+                    list.Add(ParseExpr(inner.Slice(start, i - start).Trim(), 0)); start = i + 1; break;
             }
         }
         if (start <= inner.Length)
-        {
-            list.Add(BinOpExpr.ParseAddSub(inner.Slice(start).Trim()));
-        }
-
+            list.Add(ParseExpr(inner.Slice(start).Trim(), 0));
         return list.ToArray();
     }
 
@@ -309,19 +376,9 @@ public abstract class NumExpr : Expr
         int depth = 1;
         for (int i = start; i < s.Length; i++)
         {
-            if (s[i] == open)
-            {
-                depth++;
-            }
-            else if (s[i] == close)
-            {
-                depth--;
-            }
-
-            if (depth == 0)
-            {
-                return i;
-            }
+            if (s[i] == open) depth++;
+            else if (s[i] == close) depth--;
+            if (depth == 0) return i;
         }
         throw new FormatException("缺少匹配的 " + close);
     }
@@ -331,19 +388,14 @@ public abstract class NumExpr : Expr
 public class ConstExpr : NumExpr
 {
     public override int Value { get; }
-    public ConstExpr(int value) { Value = value; }
-    public override StringBuilder BuildDetail(StringBuilder sb) { sb.Append(Value); return sb; }
-
-    /// <summary>解析数字常量。s 需已 trim。</summary>
-    internal static new NumExpr Parse(ReadOnlySpan<char> s)
+    public ConstExpr(int value)
     {
-        int len = 0;
-        while (len < s.Length && char.IsAsciiDigit(s[len]))
-        {
-            len++;
-        }
-
-        return new ConstExpr(int.Parse(s[..len])) { RawValue = s[..len].ToString() };
+        Value = value;
+    }
+    public override StringBuilder BuildDetail(StringBuilder sb)
+    {
+        sb.Append(Value);
+        return sb;
     }
 }
 
@@ -351,16 +403,26 @@ public class ConstExpr : NumExpr
 public class MinExpr : NumExpr
 {
     public NumExpr[] Items { get; }
-    public MinExpr(NumExpr[] items) { Items = items; }
+    public MinExpr(NumExpr[] items)
+    {
+        Items = items;
+    }
     public override int Value => Items.Min(e => e.Value);
     public override StringBuilder BuildDetail(StringBuilder sb)
     {
         sb.Append('[');
-        for (int i = 0; i < Items.Length; i++) { if (i > 0) { sb.Append(", "); } Items[i].BuildDetail(sb); }
-        sb.Append(']'); return sb;
+        for (int i = 0; i < Items.Length; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append(", ");
+            }
+            Items[i].BuildDetail(sb);
+        }
+        sb.Append(']');
+        return sb;
     }
 
-    /// <summary>解析中括号列表。s 需已 trim 且 s[0] == '['。</summary>
     internal static new NumExpr Parse(ReadOnlySpan<char> s)
     {
         var items = NumExpr.ParseBracketItems(s, '[', ']');
@@ -373,16 +435,26 @@ public class MinExpr : NumExpr
 public class MaxExpr : NumExpr
 {
     public NumExpr[] Items { get; }
-    public MaxExpr(NumExpr[] items) { Items = items; }
+    public MaxExpr(NumExpr[] items)
+    {
+        Items = items;
+    }
     public override int Value => Items.Max(e => e.Value);
     public override StringBuilder BuildDetail(StringBuilder sb)
     {
         sb.Append('{');
-        for (int i = 0; i < Items.Length; i++) { if (i > 0) { sb.Append(", "); } Items[i].BuildDetail(sb); }
-        sb.Append('}'); return sb;
+        for (int i = 0; i < Items.Length; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append(", ");
+            }
+            Items[i].BuildDetail(sb);
+        }
+        sb.Append('}');
+        return sb;
     }
 
-    /// <summary>解析花括号列表。s 需已 trim 且 s[0] == '{'。</summary>
     internal static new NumExpr Parse(ReadOnlySpan<char> s)
     {
         var items = NumExpr.ParseBracketItems(s, '{', '}');
@@ -394,11 +466,8 @@ public class MaxExpr : NumExpr
 /// <summary>二元算术运算表达式：左 Op 右。</summary>
 public class BinOpExpr : NumExpr
 {
-    /// <summary>左操作数。</summary>
     public NumExpr Left { get; }
-    /// <summary>运算符：'+' '-' '*' '/'。</summary>
     public char Op { get; }
-    /// <summary>右操作数。</summary>
     public NumExpr Right { get; }
     public BinOpExpr(NumExpr left, char op, NumExpr right)
     {
@@ -406,7 +475,8 @@ public class BinOpExpr : NumExpr
         Op = op;
         Right = right;
     }
-    public override int Value => Op switch {
+    public override int Value => Op switch
+    {
         '+' => Left.Value + Right.Value,
         '-' => Left.Value - Right.Value,
         '*' => Left.Value * Right.Value,
@@ -415,106 +485,19 @@ public class BinOpExpr : NumExpr
     };
     public override StringBuilder BuildDetail(StringBuilder sb)
     {
-        Left.BuildDetail(sb); sb.Append(' '); sb.Append(Op); sb.Append(' '); Right.BuildDetail(sb); return sb;
-    }
-
-    /// <summary>解析加减。s 需已 trim。</summary>
-    internal static NumExpr ParseAddSub(ReadOnlySpan<char> s)
-    {
-        var left = ParseMulDiv(s);
-        var rest = s[left.RawValue.Length..].TrimStart();
-        while (rest is ['+' or '-', ..])
-        {
-            char op = rest[0];
-            var right = ParseMulDiv(rest[1..].TrimStart());
-            int consumed = left.RawValue.Length + 1 + right.RawValue.Length;
-            left = new BinOpExpr(left, op, right) { RawValue = s[..consumed].ToString() };
-            rest = s[consumed..].TrimStart();
-        }
-        return left;
-    }
-
-    /// <summary>解析乘除。s 需已 trim。</summary>
-    internal static NumExpr ParseMulDiv(ReadOnlySpan<char> s)
-    {
-        var left = ParseDice(s.TrimStart());
-        s = s.TrimStart();
-        var rest = s[left.RawValue.Length..].TrimStart();
-        while (rest is ['*' or '/', ..])
-        {
-            char op = rest[0];
-            var right = ParseDice(rest[1..].TrimStart());
-            int consumed = left.RawValue.Length + 1 + right.RawValue.Length;
-            left = new BinOpExpr(left, op, right) { RawValue = s[..consumed].ToString() };
-            rest = s[consumed..].TrimStart();
-        }
-        return left;
-    }
-
-    /// <summary>解析骰子表达式（含优势/劣势），若无骰子则回退到基本元素。s 需已 trim。</summary>
-    internal static NumExpr ParseDice(ReadOnlySpan<char> s)
-    {
-        s = s.TrimStart();
-        // 无前缀数字的裸骰：d20
-        if (s is ['d', ..])
-        {
-            var sides = ParseDice(s[1..].TrimStart());
-            var dice = new DiceExpr(new ConstExpr(1) { RawValue = "" }, sides) { RawValue = "" };
-            int diceLen = 1 + sides.RawValue.Length;
-            return TryParseAdvantage(s, dice, diceLen, s.Length);
-        }
-
-        // 先解析基本元素，再判断是否接 d
-        var left = ParsePrimary(s);
-        int leftLen = left.RawValue.Length;
-        var after = s[leftLen..].TrimStart();
-        if (after is ['d', ..])
-        {
-            var sides = ParseDice(after[1..].TrimStart());
-            var dice = new DiceExpr(left, sides) { RawValue = "" };
-            int diceLen = leftLen + 1 + sides.RawValue.Length;
-            return TryParseAdvantage(s, dice, diceLen, s.Length);
-        }
-        return left;
-    }
-
-    /// <summary>解析骰子后可能跟的 t/l 优势/劣势后缀。若匹配则返回 AdvExpr，否则返回原 DiceExpr。</summary>
-    private static NumExpr TryParseAdvantage(ReadOnlySpan<char> s, DiceExpr dice, int diceLen, int totalLen)
-    {
-        var after = s[diceLen..].TrimStart();
-        if (after is ['t' or 'l', ..])
-        {
-            bool takeHighest = after[0] == 't';
-            after = after[1..].TrimStart();
-            NumExpr groups = AdvExpr.DefaultGroups;
-            int suffixLen = 1;
-            if (after is [_, ..] && char.IsAsciiDigit(after[0]))
-            {
-                int len = 0;
-                while (len < after.Length && char.IsAsciiDigit(after[len]))
-                {
-                    len++;
-                }
-
-                groups = new ConstExpr(int.Parse(after[..len])) { RawValue = "" };
-                suffixLen += len;
-            }
-            int totalConsumed = diceLen + 1 + (suffixLen - 1); // t/l = 1 + group digits
-            // Recalculate: diceLen is chars up to after[d suffix], suffixLen is t/l + digits
-            // totalConsumed = diceLen + (1 for t/l) + (group digits if any)
-            int advLen = diceLen + suffixLen;
-            return new AdvExpr(dice, takeHighest, groups) { RawValue = s[..advLen].ToString() };
-        }
-        return new DiceExpr(dice.CountExpr, dice.SidesExpr) { RawValue = s[..diceLen].ToString() };
+        Left.BuildDetail(sb);
+        sb.Append(' ');
+        sb.Append(Op);
+        sb.Append(' ');
+        Right.BuildDetail(sb);
+        return sb;
     }
 }
 
 /// <summary>普通骰子掷法表达式：XdY，如 4d6。</summary>
 public class DiceExpr : NumExpr
 {
-    /// <summary>骰子个数表达式。</summary>
     public NumExpr CountExpr { get; }
-    /// <summary>骰子面数表达式。</summary>
     public NumExpr SidesExpr { get; }
     public DiceExpr(NumExpr count, NumExpr sides)
     {
@@ -535,7 +518,6 @@ public class DiceExpr : NumExpr
         {
             sb.Append('[').Append(string.Join(", ", r.Take(5))).Append(", ... ").Append(r.Count - 5).Append(" more]");
         }
-
         return sb;
     }
 }
@@ -543,13 +525,9 @@ public class DiceExpr : NumExpr
 /// <summary>优势/劣势骰子表达式：XdYtZ（取高）或 XdYlZ（取低）。</summary>
 public class AdvExpr : NumExpr
 {
-    /// <summary>默认投掷组数 Z。</summary>
     public static readonly NumExpr DefaultGroups = new ConstExpr(2) { RawValue = "" };
-    /// <summary>基骰表达式，如 4d6。</summary>
     public DiceExpr BaseDice { get; }
-    /// <summary>true 为取高（优势 t），false 为取低（劣势 l）。</summary>
     public bool TakeHighest { get; }
-    /// <summary>投掷组数 Z。</summary>
     public NumExpr Groups { get; }
     public AdvExpr(DiceExpr baseDice, bool takeHighest, NumExpr groups)
     {
@@ -573,56 +551,49 @@ public class AdvExpr : NumExpr
 /// <summary>括号分组表达式：(Expr)。</summary>
 public class ParenExpr : NumExpr
 {
-    /// <summary>括号内的子表达式。</summary>
     public NumExpr Inner { get; }
-    public ParenExpr(NumExpr inner) { Inner = inner; }
+    public ParenExpr(NumExpr inner)
+    {
+        Inner = inner;
+    }
     public override int Value => Inner.Value;
-    public override StringBuilder BuildDetail(StringBuilder sb) { sb.Append('('); Inner.BuildDetail(sb); sb.Append(')'); return sb; }
+    public override StringBuilder BuildDetail(StringBuilder sb)
+    {
+        sb.Append('(');
+        Inner.BuildDetail(sb);
+        sb.Append(')');
+        return sb;
+    }
 
-    /// <summary>解析完整括号表达式。s 需已 trim。</summary>
     public static new ParenExpr Parse(ReadOnlySpan<char> s)
     {
         var result = ParseContent(s);
         var rest = s[result.RawValue.Length..].Trim();
         if (rest.Length > 0)
-        {
             throw new FormatException("括号后有多余内容: " + new string(rest));
-        }
-
         return result;
     }
 
-    /// <summary>解析括号内容，返回 ParenExpr。s 需已 trim 且 s[0] == '('。</summary>
     public static ParenExpr ParseContent(ReadOnlySpan<char> s)
     {
         if (s.IsEmpty || s[0] != '(')
-        {
             throw new FormatException("无效括号表达式: " + new string(s));
-        }
 
         int close = NumExpr.FindMatchingClose(s, 1, '(', ')');
         var inner = s.Slice(1, close - 1);
-        // 剥去冗余括号：((expr)) → (expr)
         while (inner.Length > 0 && inner[0] == '(')
         {
             int innerClose = NumExpr.FindMatchingClose(inner, 1, '(', ')');
             if (innerClose == inner.Length - 1)
-            {
                 inner = inner.Slice(1, innerClose - 1);
-            }
-            else
-            {
-                break;
-            }
+            else break;
         }
-        var innerExpr = BinOpExpr.ParseAddSub(inner);
+        var innerExpr = NumExpr.ParseExpr(inner, 0);
         if (inner.Length > innerExpr.RawValue.Length)
         {
             var check = inner[innerExpr.RawValue.Length..].Trim();
             if (check.Length > 0)
-            {
                 throw new FormatException("括号内有多余内容: " + new string(check));
-            }
         }
         return new ParenExpr(innerExpr) { RawValue = s[..(close + 1)].ToString() };
     }
