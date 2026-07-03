@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Dice.cs": {
+      "commandName": "Project"
+    },
+    "Pick.cs": {
+      "commandName": "Project"
+    }
+  }
+}

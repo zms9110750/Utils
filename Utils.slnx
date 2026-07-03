@@ -1,9 +1,11 @@
 <Solution>
-  <Project Path="Utils.Adapters/Utils.Adapters.csproj" />
-  <Project Path="Utils.Adapters.Demo/Utils.Adapters.Demo.csproj" />
-  <Project Path="Utils.Canalot/Utils.Canalot.csproj" />
-  <Project Path="Utils.Core/Utils.Core.csproj" />
-  <Project Path="Utils.Extensions/Utils.Extensions.csproj" />
-  <Project Path="Utils.SingleExe/Utils.SingleExe.csproj" />
-  <Project Path="Utils.Test/Utils.Test.csproj" />
+
+  <Project Path="src/Utils.Adapters/Utils.Adapters.csproj" />
+  <Project Path="src/Utils.Canalot/Utils.Canalot.csproj" />
+  <Project Path="src/Utils.Core/Utils.Core.csproj" />
+  <Project Path="src/Utils.Extensions/Utils.Extensions.csproj" />
+  <Project Path="src/Utils.SingleExe/Utils.SingleExe.csproj" />
+  <Project Path="samples/Utils.Adapters.Demo/Utils.Adapters.Demo.csproj" />
+  <Project Path="samples/GameDemo/GameDemo.csproj" />
+  <Project Path="test/Utils.Test/Utils.Test.csproj" />
 </Solution>
