@@ -12,32 +12,7 @@ public class ReplacementPicker<T> : BasePicker<T>
     /// <summary>构造可放回抽取器。Key=名称，Value=V值。</summary>
     public ReplacementPicker(IReadOnlyDictionary<T, int> items)
     {
-        var sorted = items
-            .Select(kvp => (kvp.Key, kvp.Value))
-            .OrderBy(x => x.Value).ThenBy(x => x.Key)
-            .ToList();
-
-        var names = new List<T>(sorted.Count);
-        var ranges = new SortedList<int, ValueRange>();
-        int start = 0;
-        int? lastVal = null;
-
-        for (int i = 0; i < sorted.Count; i++)
-        {
-            var (name, val) = sorted[i];
-            names.Add(name);
-            if (lastVal != null && val != lastVal)
-            {
-                ranges[lastVal.Value] = new ValueRange(start, i, i - start);
-                start = i;
-            }
-            lastVal = val;
-        }
-        if (sorted.Count > 0)
-        {
-            ranges[lastVal!.Value] = new ValueRange(start, sorted.Count, sorted.Count - start);
-        }
-
+        var (names, ranges) = BuildStructure(items);
         _names = names.ToImmutableList();
         _ranges = ranges;
     }

@@ -1,5 +1,3 @@
-﻿using System.Buffers;
-
 namespace zms9110750.Utils.Core.Primitives;
 
 public class ProgressStream : Stream
@@ -28,20 +26,17 @@ public class ProgressStream : Stream
 
     public override long Length => innerStream.Length;
 
-    public override long Position
-    {
+    public override long Position {
         get => innerStream.Position;
         set => innerStream.Position = value;
     }
 
-    public override int ReadTimeout
-    {
+    public override int ReadTimeout {
         get => innerStream.ReadTimeout;
         set => innerStream.ReadTimeout = value;
     }
 
-    public override int WriteTimeout
-    {
+    public override int WriteTimeout {
         get => innerStream.WriteTimeout;
         set => innerStream.WriteTimeout = value;
     }
@@ -214,11 +209,9 @@ public class ProgressStream : Stream
     /// <summary>
     /// 获取或设置已读取的总字节数
     /// </summary>
-    public long TotalBytesRead
-    {
+    public long TotalBytesRead {
         get => Interlocked.Read(ref totalBytesRead);
-        set
-        {
+        set {
             lockSlim.EnterWriteLock();
             try
             {
@@ -239,11 +232,9 @@ public class ProgressStream : Stream
     /// <summary>
     /// 获取或设置已写入的总字节数
     /// </summary>
-    public long TotalBytesWritten
-    {
+    public long TotalBytesWritten {
         get => Interlocked.Read(ref totalBytesWritten);
-        set
-        {
+        set {
             lockSlim.EnterWriteLock();
             try
             {

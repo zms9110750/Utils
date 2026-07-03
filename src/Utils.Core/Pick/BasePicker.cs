@@ -35,6 +35,39 @@ public abstract class BasePicker<T>
         PointMax = pMax;
     }
 
+    /// <summary>构建名称列表和 V 值索引范围。子类构造器共用。</summary>
+    protected static (List<T> names, SortedList<int, ValueRange> ranges) BuildStructure(
+        IReadOnlyDictionary<T, int> items)
+    {
+        var sorted = items
+            .OrderBy(x => x.Value)
+            .ThenBy(x => x.Key)
+            .ToList();
+
+        var names = new List<T>(sorted.Count);
+        var ranges = new SortedList<int, ValueRange>();
+        int start = 0;
+        int? lastVal = null;
+
+        for (int i = 0; i < sorted.Count; i++)
+        {
+            var (name, val) = sorted[i];
+            names.Add(name);
+            if (lastVal != null && val != lastVal)
+            {
+                ranges[lastVal.Value] = new ValueRange(start, i, i - start);
+                start = i;
+            }
+            lastVal = val;
+        }
+        if (sorted.Count > 0)
+        {
+            ranges[lastVal!.Value] = new ValueRange(start, sorted.Count, sorted.Count - start);
+        }
+
+        return (names, ranges);
+    }
+
     /// <summary>在 [Low, High] 中随机选一个 key（V 值）。</summary>
     protected int SelectKey()
     {

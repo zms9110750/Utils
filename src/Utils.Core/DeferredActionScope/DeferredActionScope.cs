@@ -1,5 +1,3 @@
-﻿using System.Collections;
-
 namespace zms9110750.Utils.Core.Primitives;
 
 /// <summary>
