@@ -1,17 +1,23 @@
 #if NET6_0_OR_GREATER
 namespace zms9110750.Utils.Core.Pick;
 
-/// <summary>ÖµÔÚÅÅĞòÁĞ±íÖĞµÄË÷Òı·¶Î§¡£</summary>
+/// <summary>å€¼åœ¨æ’åºåˆ—è¡¨ä¸­çš„ç´¢å¼•èŒƒå›´ã€‚</summary>
 public readonly record struct ValueRange(int Start, int End, int Count)
 {
-	/// <summary>ÒÆ³ıË÷ÒıºóÆ«ÒÆ¡£Start>removedIdx ÕûÌå×óÒÆ£¬End>removedIdx ¼õ Count¡£</summary>
-	public ValueRange ShiftLeft(int removedIdx)
-	{
-		if (Start > removedIdx)
-			return new(Start - 1, End - 1, Count);
-		if (End > removedIdx)
-			return new(Start, End - 1, Count - 1);
-		return this;
-	}
+    /// <summary>ç§»é™¤ç´¢å¼•ååç§»ã€‚Start>removedIdx æ•´ä½“å·¦ç§»ï¼ŒEnd>removedIdx å‡ Countã€‚</summary>
+    public ValueRange ShiftLeft(int removedIdx)
+    {
+        if (Start > removedIdx)
+        {
+            return new(Start - 1, End - 1, Count);
+        }
+
+        if (End > removedIdx)
+        {
+            return new(Start, End - 1, Count - 1);
+        }
+
+        return this;
+    }
 }
 #endif

@@ -1,67 +1,73 @@
 #if NET6_0_OR_GREATER
 namespace zms9110750.Utils.Core.Pick;
 
-/// <summary>Çø¼äÔ¼ÊøËæ»ú³éÈ¡»ùÀà¡£Íâ²¿Ñ­»·£ºSetConstraints + ·´¸´ Pick()¡£</summary>
+/// <summary>åŒºé—´çº¦æŸéšæœºæŠ½å–åŸºç±»ã€‚å¤–éƒ¨å¾ªç¯ï¼šSetConstraints + åå¤ Pick()ã€‚</summary>
 public abstract class BasePicker<T>
 {
-	/// <summary>ËùÓĞÏîµÄÃû³ÆÁĞ±í£¨°´ V ÖµÉıĞò£©¡£</summary>
-	public abstract IReadOnlyList<T> Names { get; }
-	/// <summary>V Öµµ½Ë÷Òı·¶Î§µÄÓ³Éä¡£Key=V£¬Value=ÔÚ Names ÖĞµÄ·¶Î§¡£</summary>
-	public abstract IReadOnlyDictionary<int, ValueRange> ValueRanges { get; }
+    /// <summary>æ‰€æœ‰é¡¹çš„åç§°åˆ—è¡¨ï¼ˆæŒ‰ V å€¼å‡åºï¼‰ã€‚</summary>
+    public abstract IReadOnlyList<T> Names { get; }
+    /// <summary>V å€¼åˆ°ç´¢å¼•èŒƒå›´çš„æ˜ å°„ã€‚Key=Vï¼ŒValue=åœ¨ Names ä¸­çš„èŒƒå›´ã€‚</summary>
+    public abstract IReadOnlyDictionary<int, ValueRange> ValueRanges { get; }
 
-	/// <summary>Ê£Óà¿ÉÈ¡ÊıÁ¿ÏÂÏŞ¡£</summary>
-	public int CountMin { get; protected set; }
-	/// <summary>Ê£Óà¿ÉÈ¡ÊıÁ¿ÉÏÏŞ¡£</summary>
-	public int CountMax { get; protected set; }
-	/// <summary>Ê£ÓàµãÊıºÍÏÂÏŞ¡£</summary>
-	public int PointMin { get; protected set; }
-	/// <summary>Ê£ÓàµãÊıºÍÉÏÏŞ¡£</summary>
-	public int PointMax { get; protected set; }
+    /// <summary>å‰©ä½™å¯å–æ•°é‡ä¸‹é™ã€‚</summary>
+    public int CountMin { get; protected set; }
+    /// <summary>å‰©ä½™å¯å–æ•°é‡ä¸Šé™ã€‚</summary>
+    public int CountMax { get; protected set; }
+    /// <summary>å‰©ä½™ç‚¹æ•°å’Œä¸‹é™ã€‚</summary>
+    public int PointMin { get; protected set; }
+    /// <summary>å‰©ä½™ç‚¹æ•°å’Œä¸Šé™ã€‚</summary>
+    public int PointMax { get; protected set; }
 
-	/// <summary>µ±Ç°²½¿ÉĞĞ V ÖµÏÂÏŞ£¨×ÓÀàÊµÏÖ£©¡£</summary>
-	public abstract int Low { get; }
-	/// <summary>µ±Ç°²½¿ÉĞĞ V ÖµÉÏÏŞ£¨×ÓÀàÊµÏÖ£©¡£</summary>
-	public abstract int High { get; }
+    /// <summary>å½“å‰æ­¥å¯è¡Œ V å€¼ä¸‹é™ï¼ˆå­ç±»å®ç°ï¼‰ã€‚</summary>
+    public abstract int Low { get; }
+    /// <summary>å½“å‰æ­¥å¯è¡Œ V å€¼ä¸Šé™ï¼ˆå­ç±»å®ç°ï¼‰ã€‚</summary>
+    public abstract int High { get; }
 
-	protected int MinVal => ValueRanges.Keys.Min();
-	protected int MaxVal => ValueRanges.Keys.Max();
+    protected int MinVal => ValueRanges.Keys.Min();
+    protected int MaxVal => ValueRanges.Keys.Max();
 
-	/// <summary>ÉèÖÃÔ¼Êø²¢¿ªÊ¼Ò»´ÎĞÂ³éÈ¡¡£</summary>
-	public void SetConstraints(int cMin, int cMax, int pMin, int pMax)
-	{
-		CountMin = cMin;
-		CountMax = cMax;
-		PointMin = pMin;
-		PointMax = pMax;
-	}
+    /// <summary>è®¾ç½®çº¦æŸå¹¶å¼€å§‹ä¸€æ¬¡æ–°æŠ½å–ã€‚</summary>
+    public void SetConstraints(int cMin, int cMax, int pMin, int pMax)
+    {
+        CountMin = cMin;
+        CountMax = cMax;
+        PointMin = pMin;
+        PointMax = pMax;
+    }
 
-	/// <summary>ÔÚ [Low, High] ÖĞËæ»úÑ¡Ò»¸ö key£¨V Öµ£©¡£</summary>
-	protected int SelectKey()
-	{
-		int lo = Low, hi = High;
-		var candidates = new List<int>();
-		foreach (var kvp in ValueRanges)
-			if (kvp.Key >= lo && kvp.Key <= hi)
-				candidates.Add(kvp.Key);
+    /// <summary>åœ¨ [Low, High] ä¸­éšæœºé€‰ä¸€ä¸ª keyï¼ˆV å€¼ï¼‰ã€‚</summary>
+    protected int SelectKey()
+    {
+        int lo = Low, hi = High;
+        var candidates = new List<int>();
+        foreach (var kvp in ValueRanges)
+        {
+            if (kvp.Key >= lo && kvp.Key <= hi)
+            {
+                candidates.Add(kvp.Key);
+            }
+        }
 
-		if (candidates.Count == 0)
-			throw new InvalidOperationException($"ÎŞ¿ÉĞĞºòÑ¡ [Low={lo}, High={hi}]");
+        if (candidates.Count == 0)
+        {
+            throw new InvalidOperationException($"æ— å¯è¡Œå€™é€‰ [Low={lo}, High={hi}]");
+        }
 
-		return candidates[Random.Shared.Next(candidates.Count)];
-	}
+        return candidates[Random.Shared.Next(candidates.Count)];
+    }
 
-	/// <summary>°´µ±Ç°Ô¼ÊøËæ»ú³éÈ¡Ò»Ïî¡£ÄÚ²¿×Ô¼õÔ¼ÊøÖµ¡£</summary>
-	public virtual T Pick()
-	{
-		int key = SelectKey();
-		var range = ValueRanges[key];
-		int idx = Random.Shared.Next(range.Start, range.End);
-		T picked = Names[idx];
-		CountMin--;
-		CountMax--;
-		PointMin -= key;
-		PointMax -= key;
-		return picked;
-	}
+    /// <summary>æŒ‰å½“å‰çº¦æŸéšæœºæŠ½å–ä¸€é¡¹ã€‚å†…éƒ¨è‡ªå‡çº¦æŸå€¼ã€‚</summary>
+    public virtual T Pick()
+    {
+        int key = SelectKey();
+        var range = ValueRanges[key];
+        int idx = Random.Shared.Next(range.Start, range.End);
+        T picked = Names[idx];
+        CountMin--;
+        CountMax--;
+        PointMin -= key;
+        PointMax -= key;
+        return picked;
+    }
 }
 #endif
