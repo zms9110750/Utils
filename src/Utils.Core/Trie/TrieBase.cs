@@ -20,28 +20,30 @@ public abstract class TrieBase : INode<TrieBase>
     /// <summary>
     /// 获取指定字符对应的子节点，如果不存在则创建
     /// </summary>
-    protected TrieNode this[char c] {
-        get {
+    protected TrieNode this[char c]
+    {
+        get
+        {
             ref var childNode = ref CollectionsMarshal.GetValueRefOrAddDefault(Children, c, out var b);
             return childNode ??= new TrieNode(this);
         }
     }
 #else
-	/// <summary>
-	/// 获取指定字符对应的子节点，如果不存在则创建
-	/// </summary>
-	protected TrieNode this[char c]
-	{
-		get
-		{
-			if (!Children.TryGetValue(c, out var childNode))
-			{
-				childNode = new TrieNode(this);
-				Children[c] = childNode;
-			}
-			return childNode;
-		}
-	}
+    /// <summary>
+    /// 获取指定字符对应的子节点，如果不存在则创建
+    /// </summary>
+    protected TrieNode this[char c]
+    {
+        get
+        {
+            if (!Children.TryGetValue(c, out var childNode))
+            {
+                childNode = new TrieNode(this);
+                Children[c] = childNode;
+            }
+            return childNode;
+        }
+    }
 #endif
     /// <summary>
     /// 子节点集合

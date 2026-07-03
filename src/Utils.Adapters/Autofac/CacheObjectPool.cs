@@ -113,18 +113,18 @@ public sealed class CacheObjectPool<T> : ObjectPool<T>, IPooledRegistrationPolic
 
     private static MemoryCacheEntryOptions CreateDefaultOptions()
     {
-        return WithEvictionCallback(new MemoryCacheEntryOptions
-        {
+        return WithEvictionCallback(new MemoryCacheEntryOptions {
             SlidingExpiration = TimeSpan.FromMinutes(5)
         });
     }
 
     private static MemoryCacheEntryOptions WithEvictionCallback(MemoryCacheEntryOptions options)
     {
-        options.RegisterPostEvictionCallback(static (_, value, _, _) =>
-        {
+        options.RegisterPostEvictionCallback(static (_, value, _, _) => {
             if (value is IDisposable disposable)
+            {
                 disposable.Dispose();
+            }
         });
         return options;
     }
@@ -197,4 +197,4 @@ public sealed class CacheObjectPool<T> : ObjectPool<T>, IPooledRegistrationPolic
         _cache.Set(key, obj, _defaultOptions);
         return true;
     }
-} 
+}

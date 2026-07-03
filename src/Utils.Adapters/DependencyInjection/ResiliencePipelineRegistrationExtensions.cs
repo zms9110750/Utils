@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Polly;
 
 namespace zms9110750.Extensions.DependencyInjection;
@@ -29,8 +29,7 @@ public static class ResiliencePipelineRegistrationExtensions
         ArgumentNullException.ThrowIfNull(name);
         ArgumentNullException.ThrowIfNull(configure);
 
-        services.AddKeyedSingleton(name, (sp, key) =>
-        {
+        services.AddKeyedSingleton(name, (sp, key) => {
             var pipelineBuilder = new ResiliencePipelineBuilder<T>();
             var ctx = new ResiliencePipelineBuilderContext(sp, name);
             configure(pipelineBuilder, ctx);

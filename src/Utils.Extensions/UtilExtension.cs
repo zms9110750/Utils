@@ -11,10 +11,11 @@ public static class UtilExtension
     public static string ToSafeFileName(this string s, char replacement = '_')
     {
         if (string.IsNullOrEmpty(s))
-            return s;
-
-        return string.Create(s.Length, (s, replacement), static (span, state) =>
         {
+            return s;
+        }
+
+        return string.Create(s.Length, (s, replacement), static (span, state) => {
             state.s.CopyTo(span);
             foreach (ref var item in span)
             {
@@ -28,8 +29,7 @@ public static class UtilExtension
 
     public static string ToString<T>(this IEnumerable<T> values, string separator = ", ")
     {
-        return separator switch
-        {
+        return separator switch {
             "" or null => string.Concat(values),
             { Length: 1 } => string.Join(separator[0], values),
             _ => string.Join(separator, values),

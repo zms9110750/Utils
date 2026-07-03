@@ -19,5 +19,11 @@ public readonly record struct ValueRange(int Start, int End, int Count)
 
         return this;
     }
+
+    /// <summary>在 [Start, End) 中随机取一个索引。</summary>
+    public int GetRandomIndex()
+    {
+        return Random.Shared.Next(Start, End);
+    }
 }
 #endif

@@ -1,22 +1,22 @@
-﻿using System.Reflection;
-using System.Text.Json;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Autofac.Pooling;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 using NeoSmart.Caching.Sqlite;
 using Polly;
 using Polly.Fallback;
 using Polly.Retry;
+using System.Reflection;
+using System.Text.Json;
 using ZiggyCreatures.Caching.Fusion;
-using zms9110750.Utils.Adapters.Demo.Polly.Models;
+using zms9110750.Extensions.Autofac;
 using zms9110750.Extensions.DependencyInjection;
 using zms9110750.Extensions.Polly;
-using zms9110750.Extensions.Autofac;
-using Autofac.Pooling;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.ObjectPool;
+using zms9110750.Utils.Adapters.Demo.Polly.Models;
 
 var services = new ServiceCollection();
 services.AddLogging(cfg => cfg.AddConsole().SetMinimumLevel(LogLevel.Information));
@@ -34,23 +34,19 @@ var jsonPath = Path.Combine(
 
 // 注册命名管道
 services.AddResiliencePipeline<List<Monster>>("monster-pipeline",
-    (pipeline, ctx) =>
-    {
+    (pipeline, ctx) => {
         var logger = ctx.ServiceProvider.GetRequiredService<ILogger<Program>>();
         var cache = ctx.ServiceProvider.GetRequiredService<HybridCache>();
         pipeline.AddTimeout(TimeSpan.FromSeconds(5));
-        pipeline.AddCaching(new Axion.Extensions.Polly.Caching.Hybrid.CachingStrategyOptions<List<Monster>>
-        {
+        pipeline.AddCaching(new Axion.Extensions.Polly.Caching.Hybrid.CachingStrategyOptions<List<Monster>> {
             HybridCache = cache
         });
-        pipeline.AddRetry(new RetryStrategyOptions<List<Monster>>
-        {
+        pipeline.AddRetry(new RetryStrategyOptions<List<Monster>> {
             MaxRetryAttempts = 3,
             Delay = TimeSpan.FromMilliseconds(200),
             BackoffType = DelayBackoffType.Exponential,
             UseJitter = true,
-            ShouldHandle = args =>
-            {
+            ShouldHandle = args => {
                 if (Random.Shared.NextDouble() < 0.3)
                 {
                     logger.LogWarning("⚠️  随机失败 (第 {A} 次)", args.AttemptNumber + 1);
@@ -60,10 +56,8 @@ services.AddResiliencePipeline<List<Monster>>("monster-pipeline",
             },
             OnRetry = args => { logger.LogInformation("🔄 重试 #{N}", args.AttemptNumber); return default; }
         });
-        pipeline.AddFallback(new FallbackStrategyOptions<List<Monster>>
-        {
-            FallbackAction = _ =>
-            {
+        pipeline.AddFallback(new FallbackStrategyOptions<List<Monster>> {
+            FallbackAction = _ => {
                 logger.LogWarning("🛡️  回退");
                 return ValueTask.FromResult(Outcome.FromResult(new List<Monster>
                 {
@@ -78,15 +72,12 @@ var builder = new ContainerBuilder();
 builder.Populate(services);
 
 // 注册工厂：从 keyed pipeline 随机取一个怪物
-builder.Register<Func<Task<Monster>>>((c, p) =>
-{
+builder.Register<Func<Task<Monster>>>((c, p) => {
     var pipeline = c.ResolveKeyed<ResiliencePipeline<List<Monster>>>("monster-pipeline");
     var jsonOpts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-    return async () =>
-    {
-        var all = await pipeline.ExecuteGenericWithKeyAsync("monsters:all", async (ctx, ct) =>
-        {
+    return async () => {
+        var all = await pipeline.ExecuteGenericWithKeyAsync("monsters:all", async (ctx, ct) => {
             await using var stream = File.OpenRead(jsonPath);
             return await JsonSerializer.DeserializeAsync<List<Monster>>(stream, jsonOpts, ct)
                    ?? new List<Monster>();
@@ -138,11 +129,16 @@ poolBuilder.RegisterType<PoolDummy>().As<IPoolDummy>().PooledInstancePerLifetime
 var poolContainer = poolBuilder.Build();
 Console.WriteLine("\n═══ 缓存池测试完成 ═══\n");
 
-interface IPoolDummy { int Id { get; }
+interface IPoolDummy
+{
+    int Id { get; }
 }
 class PoolDummy : IPoolDummy
 {
     static int _gid;
     public int Id { get; } = Interlocked.Increment(ref _gid);
-    public PoolDummy() => Console.WriteLine($"    [创建] #{Id}");
+    public PoolDummy()
+    {
+        Console.WriteLine($"    [创建] #{Id}");
+    }
 }

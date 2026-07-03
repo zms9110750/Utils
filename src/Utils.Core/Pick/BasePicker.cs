@@ -1,13 +1,21 @@
 #if NET6_0_OR_GREATER
 namespace zms9110750.Utils.Core.Pick;
 
-/// <summary>区间约束随机抽取基类。外部循环：SetConstraints + 反复 Pick()。</summary>
+/// <summary>
+/// 区间约束随机抽取基类。外部循环：SetConstraints + 反复 Pick()。
+/// </summary>
+/// <typeparam name="T">项的类型</typeparam>
+/// <param name="items">
+/// 名称-点数映射，构造时按 V 值（点数）升序分组，建立名称列表和索引范围。
+/// <see cref="Items"/> 存放排序后的名称列表，<see cref="Ranges"/> 存放 V 值到索引范围的映射。
+/// </param>
 public abstract class BasePicker<T>
 {
-    /// <summary>所有项的名称列表（按 V 值升序）。</summary>
-    public abstract IReadOnlyList<T> Names { get; }
-    /// <summary>V 值到索引范围的映射。Key=V，Value=在 Names 中的范围。</summary>
-    public abstract IReadOnlyDictionary<int, ValueRange> ValueRanges { get; }
+    /// <summary>名称列表（按 V 值升序）。</summary>
+    protected List<T> Items { get; }
+
+    /// <summary>V 值到索引范围的映射。Key=V，Value=在 Items 中的范围。</summary>
+    protected SortedList<int, ValueRange> Ranges { get; }
 
     /// <summary>剩余可取数量下限。</summary>
     public int CountMin { get; protected set; }
@@ -23,8 +31,25 @@ public abstract class BasePicker<T>
     /// <summary>当前步可行 V 值上限（子类实现）。</summary>
     public abstract int High { get; }
 
-    protected int MinVal => ValueRanges.Keys.Min();
-    protected int MaxVal => ValueRanges.Keys.Max();
+    protected int MinVal => Ranges.Keys.Min();
+    protected int MaxVal => Ranges.Keys.Max();
+
+    protected BasePicker(IReadOnlyDictionary<T, int> items)
+    {
+        var groups = items.ToLookup(k => k.Value, k => k.Key);
+        Ranges = new SortedList<int, ValueRange>(groups.Count);
+        Items = new List<T>(items.Count);
+        int start = 0;
+
+        foreach (var group in groups.OrderBy(g => g.Key))
+        {
+            var count = Items.Count;
+            Items.AddRange(group);
+            count = Items.Count - count;
+            Ranges[group.Key] = new ValueRange(start, start + count, count);
+            start += count;
+        }
+    }
 
     /// <summary>设置约束并开始一次新抽取。</summary>
     public void SetConstraints(int cMin, int cMax, int pMin, int pMax)
@@ -35,67 +60,46 @@ public abstract class BasePicker<T>
         PointMax = pMax;
     }
 
-    /// <summary>构建名称列表和 V 值索引范围。子类构造器共用。</summary>
-    protected static (List<T> names, SortedList<int, ValueRange> ranges) BuildStructure(
-        IReadOnlyDictionary<T, int> items)
-    {
-        var sorted = items
-            .OrderBy(x => x.Value)
-            .ThenBy(x => x.Key)
-            .ToList();
-
-        var names = new List<T>(sorted.Count);
-        var ranges = new SortedList<int, ValueRange>();
-        int start = 0;
-        int? lastVal = null;
-
-        for (int i = 0; i < sorted.Count; i++)
-        {
-            var (name, val) = sorted[i];
-            names.Add(name);
-            if (lastVal != null && val != lastVal)
-            {
-                ranges[lastVal.Value] = new ValueRange(start, i, i - start);
-                start = i;
-            }
-            lastVal = val;
-        }
-        if (sorted.Count > 0)
-        {
-            ranges[lastVal!.Value] = new ValueRange(start, sorted.Count, sorted.Count - start);
-        }
-
-        return (names, ranges);
-    }
-
     /// <summary>在 [Low, High] 中随机选一个 key（V 值）。</summary>
     protected int SelectKey()
     {
         int lo = Low, hi = High;
-        var candidates = new List<int>();
-        foreach (var kvp in ValueRanges)
+        var buffer = ArrayPool<int>.Shared.Rent(Ranges.Count);
+        try
         {
-            if (kvp.Key >= lo && kvp.Key <= hi)
+            int count = Ranges.Count;
+            Ranges.Keys.CopyTo(buffer, 0);
+            var candidates = buffer.AsSpan(0, count);
+
+            int start = candidates.BinarySearch(lo);
+            if (start < 0)
             {
-                candidates.Add(kvp.Key);
+                start = ~start;
             }
-        }
 
-        if (candidates.Count == 0)
+            int end = candidates.BinarySearch(hi);
+            if (end < 0)
+            {
+                end = ~end - 1;
+            }
+
+            return start > end
+                ? throw new InvalidOperationException($"无可行候选 [Low={lo}, High={hi}]")
+                : candidates[start + Random.Shared.Next(end - start + 1)];
+        }
+        finally
         {
-            throw new InvalidOperationException($"无可行候选 [Low={lo}, High={hi}]");
+            ArrayPool<int>.Shared.Return(buffer);
         }
-
-        return candidates[Random.Shared.Next(candidates.Count)];
     }
 
     /// <summary>按当前约束随机抽取一项。内部自减约束值。</summary>
     public virtual T Pick()
     {
+
         int key = SelectKey();
-        var range = ValueRanges[key];
-        int idx = Random.Shared.Next(range.Start, range.End);
-        T picked = Names[idx];
+        var range = Ranges[key];
+        T picked = Items[range.GetRandomIndex()];
         CountMin--;
         CountMax--;
         PointMin -= key;

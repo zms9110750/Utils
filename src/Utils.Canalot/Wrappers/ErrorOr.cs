@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace zms9110750.Utils.Canalot.Wrappers;
 
@@ -65,7 +65,11 @@ public readonly record struct ErrorOr<T>
     /// <exception cref="ArgumentNullException">error 为 null 时抛出</exception>
     public ErrorOr(string error)
     {
-        if (error is null) throw new ArgumentNullException(nameof(error));
+        if (error is null)
+        {
+            throw new ArgumentNullException(nameof(error));
+        }
+
         Error = error;
         Value = default;
         IsInitialized = true;
@@ -74,7 +78,10 @@ public readonly record struct ErrorOr<T>
     /// <summary>
     /// 将值隐式转换为成功的 ErrorOr
     /// </summary>
-    public static implicit operator ErrorOr<T>(T value) => new(value);
+    public static implicit operator ErrorOr<T>(T value)
+    {
+        return new(value);
+    }
 }
 
 /// <summary>
@@ -143,7 +150,11 @@ public readonly record struct ErrorOr<T, TError> where TError : Exception
     /// <exception cref="ArgumentNullException">error 为 null 时抛出</exception>
     public ErrorOr(TError error)
     {
-        if (error is null) throw new ArgumentNullException(nameof(error));
+        if (error is null)
+        {
+            throw new ArgumentNullException(nameof(error));
+        }
+
         Error = error;
         Value = default;
         IsInitialized = true;
@@ -152,12 +163,18 @@ public readonly record struct ErrorOr<T, TError> where TError : Exception
     /// <summary>
     /// 将值隐式转换为成功的 ErrorOr
     /// </summary>
-    public static implicit operator ErrorOr<T, TError>(T? value) => new(value);
+    public static implicit operator ErrorOr<T, TError>(T? value)
+    {
+        return new(value);
+    }
 
     /// <summary>
     /// 将异常隐式转换为失败的 ErrorOr
     /// </summary>
-    public static implicit operator ErrorOr<T, TError>(TError error) => new(error);
+    public static implicit operator ErrorOr<T, TError>(TError error)
+    {
+        return new(error);
+    }
 
     /// <summary>
     /// 将 ErrorOr&lt;T, TError&gt; 隐式转换为 ErrorOr&lt;T&gt;

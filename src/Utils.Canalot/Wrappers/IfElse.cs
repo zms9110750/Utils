@@ -1,4 +1,4 @@
-﻿using System.Collections.Specialized;
+using System.Collections.Specialized;
 
 namespace zms9110750.Utils.Canalot.Wrappers;
 
@@ -8,9 +8,9 @@ namespace zms9110750.Utils.Canalot.Wrappers;
 /// <typeparam name="T">值的类型</typeparam>
 public readonly partial record struct IfElse<T>
 {
-    private static  InvalidOperationException UninitializedException => new("Instance not initialized");
-    private static  InvalidOperationException TopLevelException => new("Already at top level, cannot exit");
-    private static  InvalidOperationException MaxLevelException => new("Maximum level (31) reached, cannot enter next level");
+    private static InvalidOperationException UninitializedException => new("Instance not initialized");
+    private static InvalidOperationException TopLevelException => new("Already at top level, cannot exit");
+    private static InvalidOperationException MaxLevelException => new("Maximum level (31) reached, cannot enter next level");
 
     /// <summary>
     /// 当前持有的值
