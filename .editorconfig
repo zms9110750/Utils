@@ -1,5 +1,5 @@
 [*.cs]
-indent_style = space
+indent_style = tab
 indent_size = 4
 charset = utf-8
 end_of_line = crlf
@@ -12,6 +12,18 @@ csharp_new_line_before_finally = true
 
 # 流程语句强制大括号
 csharp_prefer_braces = true:error
+
+# 方法禁止 => 表达式体（构造、析构、本地函数均禁止）
+csharp_style_expression_bodied_constructors = false:error
+csharp_style_expression_bodied_methods = false:error
+csharp_style_expression_bodied_operators = false:error
+csharp_style_expression_bodied_deconstructors = false:error
+csharp_style_expression_bodied_local_functions = false:error
+
+# 属性、索引器允许 =>（例外）
+csharp_style_expression_bodied_properties = true:silent
+csharp_style_expression_bodied_indexers = true:silent
+csharp_style_expression_bodied_accessors = true:silent
 
 # switch case 内展开
 csharp_new_line_between_query_expression_clauses = true
