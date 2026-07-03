@@ -4,8 +4,8 @@ indent_size = 4
 charset = utf-8
 end_of_line = crlf
 
-# Allman 大括号：方法、控制块、lambda 换行；属性访问器 { get; set; } 不换行
-csharp_new_line_before_open_brace = types, methods, control_blocks, anonymous_methods, lambdas_expression_body
+# Allman 大括号：所有结构均换行
+csharp_new_line_before_open_brace = types, methods, properties, accessors, control_blocks, anonymous_methods, lambdas_expression_body
 csharp_new_line_before_else = true
 csharp_new_line_before_catch = true
 csharp_new_line_before_finally = true
