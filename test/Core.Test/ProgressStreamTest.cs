@@ -240,14 +240,21 @@ public sealed class ProgressStreamReadTest
 
     #region CopyToAsync
 
-    /// <summary>CopyToAsync 因源项目缺陷（ReaderWriterLockSlim 递归锁）跳过</summary>
-    [Fact(Skip = "源项目缺陷: CopyToAsync 内已持有读锁，ReportReadProgress 再次尝试进入读锁导致 LockRecursionException")]
-    public void CopyToAsync_ReportsProgress()
+    /// <summary>CopyToAsync 复制所有数据并报告进度</summary>
+    [Fact]
+    public async Task CopyToAsync_CopiesAllData()
     {
-        // CopyToAsync 的实现先 lockSlim.EnterReadLock()，
-        // 然后在循环内调用 ReportReadProgress(bytesRead)，
-        // 后者再次 lockSlim.EnterReadLock() 导致递归锁异常。
-        // 此问题需要修改源项目才能修复，测试无法绕过。
+        var data = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        var obs = new TestObserver();
+        using var inner = new MemoryStream(data);
+        using var dst = new MemoryStream();
+        using var stream = new ProgressStream(inner, obs);
+
+        await stream.CopyToAsync(dst, 4096, CancellationToken.None);
+
+        Assert.Equal(data.Length, dst.Length);
+        Assert.Equal(data, dst.ToArray());
+        Assert.Equal(data.Length, obs.Value);
     }
 
     #endregion

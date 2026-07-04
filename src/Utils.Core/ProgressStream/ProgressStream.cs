@@ -122,16 +122,8 @@ public class ProgressStream(
     {
         if (bytesRead > 0)
         {
-            lockSlim.EnterReadLock();
-            try
-            {
-                var newTotal = Interlocked.Add(ref totalBytesRead, bytesRead);
-                readObserver?.OnNext(newTotal);
-            }
-            finally
-            {
-                lockSlim.ExitReadLock();
-            }
+            var newTotal = Interlocked.Add(ref totalBytesRead, bytesRead);
+            readObserver?.OnNext(newTotal);
         }
         return bytesRead;
     }
@@ -140,16 +132,8 @@ public class ProgressStream(
     {
         if (bytesWritten > 0)
         {
-            lockSlim.EnterReadLock();
-            try
-            {
-                var newTotal = Interlocked.Add(ref totalBytesWritten, bytesWritten);
-                writeObserver?.OnNext(newTotal);
-            }
-            finally
-            {
-                lockSlim.ExitReadLock();
-            }
+            var newTotal = Interlocked.Add(ref totalBytesWritten, bytesWritten);
+            writeObserver?.OnNext(newTotal);
         }
         return bytesWritten;
     }
