@@ -366,3 +366,6 @@ FodyWeavers.xsd
 
 # Cache
 cache.sqlite.*
+
+# Coverage reports
+*.xml
