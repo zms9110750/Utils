@@ -1,8 +1,5 @@
-using System.Collections.Immutable;
-#if NET6_0_OR_GREATER
-using System.Runtime.InteropServices;
-#endif
-namespace zms9110750.Utils.Core.Trie;
+
+namespace zms9110750.Utils.Core;
 
 /// <summary>
 /// 字典树的节点抽象
@@ -24,7 +21,7 @@ public abstract class TrieBase
     /// </summary>
     public int Depth { get; }
 
-#if NET6_0_OR_GREATER
+
     /// <summary>
     /// 获取指定字符对应的子节点，如果不存在则创建
     /// </summary>
@@ -32,27 +29,14 @@ public abstract class TrieBase
     {
         get
         {
+#if NET6_0_OR_GREATER
             ref var childNode = ref CollectionsMarshal.GetValueRefOrAddDefault(Children, c, out var b);
             return childNode ??= new TrieNode(this);
+#else 
+            return Children.TryGetValue(c, out var childNode2) ? childNode2 : Children[c] = new TrieNode(this);
+#endif 
         }
     }
-#else
-    /// <summary>
-    /// 获取指定字符对应的子节点，如果不存在则创建
-    /// </summary>
-    protected TrieNode this[char c]
-    {
-        get
-        {
-            if (!Children.TryGetValue(c, out var childNode))
-            {
-                childNode = new TrieNode(this);
-                Children[c] = childNode;
-            }
-            return childNode;
-        }
-    }
-#endif
 
     /// <summary>
     /// 子节点集合

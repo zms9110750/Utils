@@ -2,12 +2,8 @@
 namespace zms9110750.Utils.Core.Pick;
 
 /// <summary>不可放回抽取。每抽一项即从池中移除。</summary>
-public class NonReplacementPicker<T> : BasePicker<T>
+public class NonReplacementPicker<T>(IReadOnlyDictionary<T, int> items) : BasePicker<T>(items)
 {
-    public NonReplacementPicker(IReadOnlyDictionary<T, int> items) : base(items)
-    {
-    }
-
     public override int Low
     {
         get

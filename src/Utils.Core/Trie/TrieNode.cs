@@ -1,4 +1,4 @@
-namespace zms9110750.Utils.Core.Trie;
+namespace zms9110750.Utils.Core;
 
 /// <summary>
 /// 负责储存字符的字典树子节点

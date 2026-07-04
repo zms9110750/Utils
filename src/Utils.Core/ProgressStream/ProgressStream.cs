@@ -1,4 +1,4 @@
-namespace zms9110750.Utils.Core.Primitives;
+namespace zms9110750.Utils.Core;
 
 public class ProgressStream : Stream
 {

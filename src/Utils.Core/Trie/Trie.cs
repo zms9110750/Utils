@@ -1,4 +1,4 @@
-namespace zms9110750.Utils.Core.Trie;
+namespace zms9110750.Utils.Core;
 
 /// <summary>
 /// 字典树根节点
@@ -14,7 +14,7 @@ public class Trie(HashSet<char>? separator = null) : TrieBase()
     public override bool Add(string word)
     {
 #if NET8_0_OR_GREATER
-		ArgumentException.ThrowIfNullOrEmpty(word);
+        ArgumentException.ThrowIfNullOrEmpty(word);
 #else
         if (string.IsNullOrEmpty(word))
         {

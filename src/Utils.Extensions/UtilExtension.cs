@@ -31,7 +31,7 @@ public static class UtilExtension
     {
         return separator switch {
             "" or null => string.Concat(values),
-            { Length: 1 } => string.Join(separator[0], values),
+            [char c] => string.Join(c, values),
             _ => string.Join(separator, values),
         };
     }
@@ -47,6 +47,7 @@ public static class UtilExtension
         /// <param name="message">自定义错误消息（可选）</param>
         /// <param name="paramName">参数名（自动获取）</param>
         /// <returns>原值（如果未抛出异常）</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ThrowIfOutOfRange<T>(T value, T min, T max, string? message = null, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : IComparable<T>
         {
             return value.CompareTo(min) < 0 || value.CompareTo(max) > 0

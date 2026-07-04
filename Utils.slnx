@@ -8,4 +8,5 @@
   <Project Path="samples/Utils.Adapters.Demo/Utils.Adapters.Demo.csproj" />
   <Project Path="samples/GameDemo/GameDemo.csproj" />
   <Project Path="test/Utils.Test/Utils.Test.csproj" />
+  <Project Path="test/Core.Test/Core.Test.csproj" />
 </Solution>

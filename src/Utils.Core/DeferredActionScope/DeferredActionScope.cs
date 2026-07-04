@@ -1,4 +1,4 @@
-namespace zms9110750.Utils.Core.Primitives;
+namespace zms9110750.Utils.Core;
 
 /// <summary>
 /// 延迟操作作用域，用于批量管理释放操作和延迟执行的动作

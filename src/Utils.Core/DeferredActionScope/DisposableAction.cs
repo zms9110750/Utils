@@ -1,4 +1,4 @@
-﻿namespace zms9110750.Utils.Core.Primitives;
+namespace zms9110750.Utils.Core;
 
 /// <summary>
 /// 将 <see cref="Action"/> 包装为 <see cref="IDisposable"/>，调用 <see cref="Dispose()"/> 时执行该委托
