@@ -6,8 +6,6 @@
     <Project Path="src/Utils.Extensions/Utils.Extensions.csproj" />
   </Folder>
   <Folder Name="/samples/">
-    <Project Path="samples/Utils.Adapters.Demo/Utils.Adapters.Demo.csproj" />
-    <Project Path="samples/GameDemo/GameDemo.csproj" />
     <Project Path="samples/Utils.SingleExe/Utils.SingleExe.csproj" />
   </Folder>
   <Folder Name="/test/">

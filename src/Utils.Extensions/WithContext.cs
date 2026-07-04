@@ -1,3 +1,4 @@
+#if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
 
 namespace zms9110750.Extensions.Utils;
@@ -29,3 +30,4 @@ public static class WithContextExtension
         return Obj;
     }
 }
+#endif
