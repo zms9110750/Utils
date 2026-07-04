@@ -95,6 +95,29 @@ public sealed class TrieSearchTest
         Assert.Contains("ab", r);
     }
 
+    /// <summary>前缀含分隔符时两种解释都尝试匹配</summary>
+    [Fact]
+    public void Search_PrefixWithSeparator_MatchesBoth()
+    {
+        var t = new Trie(new HashSet<char> { ' ' });
+        t.Add("a b");
+        t.Add("ab");
+        var r = t.Search("a b").ToList();
+        Assert.Contains("a b", r);
+    }
+
+    /// <summary>搜索前缀中的分隔符匹配消耗更多字符的场景</summary>
+    [Fact]
+    public void Search_SeparatorPath_ExtraChars()
+    {
+        var t = new Trie(new HashSet<char> { '-' });
+        t.Add("ac-b");
+        t.Add("acb");
+        var r = t.Search("a-b").ToList();
+        // a-b 可以通过 a→(跳过 c)→b 匹配 ac-b，或 a→-→b 匹配 ac-b
+        Assert.Contains("ac-b", r);
+    }
+
     #endregion
 }
 

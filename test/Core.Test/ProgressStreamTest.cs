@@ -151,3 +151,47 @@ public sealed class ProgressStreamPropertyTest
         Assert.Equal(100, stream.Length);
     }
 }
+
+/// <summary>
+/// 验证 ProgressStream 的释放等生命周期行为
+/// </summary>
+public sealed class ProgressStreamLifecycleTest
+{
+    #region Dispose
+
+    /// <summary>Dispose 后内层 Stream 不可读</summary>
+    [Fact]
+    public void Dispose_InnerStreamClosed()
+    {
+        var inner = new MemoryStream("data"u8.ToArray());
+        var stream = new ProgressStream(inner);
+        stream.Dispose();
+        Assert.Throws<ObjectDisposedException>(() => inner.ReadByte());
+    }
+
+    /// <summary>DisposeAsync 异步释放内层 Stream</summary>
+    [Fact]
+    public async Task DisposeAsync_InnerStreamClosed()
+    {
+        var inner = new MemoryStream("data"u8.ToArray());
+        await using var stream = new ProgressStream(inner);
+        await stream.DisposeAsync();
+        Assert.Throws<ObjectDisposedException>(() => inner.ReadByte());
+    }
+
+    #endregion
+
+    #region Close
+
+    /// <summary>Close 释放内层 Stream</summary>
+    [Fact]
+    public void Close_InnerStreamClosed()
+    {
+        var inner = new MemoryStream("data"u8.ToArray());
+        var stream = new ProgressStream(inner);
+        stream.Close();
+        Assert.Throws<ObjectDisposedException>(() => inner.ReadByte());
+    }
+
+    #endregion
+}

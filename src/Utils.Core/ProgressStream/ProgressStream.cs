@@ -1,23 +1,14 @@
 namespace zms9110750.Utils.Core;
 
-public class ProgressStream : Stream
+public class ProgressStream(
+    Stream innerStream,
+    IObserver<long>? readObserver = null,
+    IObserver<long>? writeObserver = null) : Stream
 {
-    private readonly Stream innerStream;
-    private readonly IObserver<long>? readObserver;
-    private readonly IObserver<long>? writeObserver;
+    private readonly Stream innerStream = innerStream ?? throw new ArgumentNullException(nameof(innerStream));
     private long totalBytesRead;
     private long totalBytesWritten;
     private readonly ReaderWriterLockSlim lockSlim = new ReaderWriterLockSlim();
-
-    public ProgressStream(
-        Stream innerStream,
-        IObserver<long>? readObserver = null,
-        IObserver<long>? writeObserver = null)
-    {
-        this.innerStream = innerStream ?? throw new ArgumentNullException(nameof(innerStream));
-        this.readObserver = readObserver;
-        this.writeObserver = writeObserver;
-    }
 
     public override bool CanRead => innerStream.CanRead;
     public override bool CanSeek => innerStream.CanSeek;

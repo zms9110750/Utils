@@ -11,8 +11,10 @@ public sealed class DisposableActionTest
 
     /// <summary>传入 null 的 action 抛出 ArgumentNullException</summary>
     [Fact]
-    public void Ctor_NullAction_Throws() =>
+    public void Ctor_NullAction_Throws()
+    {
         Assert.Throws<ArgumentNullException>(() => new DisposableAction(null!));
+    }
 
     #endregion
 
@@ -54,7 +56,7 @@ public sealed class DeferredActionScopeTest
     {
         using var scope = new DeferredActionScope();
         scope.Add(new DisposableAction(() => { }));
-        Assert.Equal(1, scope.Count);
+        Assert.Single(scope);
     }
 
     /// <summary>添加 Action 委托后 Count 增加</summary>
@@ -63,7 +65,7 @@ public sealed class DeferredActionScopeTest
     {
         using var scope = new DeferredActionScope();
         scope.Add(() => { });
-        Assert.Equal(1, scope.Count);
+        Assert.Single(scope);
     }
 
     #endregion
@@ -88,7 +90,7 @@ public sealed class DeferredActionScopeTest
         var scope = new DeferredActionScope();
         scope.Add(() => { });
         scope.Dispose();
-        Assert.Equal(0, scope.Count);
+        Assert.Empty(scope);
     }
 
     #endregion
@@ -104,7 +106,7 @@ public sealed class DeferredActionScopeTest
         scope.Add(() => called = true);
         scope.Clear();
         Assert.False(called);
-        Assert.Equal(0, scope.Count);
+        Assert.Empty(scope);
     }
 
     /// <summary>Remove 移除指定项</summary>
@@ -115,7 +117,7 @@ public sealed class DeferredActionScopeTest
         var d = new DisposableAction(() => { });
         scope.Add(d);
         Assert.True(scope.Remove(d));
-        Assert.Equal(0, scope.Count);
+        Assert.Empty(scope);
     }
 
     #endregion
