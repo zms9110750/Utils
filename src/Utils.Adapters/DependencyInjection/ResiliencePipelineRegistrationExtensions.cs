@@ -16,18 +16,20 @@ public static class ResiliencePipelineRegistrationExtensions
     /// <param name="services">服务容器。</param>
     /// <param name="name">管道名称（同时也是 DI key）。</param>
     /// <param name="configure">配置管道的回调。</param>
-    /// <remarks>
-    /// 在 Autofac 中可通过 <c>container.ResolveKeyed&lt;ResiliencePipeline&lt;T&gt;&gt;(name)</c> 解析；
-    /// 在 MS DI 中可通过 <c>sp.GetRequiredKeyedService&lt;ResiliencePipeline&lt;T&gt;&gt;(name)</c> 解析。
-    /// </remarks>
     public static void AddResiliencePipeline<T>(
         this IServiceCollection services,
         string name,
         Action<ResiliencePipelineBuilder<T>, ResiliencePipelineBuilderContext> configure)
     {
+#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(name);
         ArgumentNullException.ThrowIfNull(configure);
+#else
+        if (services is null) throw new ArgumentNullException(nameof(services));
+        if (name is null) throw new ArgumentNullException(nameof(name));
+        if (configure is null) throw new ArgumentNullException(nameof(configure));
+#endif
 
         services.AddKeyedSingleton(name, (sp, key) => {
             var pipelineBuilder = new ResiliencePipelineBuilder<T>();

@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Polly;
+using System.Diagnostics.CodeAnalysis;
 
 namespace zms9110750.Extensions.Polly;
 
@@ -20,9 +21,9 @@ public static class PipelineExecutionExtensions
         Func<ResilienceContext, CancellationToken, ValueTask<TResult>> operation,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(pipeline);
-        ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(operation);
+        ThrowIfNull(pipeline);
+        ThrowIfNull(key);
+        ThrowIfNull(operation);
 
         var context = ResilienceContextPool.Shared.Get(key, cancellationToken);
         try
@@ -46,9 +47,9 @@ public static class PipelineExecutionExtensions
         Func<ResilienceContext, CancellationToken, ValueTask<TResult>> operation,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(pipeline);
-        ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(operation);
+        ThrowIfNull(pipeline);
+        ThrowIfNull(key);
+        ThrowIfNull(operation);
 
         var context = ResilienceContextPool.Shared.Get(key, cancellationToken);
         try
@@ -61,5 +62,14 @@ public static class PipelineExecutionExtensions
         {
             ResilienceContextPool.Shared.Return(context);
         }
+    }
+
+    static void ThrowIfNull([NotNull] object? argument, string? paramName = null)
+    {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(argument, paramName);
+#else
+        if (argument is null) throw new ArgumentNullException(paramName ?? nameof(argument));
+#endif
     }
 }
