@@ -15,7 +15,7 @@ public record struct Pagination(int Page, int PageSize, int Total)
     public int Total { get; set => field = ThrowIfOutOfRange(value, 0, int.MaxValue, "Total"); } = Total;
 
     /// <summary>分页按钮个数。</summary>
-    public int ButtonCount { get; set; } = 5;
+    public int ButtonCount { get; set => field = ThrowIfOutOfRange(value, 1, int.MaxValue, "ButtonCount"); } = 5;
 
     /// <summary>双数按钮时当前页是否更靠后。</summary>
     public bool PreferEnd { get; set; } = false;

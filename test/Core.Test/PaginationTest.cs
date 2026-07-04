@@ -91,6 +91,33 @@ public sealed class PaginationConstructorTest
         Assert.Throws<ArgumentOutOfRangeException>(() => p.Total = -1);
     }
 
+    /// <summary>Total 设为 0 后 TotalPages 为 0，此时 Page 的合法范围变为 [1,0]，任何赋值都抛出异常</summary>
+    [Fact]
+    public void Page_SetAfterTotalZero_Throws()
+    {
+        var p = new Pagination(1, 20, 100);
+        p.Total = 0; // TotalPages 变为 0
+        Assert.Throws<ArgumentOutOfRangeException>(() => p.Page = 1);
+    }
+
+    /// <summary>ButtonCount 设为 0 抛出异常</summary>
+    [Fact]
+    public void ButtonCount_SetZero_Throws()
+    {
+        var p = new Pagination(1, 20, 100);
+        Assert.Throws<ArgumentOutOfRangeException>(() => p.ButtonCount = 0);
+    }
+
+    /// <summary>ButtonCount 设为负数抛出异常</summary>
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-100)]
+    public void ButtonCount_SetNegative_Throws(int value)
+    {
+        var p = new Pagination(1, 20, 100);
+        Assert.Throws<ArgumentOutOfRangeException>(() => p.ButtonCount = value);
+    }
+
     #endregion
 }
 
@@ -170,6 +197,14 @@ public sealed class PaginationDataRangeTest
         var p = new Pagination(page, size, total);
         Assert.Equal(start..end, p.DataRange);
     }
+
+    /// <summary>Total=0 时 DataRange 为空范围 0..0</summary>
+    [Fact]
+    public void DataRange_TotalZero_ReturnsEmpty()
+    {
+        var p = new Pagination(1, 20, 0);
+        Assert.Equal(0..0, p.DataRange);
+    }
 }
 
 /// <summary>
@@ -204,6 +239,24 @@ public sealed class PaginationButtonRangeTest
     {
         var p = new Pagination(3, 10, 50) { ButtonCount = 10 };
         Assert.Equal(1..6, p.ButtonRange);
+    }
+
+    /// <summary>TotalPages=0 时 ButtonRange 返回空范围 1..1</summary>
+    [Fact]
+    public void ButtonRange_TotalPagesZero_ReturnsEmpty()
+    {
+        var p = new Pagination(1, 20, 0); // TotalPages=0
+        Assert.Equal(1..1, p.ButtonRange);
+    }
+
+    /// <summary>Page=1, ButtonCount=2 时两种 PreferEnd 均 clamp 到起始页 1</summary>
+    [Theory]
+    [InlineData(false, 1, 3)]
+    [InlineData(true, 1, 3)]
+    public void ButtonRange_EvenCountTwoAtFirstPage_ClampsStart(bool preferEnd, int start, int end)
+    {
+        var p = new Pagination(1, 10, 100) { ButtonCount = 2, PreferEnd = preferEnd };
+        Assert.Equal(start..end, p.ButtonRange);
     }
 }
 
