@@ -13,11 +13,14 @@ public class Trie(HashSet<char>? separator = null) : TrieBase()
     /// <inheritdoc/>
     public override bool Add(string word)
     {
+#if NET8_0_OR_GREATER
+        ArgumentException.ThrowIfNullOrEmpty(word);
+#else
         if (string.IsNullOrEmpty(word))
         {
             throw new ArgumentException("Value cannot be null or empty.", nameof(word));
         }
-
+#endif
         return base[word[0]].Add(word);
     }
 

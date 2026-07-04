@@ -1,9 +1,14 @@
-﻿namespace zms9110750.Utils.Core.Pick;
+#if NET6_0_OR_GREATER
+namespace zms9110750.Utils.Core.Pick;
 
 /// <summary>
 /// 区间约束随机抽取基类。外部循环：SetConstraints + 反复 Pick()。
 /// </summary>
 /// <typeparam name="T">项的类型</typeparam>
+/// <param name="items">
+/// 名称-点数映射，构造时按 V 值（点数）升序分组，建立名称列表和索引范围。
+/// <see cref="Items"/> 存放排序后的名称列表，<see cref="Ranges"/> 存放 V 值到索引范围的映射。
+/// </param>
 public abstract class BasePicker<T>
 {
     /// <summary>名称列表（按 V 值升序）。</summary>
@@ -98,3 +103,4 @@ public abstract class BasePicker<T>
         return picked;
     }
 }
+#endif
