@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 
 namespace zms9110750.Utils.Core;
 
@@ -21,7 +22,6 @@ public abstract class TrieBase
     /// </summary>
     public int Depth { get; }
 
-
     /// <summary>
     /// 获取指定字符对应的子节点，如果不存在则创建
     /// </summary>
@@ -29,12 +29,8 @@ public abstract class TrieBase
     {
         get
         {
-#if NET6_0_OR_GREATER
             ref var childNode = ref CollectionsMarshal.GetValueRefOrAddDefault(Children, c, out var b);
             return childNode ??= new TrieNode(this);
-#else 
-            return Children.TryGetValue(c, out var childNode2) ? childNode2 : Children[c] = new TrieNode(this);
-#endif 
         }
     }
 

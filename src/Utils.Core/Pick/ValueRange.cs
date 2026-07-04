@@ -1,5 +1,4 @@
-#if NET6_0_OR_GREATER
-namespace zms9110750.Utils.Core.Pick;
+﻿namespace zms9110750.Utils.Core.Pick;
 
 /// <summary>值在排序列表中的索引范围。</summary>
 public readonly record struct ValueRange(int Start, int End, int Count)
@@ -26,4 +25,3 @@ public readonly record struct ValueRange(int Start, int End, int Count)
         return Random.Shared.Next(Start, End);
     }
 }
-#endif

@@ -7,14 +7,9 @@ namespace zms9110750.Extensions.Autofac;
 /// 通过 <see cref="IServiceProvider"/> 解析实例的对象池策略。
 /// </summary>
 /// <typeparam name="T">池化对象的类型。</typeparam>
-public class DIPooledObjectPolicy<T> : IPooledObjectPolicy<T> where T : class
+public class DIPooledObjectPolicy<T>(IServiceProvider serviceProvider) : IPooledObjectPolicy<T> where T : class
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public DIPooledObjectPolicy(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
     public T Create()
     {

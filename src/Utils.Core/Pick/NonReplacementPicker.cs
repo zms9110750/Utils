@@ -1,5 +1,4 @@
-#if NET6_0_OR_GREATER
-namespace zms9110750.Utils.Core.Pick;
+﻿namespace zms9110750.Utils.Core.Pick;
 
 /// <summary>不可放回抽取。每抽一项即从池中移除。</summary>
 public class NonReplacementPicker<T>(IReadOnlyDictionary<T, int> items) : BasePicker<T>(items)
@@ -85,4 +84,3 @@ public class NonReplacementPicker<T>(IReadOnlyDictionary<T, int> items) : BasePi
         return picked;
     }
 }
-#endif
