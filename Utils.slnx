@@ -7,6 +7,10 @@
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/Utils.SingleExe/Utils.SingleExe.csproj" />
+    <Project Path="samples/Core.Sample/Core.Sample.csproj" />
+    <Project Path="samples/Adapters.Sample/Adapters.Sample.csproj" />
+    <Project Path="samples/Canalot.Sample/Canalot.Sample.csproj" />
+    <Project Path="samples/Extensions.Sample/Extensions.Sample.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Utils.Test/Utils.Test.csproj" />

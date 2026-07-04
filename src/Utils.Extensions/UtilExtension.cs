@@ -1,3 +1,4 @@
+#if NET6_0_OR_GREATER
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 
@@ -53,3 +54,5 @@ public static class UtilExtension
         }
     }
 }
+#endif
+
