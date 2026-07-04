@@ -31,9 +31,6 @@ public abstract class BasePicker<T>
     /// <summary>当前步可行 V 值上限（子类实现）。</summary>
     public abstract int High { get; }
 
-    protected int MinVal => Ranges.Keys.Min();
-    protected int MaxVal => Ranges.Keys.Max();
-
     protected BasePicker(IReadOnlyDictionary<T, int> items)
     {
         var groups = items.ToLookup(k => k.Value, k => k.Key);
@@ -96,7 +93,6 @@ public abstract class BasePicker<T>
     /// <summary>按当前约束随机抽取一项。内部自减约束值。</summary>
     public virtual T Pick()
     {
-
         int key = SelectKey();
         var range = Ranges[key];
         T picked = Items[range.GetRandomIndex()];

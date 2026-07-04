@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 #if NET6_0_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
@@ -6,15 +7,22 @@ namespace zms9110750.Utils.Core.Trie;
 /// <summary>
 /// 字典树的节点抽象
 /// </summary>
-public abstract class TrieBase : INode<TrieBase>
+public abstract class TrieBase
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// 父节点
+    /// </summary>
     public TrieBase? Parent { get; }
-    /// <inheritdoc cref="INode{TrieBase}.Root"/>
+
+    /// <summary>
+    /// 根节点
+    /// </summary>
     public Trie Root { get; }
-    /// <inheritdoc/>
+
+    /// <summary>
+    /// 节点深度
+    /// </summary>
     public int Depth { get; }
-    TrieBase INode<TrieBase>.Root => Root;
 
 #if NET6_0_OR_GREATER
     /// <summary>
@@ -45,6 +53,7 @@ public abstract class TrieBase : INode<TrieBase>
         }
     }
 #endif
+
     /// <summary>
     /// 子节点集合
     /// </summary>

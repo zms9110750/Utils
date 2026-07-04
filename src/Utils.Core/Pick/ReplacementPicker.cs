@@ -8,7 +8,18 @@ public class ReplacementPicker<T> : BasePicker<T>
     {
     }
 
-    public override int Low => PointMin - (CountMax - 1) * MaxVal;
-    public override int High => PointMax - (CountMin - 1) * MinVal;
+    public override int Low => PointMin - (CountMax - 1) *
+#if NET7_0_OR_GREATER
+        Ranges.GetKeyAtIndex(Ranges.Count - 1);
+#else
+         Ranges.Keys.Max();
+#endif
+    public override int High => PointMax - (CountMin - 1) *
+#if NET7_0_OR_GREATER
+        Ranges.GetKeyAtIndex(0);
+#else
+         Ranges.Keys.Min();
+#endif
+
 }
 #endif
