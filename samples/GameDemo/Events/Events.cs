@@ -26,7 +26,9 @@ public class DamageEvent
     public bool IsProcessed { get; set; }           // 实际扣血是否执行
 
     public override string ToString()
-        => $"{Source.Name} → {Target.Name} {Amount}点";
+    {
+        return $"{Source.Name} → {Target.Name} {Amount}点";
+    }
 }
 
 /// <summary>判定事件 (刚烈触发)</summary>

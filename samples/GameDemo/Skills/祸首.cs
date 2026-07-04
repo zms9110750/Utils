@@ -17,16 +17,31 @@ public class 祸首
 {
     public bool Is南蛮无效(Player target, Card card)
     {
-        if (card.Type != CardType.南蛮入侵) return false;
+        if (card.Type != CardType.南蛮入侵)
+        {
+            return false;
+        }
+
         return target.ActiveSkills.Contains("祸首");
     }
 
     /// <summary>替换伤害来源为孟获</summary>
     public bool TryRedirectSource(DamageEvent damage, Player mengHuo)
     {
-        if (!mengHuo.ActiveSkills.Contains("祸首")) return false;
-        if (damage.SourceCard?.Type != CardType.南蛮入侵) return false;
-        if (damage.Source == mengHuo) return true;  // 已经就是祸首
+        if (!mengHuo.ActiveSkills.Contains("祸首"))
+        {
+            return false;
+        }
+
+        if (damage.SourceCard?.Type != CardType.南蛮入侵)
+        {
+            return false;
+        }
+
+        if (damage.Source == mengHuo)
+        {
+            return true;  // 已经就是祸首
+        }
 
         Console.ForegroundColor = ConsoleColor.DarkRed;
         Console.WriteLine($"  🪓 【祸首】{mengHuo.Name} 代替成为南蛮入侵的伤害来源！");

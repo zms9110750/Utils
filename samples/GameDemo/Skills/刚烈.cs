@@ -1,6 +1,5 @@
-using MessagePipe;
 using GameDemo.Events;
-using GameDemo.Models;
+using MessagePipe;
 
 namespace GameDemo.Skills;
 
@@ -33,8 +32,15 @@ public class 刚烈
     /// <summary>检查并触发刚烈</summary>
     public async ValueTask TryTrigger(DamageEvent damage)
     {
-        if (!damage.Target.ActiveSkills.Contains("刚烈")) return;
-        if (!damage.Target.IsAlive) return;
+        if (!damage.Target.ActiveSkills.Contains("刚烈"))
+        {
+            return;
+        }
+
+        if (!damage.Target.IsAlive)
+        {
+            return;
+        }
 
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine($"  ⚔ 【刚烈】{damage.Target.Name} 受到伤害，触发判定！");
@@ -45,8 +51,7 @@ public class 刚烈
         var judgeFrame = _pipeline.Push("判定", $"{damage.Target.Name}·刚烈");
         try
         {
-            var judge = new JudgeEvent
-            {
+            var judge = new JudgeEvent {
                 Target = damage.Target,
                 Reason = "刚烈"
             };
@@ -64,8 +69,7 @@ public class 刚烈
                 var subFrame = _pipeline.Push("反伤", $"{damage.Target.Name} → {damage.Source.Name}");
                 try
                 {
-                    await _damagePub.PublishAsync(new DamageEvent
-                    {
+                    await _damagePub.PublishAsync(new DamageEvent {
                         Source = damage.Target,
                         Target = damage.Source,
                         Amount = 1,

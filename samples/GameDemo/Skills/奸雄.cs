@@ -1,6 +1,4 @@
-using MessagePipe;
 using GameDemo.Events;
-using GameDemo.Models;
 
 namespace GameDemo.Skills;
 
@@ -22,9 +20,20 @@ public class 奸雄
 
     public async ValueTask TryTrigger(DamageEvent damage)
     {
-        if (!damage.Target.ActiveSkills.Contains("奸雄")) return;
-        if (!damage.Target.IsAlive) return;
-        if (damage.SourceCard == null) return;
+        if (!damage.Target.ActiveSkills.Contains("奸雄"))
+        {
+            return;
+        }
+
+        if (!damage.Target.IsAlive)
+        {
+            return;
+        }
+
+        if (damage.SourceCard == null)
+        {
+            return;
+        }
 
         var frame = _pipeline.Push("奸雄", $"{damage.Target.Name} 获得牌 {damage.SourceCard}");
         try

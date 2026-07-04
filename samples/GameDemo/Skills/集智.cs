@@ -1,6 +1,6 @@
-using MessagePipe;
 using GameDemo.Events;
 using GameDemo.Models;
+using MessagePipe;
 
 namespace GameDemo.Skills;
 
@@ -28,10 +28,16 @@ public class 集智
 
     public async ValueTask TryTrigger(CardUsedEvent cardEvent)
     {
-        if (!cardEvent.Source.ActiveSkills.Contains("集智")) return;
+        if (!cardEvent.Source.ActiveSkills.Contains("集智"))
+        {
+            return;
+        }
 
         // 只有锦囊牌触发
-        if (!锦囊牌.Contains(cardEvent.Card.Type)) return;
+        if (!锦囊牌.Contains(cardEvent.Card.Type))
+        {
+            return;
+        }
 
         var frame = _pipeline.Push("集智", $"{cardEvent.Source.Name} 使用锦囊摸牌");
         try
@@ -40,8 +46,7 @@ public class 集智
             Console.WriteLine($"  📜 【集智】{cardEvent.Source.Name} 使用 {cardEvent.Card}，摸一张牌！");
             Console.ResetColor();
 
-            await _drawPub.PublishAsync(new DrawCardEvent
-            {
+            await _drawPub.PublishAsync(new DrawCardEvent {
                 Target = cardEvent.Source,
                 Reason = "集智"
             }, AsyncPublishStrategy.Sequential);

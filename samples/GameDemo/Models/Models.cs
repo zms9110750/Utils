@@ -9,7 +9,10 @@ public enum CardType { 杀, 闪, 桃, 过河拆桥, 顺手牵羊, 无中生有, 
 /// <summary>一张卡牌</summary>
 public record Card(CardType Type, Suit Suit, int Number, string Name)
 {
-    public override string ToString() => $"{Name}";
+    public override string ToString()
+    {
+        return $"{Name}";
+    }
 }
 
 /// <summary>玩家</summary>
@@ -31,7 +34,10 @@ public class Player
     }
 
     public bool IsAlive => Hp > 0;
-    public override string ToString() => $"{Name}[{Hp}/{MaxHp}]";
+    public override string ToString()
+    {
+        return $"{Name}[{Hp}/{MaxHp}]";
+    }
 }
 
 /// <summary>事件栈帧 —— 记录当前在栈中的位置</summary>

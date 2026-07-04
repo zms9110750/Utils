@@ -1,8 +1,8 @@
-using MessagePipe;
-using Microsoft.Extensions.DependencyInjection;
 using GameDemo;
 using GameDemo.Events;
 using GameDemo.Skills;
+using MessagePipe;
+using Microsoft.Extensions.DependencyInjection;
 
 // ═══════════════════════════════════════════════════
 //  GameDemo — MessagePipe + 中间件 = 游戏事件栈
@@ -19,8 +19,7 @@ using GameDemo.Skills;
 
 // ── 1. DI 容器 + MessagePipe 配置 ──
 var services = new ServiceCollection();
-services.AddMessagePipe(options =>
-{
+services.AddMessagePipe(options => {
     // 注册全局中间件：DamageEvent 的每次发布都经过这个 filter
     options.AddGlobalMessageHandlerFilter(typeof(DamageMiddlewareFilter), order: 0);
 });
@@ -45,7 +44,7 @@ var provider = services.BuildServiceProvider();
 // ── 2. 手动订阅 DamageEvent：把 DamageExecutor 挂到总线上 ──
 //  MessagePipe 的 IAsyncMessageHandler<T> 需要显式注册
 var damageSubscriber = provider.GetRequiredService<IAsyncSubscriber<DamageEvent>>();
-var damageExecutor   = provider.GetRequiredService<DamageExecutor>();
+var damageExecutor = provider.GetRequiredService<DamageExecutor>();
 damageSubscriber.Subscribe(async (evt, ct) => await damageExecutor.HandleAsync(evt, ct));
 
 // ── 3. 启动历史面板（订阅 StackChangedEvent） ──
@@ -81,7 +80,9 @@ history.PrintAll();
 Console.WriteLine();
 Console.WriteLine("═══ 最终状态 ═══");
 foreach (var p in engine.AllPlayers)
+{
     Console.WriteLine($"  {p.Name}  体力:{p.Hp}/{p.MaxHp}  手牌:{p.HandCards.Count}");
+}
 
 history.Dispose();
 
@@ -93,7 +94,10 @@ public class DamageExecutor
 {
     public async ValueTask HandleAsync(DamageEvent message, CancellationToken cancellationToken)
     {
-        if (message.Amount <= 0) return;
+        if (message.Amount <= 0)
+        {
+            return;
+        }
 
         var actual = Math.Min(message.Amount, message.Target.Hp);
         message.Target.Hp -= actual;

@@ -1,7 +1,7 @@
-using MessagePipe;
 using GameDemo.Events;
 using GameDemo.Models;
 using GameDemo.Skills;
+using MessagePipe;
 
 namespace GameDemo;
 
@@ -60,10 +60,10 @@ public class GameEngine
 
     public void SetupGame()
     {
-        曹操   = new Player("曹操",   "奸雄", 4);
+        曹操 = new Player("曹操", "奸雄", 4);
         夏侯惇 = new Player("夏侯惇", "刚烈", 4);
-        小乔   = new Player("小乔",   "天香", 3);
-        孟获   = new Player("孟获",   "祸首", 4);
+        小乔 = new Player("小乔", "天香", 3);
+        孟获 = new Player("孟获", "祸首", 4);
         黄月英 = new Player("黄月英", "集智", 3);
 
         AllPlayers = new List<Player> { 曹操, 夏侯惇, 小乔, 孟获, 黄月英 };
@@ -73,12 +73,17 @@ public class GameEngine
             p.HandCards.Add(new Card(CardType.杀, Suit.Spade, 7, "♠7杀"));
             p.HandCards.Add(new Card(CardType.闪, Suit.Heart, 2, "♥2闪"));
             if (p == 小乔)
+            {
                 p.HandCards.Add(new Card(CardType.桃, Suit.Heart, 3, "♥3桃"));
+            }
         }
 
         Console.WriteLine("═══ 游戏初始化 ═══");
         foreach (var p in AllPlayers)
+        {
             Console.WriteLine($"  {p.Name}  体力:{p.Hp}/{p.MaxHp}  技能:{p.SkillName}");
+        }
+
         Console.WriteLine();
     }
 
@@ -116,8 +121,7 @@ public class GameEngine
             var dmgFrame = _pipeline.Push("伤害", $"曹操 → 夏侯惇 1点");
             try
             {
-                var damage = new DamageEvent
-                {
+                var damage = new DamageEvent {
                     Source = 曹操,
                     Target = 夏侯惇,
                     Amount = 1,
@@ -170,8 +174,7 @@ public class GameEngine
 
         foreach (var target in targets)
         {
-            var damage = new DamageEvent
-            {
+            var damage = new DamageEvent {
                 Source = 孟获,
                 Target = target,
                 Amount = 1,
@@ -207,9 +210,9 @@ public class GameEngine
         var frame = _pipeline.Push("使用牌", $"{黄月英.Name} 使用【无中生有】");
         try
         {
-            await _jiZhi.TryTrigger(new CardUsedEvent
-            {
-                Source = 黄月英, Card = 无中Card
+            await _jiZhi.TryTrigger(new CardUsedEvent {
+                Source = 黄月英,
+                Card = 无中Card
             });
             Console.WriteLine($"\n  {黄月英.Name} 手牌数：{黄月英.HandCards.Count}");
         }
@@ -228,8 +231,7 @@ public class GameEngine
         Console.WriteLine("  【场景4】小乔天香转移伤害");
         Console.WriteLine("═══════════════════════════════════════");
 
-        var damage = new DamageEvent
-        {
+        var damage = new DamageEvent {
             Source = 曹操,
             Target = 小乔,
             Amount = 2,

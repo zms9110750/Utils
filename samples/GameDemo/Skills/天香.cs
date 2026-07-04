@@ -1,4 +1,3 @@
-using MessagePipe;
 using GameDemo.Events;
 using GameDemo.Models;
 
@@ -16,15 +15,29 @@ public class 天香
 {
     public async ValueTask<bool> TryRedirect(DamageEvent damage, Player? redirectTarget)
     {
-        if (!damage.Target.ActiveSkills.Contains("天香")) return false;
-        if (!damage.Target.IsAlive) return false;
-        if (redirectTarget == null) return false;
+        if (!damage.Target.ActiveSkills.Contains("天香"))
+        {
+            return false;
+        }
+
+        if (!damage.Target.IsAlive)
+        {
+            return false;
+        }
+
+        if (redirectTarget == null)
+        {
+            return false;
+        }
 
         // 小乔弃一张红色牌（demo 简化：假设有）
         var redCard = damage.Target.HandCards.FirstOrDefault(c =>
             c.Suit is Suit.Heart or Suit.Diamond);
 
-        if (redCard == null) return false;
+        if (redCard == null)
+        {
+            return false;
+        }
 
         damage.Target.HandCards.Remove(redCard);
 

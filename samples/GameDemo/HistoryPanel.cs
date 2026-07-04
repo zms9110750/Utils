@@ -1,5 +1,5 @@
-using MessagePipe;
 using GameDemo.Events;
+using MessagePipe;
 
 namespace GameDemo;
 
@@ -17,12 +17,11 @@ public class HistoryPanel : IDisposable
     private bool _dirty;
 
     private static readonly ConsoleColor PushColor = ConsoleColor.Green;
-    private static readonly ConsoleColor PopColor  = ConsoleColor.DarkYellow;
+    private static readonly ConsoleColor PopColor = ConsoleColor.DarkYellow;
 
     public HistoryPanel(IAsyncSubscriber<StackChangedEvent> subscriber)
     {
-        _subscription = subscriber.Subscribe(async (evt, _) =>
-        {
+        _subscription = subscriber.Subscribe(async (evt, _) => {
             var depth = evt.Frame.Depth;
             var indent = new string('　', depth);
             var arrow = evt.Action == StackChangedEvent.ActionType.Push ? "▶" : "◀";
@@ -45,7 +44,11 @@ public class HistoryPanel : IDisposable
     {
         lock (_lock)
         {
-            if (!_dirty) return;
+            if (!_dirty)
+            {
+                return;
+            }
+
             _dirty = false;
 
             Console.SetCursorPosition(0, Console.CursorTop - Math.Min(_log.Count, Console.WindowHeight - 3));
@@ -65,9 +68,13 @@ public class HistoryPanel : IDisposable
             foreach (var line in _log)
             {
                 if (line.Contains("▶"))
+                {
                     Console.ForegroundColor = PushColor;
+                }
                 else
+                {
                     Console.ForegroundColor = PopColor;
+                }
 
                 Console.WriteLine($"  {line}");
                 Console.ResetColor();
@@ -78,5 +85,8 @@ public class HistoryPanel : IDisposable
         Console.WriteLine();
     }
 
-    public void Dispose() => _subscription.Dispose();
+    public void Dispose()
+    {
+        _subscription.Dispose();
+    }
 }
