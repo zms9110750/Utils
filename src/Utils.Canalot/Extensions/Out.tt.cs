@@ -18,7 +18,7 @@ public static partial class CanalotExtensions
     }
 
     /// <summary>
-    /// 将二元组的每个元素分别绑定到对应的 out 变量，并返回原元组
+    /// 将2元组的每个元素分别绑定到对应的 out 变量，并返回原元组
     /// </summary>
     /// <typeparam name="T1">第1个元素的类型</typeparam>
     /// <typeparam name="T2">第2个元素的类型</typeparam>
@@ -191,5 +191,4 @@ public static partial class CanalotExtensions
         result8 = value.Item8;
         return value;
     }
-
 }

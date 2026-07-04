@@ -32,7 +32,7 @@ public static partial class CanalotExtensions
     }
 
     /// <summary>
-    /// 将二元组解构后传入函数 (有返回值)
+    /// 将2元组解构后传入函数 (有返回值)
     /// </summary>
     /// <typeparam name="T1">第1个元素的类型</typeparam>
     /// <typeparam name="T2">第2个元素的类型</typeparam>
@@ -46,7 +46,7 @@ public static partial class CanalotExtensions
     }
 
     /// <summary>
-    /// 将二元组解构后传入函数 (无返回值，返回原元组)
+    /// 将2元组解构后传入函数 (无返回值，返回原元组)
     /// </summary>
     /// <typeparam name="T1">第1个元素的类型</typeparam>
     /// <typeparam name="T2">第2个元素的类型</typeparam>
@@ -268,5 +268,4 @@ public static partial class CanalotExtensions
         action(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6, value.Item7, value.Item8);
         return value;
     }
-
 }
