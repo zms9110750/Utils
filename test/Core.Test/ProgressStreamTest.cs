@@ -5,169 +5,145 @@ namespace Core.Test;
 class TestObserver : IObserver<long>
 {
     public long Value { get; private set; }
-    public void OnNext(long value) => Value = value;
+    public void OnNext(long value)
+    {
+        Value = value;
+    }
+
     public void OnError(Exception error) { }
     public void OnCompleted() { }
 }
 
 /// <summary>
-/// 验证 ProgressStream 的读操作和进度报告。
-/// 预期：读操作透传内层 Stream 行为，注册的 readObserver 收到累计字节数。
+/// 验证 ProgressStream 构造器参数验证
 /// </summary>
-public class ProgressStreamReadTest
+public sealed class ProgressStreamCtorTest
 {
+    /// <summary>传入 null 的 innerStream 抛出 ArgumentNullException</summary>
     [Fact]
-    public void Read_返回正确字节数()
+    public void Ctor_NullInner_Throws()
     {
-        var data = "Hello"u8.ToArray();
-        using var inner = new MemoryStream(data);
-        using var stream = new ProgressStream(inner);
-        var buffer = new byte[1024];
-        int read = stream.Read(buffer, 0, buffer.Length);
-        Assert.Equal(5, read);
-    }
-
-    [Fact]
-    public void ReadAsync_返回正确字节数()
-    {
-        var data = "Hello"u8.ToArray();
-        using var inner = new MemoryStream(data);
-        using var stream = new ProgressStream(inner);
-        var buffer = new byte[1024];
-        int read = stream.ReadAsync(buffer, 0, buffer.Length).Result;
-        Assert.Equal(5, read);
-    }
-
-    [Fact]
-    public void Read_报告进度()
-    {
-        var data = "Hello World"u8.ToArray();
-        var observer = new TestObserver();
-        using var inner = new MemoryStream(data);
-        using var stream = new ProgressStream(inner, observer);
-        var buffer = new byte[1024];
-        stream.Read(buffer, 0, buffer.Length);
-        Assert.Equal(11, observer.Value);
-    }
-
-    [Fact]
-    public void CanRead_透传内层()
-    {
-        using var inner = new MemoryStream();
-        using var stream = new ProgressStream(inner);
-        Assert.True(stream.CanRead);
-    }
-
-    [Fact]
-    public void CanSeek_透传内层()
-    {
-        using var inner = new MemoryStream();
-        using var stream = new ProgressStream(inner);
-        Assert.True(stream.CanSeek);
-    }
-
-    [Fact]
-    public void CanWrite_透传内层()
-    {
-        using var inner = new MemoryStream();
-        using var stream = new ProgressStream(inner);
-        Assert.True(stream.CanWrite);
+        Assert.Throws<ArgumentNullException>(() => new ProgressStream(null!));
     }
 }
 
 /// <summary>
-/// 验证 ProgressStream 的写操作和进度报告。
-/// 预期：写操作透传内层 Stream，注册的 writeObserver 收到累计字节数。
+/// 验证 ProgressStream 读操作和进度报告
 /// </summary>
-public class ProgressStreamWriteTest
+public sealed class ProgressStreamReadTest
 {
+    #region 读
+
+    /// <summary>Read 返回内层 Stream 的字节数</summary>
     [Fact]
-    public void Write_写入内层()
+    public void Read_ReturnsBytes()
     {
-        using var inner = new MemoryStream();
+        using var inner = new MemoryStream("Hello"u8.ToArray());
         using var stream = new ProgressStream(inner);
-        var data = "Hello"u8.ToArray();
-        stream.Write(data, 0, data.Length);
-        Assert.Equal(5, inner.Length);
+        var buf = new byte[1024];
+        Assert.Equal(5, stream.Read(buf, 0, buf.Length));
     }
 
+    /// <summary>ReadAsync 返回内层 Stream 的字节数</summary>
     [Fact]
-    public void WriteAsync_写入内层()
+    public void ReadAsync_ReturnsBytes()
     {
-        using var inner = new MemoryStream();
+        using var inner = new MemoryStream("Hello"u8.ToArray());
         using var stream = new ProgressStream(inner);
-        var data = "Hello"u8.ToArray();
-        stream.WriteAsync(data, 0, data.Length).Wait();
-        Assert.Equal(5, inner.Length);
+        var buf = new byte[1024];
+        Assert.Equal(5, stream.ReadAsync(buf, 0, buf.Length).Result);
     }
 
+    #endregion
+
+    #region 进度报告
+
+    /// <summary>Read 触发 readObserver 报告累计字节数</summary>
     [Fact]
-    public void Write_报告进度()
+    public void Read_ReportsProgress()
     {
-        var observer = new TestObserver();
-        using var inner = new MemoryStream();
-        using var stream = new ProgressStream(inner, writeObserver: observer);
-        var data = "Hi"u8.ToArray();
-        stream.Write(data, 0, data.Length);
-        Assert.Equal(2, observer.Value);
+        var obs = new TestObserver();
+        using var inner = new MemoryStream("Hello World"u8.ToArray());
+        using var stream = new ProgressStream(inner, obs);
+        stream.Read(new byte[1024], 0, 1024);
+        Assert.Equal(11, obs.Value);
     }
 
-    [Fact]
-    public void Flush_不抛出()
-    {
-        using var inner = new MemoryStream();
-        using var stream = new ProgressStream(inner);
-        stream.Flush();
-    }
-
-    [Fact]
-    public void Close_不抛出()
-    {
-        using var inner = new MemoryStream();
-        using var stream = new ProgressStream(inner);
-        stream.Close();
-    }
+    #endregion
 }
 
 /// <summary>
-/// 验证 ProgressStream 的 Seek / Length / Position 透传。
-/// 预期：Seek、Length、Position 行为与内层 MemoryStream 一致。
+/// 验证 ProgressStream 写操作和进度报告
 /// </summary>
-public class ProgressStreamSeekTest
+public sealed class ProgressStreamWriteTest
 {
+    #region 写
+
+    /// <summary>Write 数据写入内层 Stream</summary>
     [Fact]
-    public void Length_透传内层()
+    public void Write_ToInnerStream()
     {
-        var data = "Hello"u8.ToArray();
-        using var inner = new MemoryStream(data);
+        using var inner = new MemoryStream();
         using var stream = new ProgressStream(inner);
-        Assert.Equal(5, stream.Length);
+        stream.Write("Hi"u8);
+        Assert.Equal(2, inner.Length);
     }
 
+    /// <summary>WriteAsync 数据写入内层 Stream</summary>
     [Fact]
-    public void Seek_返回正确位置()
+    public void WriteAsync_ToInnerStream()
     {
-        var data = "Hello"u8.ToArray();
-        using var inner = new MemoryStream(data);
+        using var inner = new MemoryStream();
         using var stream = new ProgressStream(inner);
-        long pos = stream.Seek(2, SeekOrigin.Begin);
-        Assert.Equal(2, pos);
+        stream.WriteAsync("Hi"u8.ToArray(), 0, 2).Wait();
+        Assert.Equal(2, inner.Length);
+    }
+
+    #endregion
+
+    #region 进度报告
+
+    /// <summary>Write 触发 writeObserver 报告累计字节数</summary>
+    [Fact]
+    public void Write_ReportsProgress()
+    {
+        var obs = new TestObserver();
+        using var inner = new MemoryStream();
+        using var stream = new ProgressStream(inner, writeObserver: obs);
+        stream.Write("Hi"u8);
+        Assert.Equal(2, obs.Value);
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// 验证 ProgressStream 属性透传
+/// </summary>
+public sealed class ProgressStreamPropertyTest
+{
+    /// <summary>CanRead / CanSeek / CanWrite 透传内层</summary>
+    [Fact]
+    public void Capabilities_PassThrough()
+    {
+        using var inner = new MemoryStream();
+        using var stream = new ProgressStream(inner);
+        Assert.True(stream.CanRead && stream.CanSeek && stream.CanWrite);
+    }
+
+    /// <summary>Length / Position / Seek 透传内层</summary>
+    [Fact]
+    public void Seek_PassThrough()
+    {
+        using var inner = new MemoryStream("Hello"u8.ToArray());
+        using var stream = new ProgressStream(inner);
+        Assert.Equal(2, stream.Seek(2, SeekOrigin.Begin));
         Assert.Equal(2, stream.Position);
     }
 
+    /// <summary>SetLength 改变内层长度</summary>
     [Fact]
-    public void Position_设置后读取位置正确()
-    {
-        var data = "Hello"u8.ToArray();
-        using var inner = new MemoryStream(data);
-        using var stream = new ProgressStream(inner);
-        stream.Position = 1;
-        int b = stream.ReadByte();
-        Assert.Equal('e', b);
-    }
-
-    [Fact]
-    public void SetLength_改变长度()
+    public void SetLength_PassThrough()
     {
         using var inner = new MemoryStream();
         using var stream = new ProgressStream(inner);

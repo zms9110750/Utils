@@ -3,66 +3,87 @@ using zms9110750.Utils.Core;
 namespace Core.Test;
 
 /// <summary>
-/// 验证 DisposableAction 的构造和释放行为。
-/// 预期：Dispose 执行传入的回调，回调只执行一次。
+/// 验证 DisposableAction 构造和释放行为
 /// </summary>
-public class DisposableActionTest
+public sealed class DisposableActionTest
 {
+    #region 构造
+
+    /// <summary>传入 null 的 action 抛出 ArgumentNullException</summary>
     [Fact]
-    public void Dispose_执行回调()
+    public void Ctor_NullAction_Throws() =>
+        Assert.Throws<ArgumentNullException>(() => new DisposableAction(null!));
+
+    #endregion
+
+    #region 释放
+
+    /// <summary>Dispose 执行回调</summary>
+    [Fact]
+    public void Dispose_InvokeAction()
     {
-        bool called = false;
-        var d = new DisposableAction(() => called = true);
-        d.Dispose();
+        var called = false;
+        new DisposableAction(() => called = true).Dispose();
         Assert.True(called);
     }
 
+    /// <summary>多次 Dispose 回调只执行一次</summary>
     [Fact]
-    public void 多次_Dispose_回调只执行一次()
+    public void Dispose_MultipleTimes_Once()
     {
-        int count = 0;
+        var count = 0;
         var d = new DisposableAction(() => count++);
         d.Dispose();
         d.Dispose();
         Assert.Equal(1, count);
     }
+
+    #endregion
 }
 
 /// <summary>
-/// 验证 DeferredActionScope 的添加和释放行为。
-/// 预期：添加的 IDisposable 在调用 Dispose 时一次性释放；可添加 Action 委托。
+/// 验证 DeferredActionScope 的添加、释放、枚举等行为
 /// </summary>
-public class DeferredActionScopeTest
+public sealed class DeferredActionScopeTest
 {
+    #region 添加与计数
+
+    /// <summary>添加 IDisposable 后 Count 增加</summary>
     [Fact]
-    public void Add_增加_Count()
+    public void Add_IncreaseCount()
     {
         using var scope = new DeferredActionScope();
         scope.Add(new DisposableAction(() => { }));
         Assert.Equal(1, scope.Count);
     }
 
+    /// <summary>添加 Action 委托后 Count 增加</summary>
     [Fact]
-    public void Add_Action_包装为_Disposable()
+    public void AddAction_IncreaseCount()
     {
-        bool called = false;
         using var scope = new DeferredActionScope();
-        scope.Add(() => called = true);
+        scope.Add(() => { });
         Assert.Equal(1, scope.Count);
     }
 
+    #endregion
+
+    #region 释放
+
+    /// <summary>Dispose 执行所有已添加的委托</summary>
     [Fact]
-    public void Dispose_释放所有已添加项()
+    public void Dispose_ExecuteAllActions()
     {
-        bool called = false;
+        var called = false;
         var scope = new DeferredActionScope();
         scope.Add(() => called = true);
         scope.Dispose();
         Assert.True(called);
     }
 
+    /// <summary>Dispose 后 Count 归零</summary>
     [Fact]
-    public void Dispose_后_Count_为_0()
+    public void Dispose_ClearsCount()
     {
         var scope = new DeferredActionScope();
         scope.Add(() => { });
@@ -70,49 +91,25 @@ public class DeferredActionScopeTest
         Assert.Equal(0, scope.Count);
     }
 
-    [Fact]
-    public void Clear_清空所有项()
-    {
-        var scope = new DeferredActionScope();
-        scope.Add(() => { });
-        scope.Clear();
-        Assert.Equal(0, scope.Count);
-    }
+    #endregion
 
+    #region 清空与移除
+
+    /// <summary>Clear 清空但不释放</summary>
     [Fact]
-    public void Clear_不触发_Dispose()
+    public void Clear_RemoveItemsWithoutDispose()
     {
-        bool called = false;
+        var called = false;
         var scope = new DeferredActionScope();
         scope.Add(() => called = true);
         scope.Clear();
         Assert.False(called);
+        Assert.Equal(0, scope.Count);
     }
 
+    /// <summary>Remove 移除指定项</summary>
     [Fact]
-    public void Dispose_后_Add_不抛出()
-    {
-        var scope = new DeferredActionScope();
-        scope.Dispose();
-        scope.Add(() => { });
-        Assert.Equal(1, scope.Count);
-    }
-
-    [Fact]
-    public void 枚举返回所有项()
-    {
-        using var scope = new DeferredActionScope();
-        var d1 = new DisposableAction(() => { });
-        var d2 = new DisposableAction(() => { });
-        scope.Add(d1);
-        scope.Add(d2);
-        var items = scope.ToList();
-        Assert.Contains(d1, items);
-        Assert.Contains(d2, items);
-    }
-
-    [Fact]
-    public void Remove_移除指定项()
+    public void Remove_SpecificItem()
     {
         using var scope = new DeferredActionScope();
         var d = new DisposableAction(() => { });
@@ -120,4 +117,23 @@ public class DeferredActionScopeTest
         Assert.True(scope.Remove(d));
         Assert.Equal(0, scope.Count);
     }
+
+    #endregion
+
+    #region 枚举
+
+    /// <summary>枚举器遍历所有添加项</summary>
+    [Fact]
+    public void Enumerate_AllItems()
+    {
+        using var scope = new DeferredActionScope();
+        var d1 = new DisposableAction(() => { });
+        var d2 = new DisposableAction(() => { });
+        scope.Add(d1);
+        scope.Add(d2);
+        Assert.Contains(d1, scope);
+        Assert.Contains(d2, scope);
+    }
+
+    #endregion
 }

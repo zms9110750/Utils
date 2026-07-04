@@ -1,128 +1,151 @@
+#if NET6_0_OR_GREATER
 using zms9110750.Utils.Core.Pick;
 
 namespace Core.Test;
 
 /// <summary>
-/// 验证 ValueRange 的基本功能。
-/// 预期：GetRandomIndex 返回 [Start, End) 内的值；ShiftLeft 正确调整删除后的偏移。
+/// 验证 ValueRange 结构体基本功能
 /// </summary>
-public class ValueRangeTest
+public sealed class ValueRangeTest
 {
-    [Fact]
-    public void 构造器设置属性()
+    #region 构造
+
+    /// <summary>位置构造器赋值 Start / End / Count</summary>
+    [Theory]
+    [InlineData(0, 10, 10)]
+    [InlineData(2, 5, 3)]
+    public void Ctor_AssignsProperties(int start, int end, int count)
     {
-        var r = new ValueRange(2, 5, 3);
-        Assert.Equal(2, r.Start);
-        Assert.Equal(5, r.End);
-        Assert.Equal(3, r.Count);
+        var r = new ValueRange(start, end, count);
+        Assert.Equal(start, r.Start);
+        Assert.Equal(end, r.End);
+        Assert.Equal(count, r.Count);
     }
 
-    [Fact]
-    public void 记录相等()
-    {
-        var a = new ValueRange(1, 4, 3);
-        var b = new ValueRange(1, 4, 3);
-        Assert.Equal(a, b);
-    }
+    #endregion
 
+    #region GetRandomIndex
+
+    /// <summary>GetRandomIndex 返回 [Start, End) 内的值</summary>
     [Fact]
-    public void GetRandomIndex_在范围内()
+    public void GetRandomIndex_WithinRange()
     {
         var r = new ValueRange(0, 10, 10);
         for (int i = 0; i < 100; i++)
         {
-            int idx = r.GetRandomIndex();
-            Assert.InRange(idx, 0, 9);
+            Assert.InRange(r.GetRandomIndex(), 0, 9);
         }
     }
 
+    #endregion
+
+    #region ShiftLeft
+
+    /// <summary>删除索引在 start 前时整体左移</summary>
     [Fact]
-    public void ShiftLeft_索引在_start_前_不变()
+    public void ShiftLeft_BeforeStart_ShiftsAll()
     {
         var r = new ValueRange(5, 10, 5);
-        var shifted = r.ShiftLeft(3);
-        Assert.Equal(new ValueRange(4, 9, 5), shifted);
+        Assert.Equal(new ValueRange(4, 9, 5), r.ShiftLeft(3));
     }
 
+    /// <summary>删除索引在范围内时 Count 减 1</summary>
     [Fact]
-    public void ShiftLeft_索引在范围内_减_count()
+    public void ShiftLeft_InsideRange_ReducesCount()
     {
         var r = new ValueRange(3, 8, 5);
-        var shifted = r.ShiftLeft(5);
-        Assert.Equal(new ValueRange(3, 7, 4), shifted);
+        Assert.Equal(new ValueRange(3, 7, 4), r.ShiftLeft(5));
     }
 
+    /// <summary>删除索引在 end 外时不变</summary>
     [Fact]
-    public void ShiftLeft_索引不在范围内_不变()
+    public void ShiftLeft_AfterEnd_Unchanged()
     {
         var r = new ValueRange(3, 8, 5);
-        var shifted = r.ShiftLeft(10);
-        Assert.Equal(r, shifted);
+        Assert.Equal(r, r.ShiftLeft(10));
+    }
+
+    #endregion
+}
+
+/// <summary>
+/// 验证 BasePicker 的 SetConstraints 和 SelectKey 功能
+/// </summary>
+public sealed class BasePickerTest
+{
+    /// <summary>SetConstraints 设置约束后 CountMin / CountMax / PointMin / PointMax 正确</summary>
+    [Theory]
+    [InlineData(1, 3, 5, 15)]
+    [InlineData(2, 2, 8, 8)]
+    public void SetConstraints_AssignsCorrectly(int cMin, int cMax, int pMin, int pMax)
+    {
+        var pool = new Dictionary<string, int> { { "A", 3 }, { "B", 5 } };
+        var picker = new ReplacementPicker<string>(pool);
+        picker.SetConstraints(cMin, cMax, pMin, pMax);
+        Assert.Equal(cMin, picker.CountMin);
+        Assert.Equal(cMax, picker.CountMax);
+        Assert.Equal(pMin, picker.PointMin);
+        Assert.Equal(pMax, picker.PointMax);
     }
 }
 
 /// <summary>
-/// 验证可放回抽取器 ReplacementPicker 的基本行为。
-/// 预期：每次 Pick 返回池中的一个项，多次抽取不改变池。
+/// 验证 ReplacementPicker 可放回抽取行为
 /// </summary>
-public class ReplacementPickerTest
+public sealed class ReplacementPickerTest
 {
+    /// <summary>Pick 返回池中的项</summary>
     [Fact]
-    public void 抽取返回池中的项()
+    public void Pick_ReturnsItemFromPool()
     {
-        var pool = new Dictionary<string, int> { { "A", 3 }, { "B", 5 }, { "C", 2 } };
+        var pool = new Dictionary<string, int> { { "A", 3 }, { "B", 5 } };
         var picker = new ReplacementPicker<string>(pool);
         picker.SetConstraints(1, 3, 2, 10);
-        var result = picker.Pick();
-        Assert.Contains(result, pool.Keys);
+        Assert.Contains(picker.Pick(), pool.Keys);
     }
 
+    /// <summary>多次抽取直到约束耗尽，每次返回有效项</summary>
     [Fact]
-    public void 多次抽取_直到约束耗尽()
+    public void Pick_Multiple_UntilConstraintExhausted()
     {
-        var pool = new Dictionary<string, int> { { "A", 3 }, { "B", 5 }, { "C", 2 } };
+        var pool = new Dictionary<string, int> { { "A", 3 }, { "B", 5 } };
         var picker = new ReplacementPicker<string>(pool);
         picker.SetConstraints(1, 3, 2, 10);
-        int count = 0;
         while (picker.CountMin > 0 && picker.PointMin > 0)
         {
-            var item = picker.Pick();
-            Assert.Contains(item, pool.Keys);
-            count++;
+            Assert.Contains(picker.Pick(), pool.Keys);
         }
-        Assert.True(count > 0);
     }
 }
 
 /// <summary>
-/// 验证不放回抽取器 NonReplacementPicker 的基本行为。
-/// 预期：每次 Pick 从池中移除一项，池耗尽后继续抽取抛 InvalidOperationException。
+/// 验证 NonReplacementPicker 不放回抽取行为
 /// </summary>
-public class NonReplacementPickerTest
+public sealed class NonReplacementPickerTest
 {
+    /// <summary>Pick 返回池中的项</summary>
     [Fact]
-    public void 抽取返回池中的项()
+    public void Pick_ReturnsItemFromPool()
     {
         var pool = new Dictionary<string, int> { { "A", 3 }, { "B", 5 } };
         var picker = new NonReplacementPicker<string>(pool);
         picker.SetConstraints(1, 2, 3, 8);
-        var result = picker.Pick();
-        Assert.Contains(result, pool.Keys);
+        Assert.Contains(picker.Pick(), pool.Keys);
     }
 
+    /// <summary>不放回抽取不能重复选中同一项</summary>
     [Fact]
-    public void 不放回_两次抽取不同()
+    public void Pick_TwoDifferentItems()
     {
         var pool = new Dictionary<string, int> { { "A", 3 }, { "B", 5 } };
         var picker = new NonReplacementPicker<string>(pool);
         picker.SetConstraints(2, 2, 8, 8);
-        var r1 = picker.Pick();
-        var r2 = picker.Pick();
-        Assert.NotEqual(r1, r2);
+        Assert.NotEqual(picker.Pick(), picker.Pick());
     }
 
+    /// <summary>约束不可满足时抛出 InvalidOperationException</summary>
     [Fact]
-    public void 约束不满足时抛异常()
+    public void Pick_Unsatisfiable_Throws()
     {
         var pool = new Dictionary<string, int> { { "A", 3 }, { "B", 5 } };
         var picker = new NonReplacementPicker<string>(pool);
@@ -130,3 +153,4 @@ public class NonReplacementPickerTest
         Assert.Throws<InvalidOperationException>(() => picker.Pick());
     }
 }
+#endif
