@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using NeoSmart.Caching.Sqlite;
 using System.Text.Json;
 using ZiggyCreatures.Caching.Fusion;

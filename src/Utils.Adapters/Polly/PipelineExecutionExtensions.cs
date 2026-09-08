@@ -1,4 +1,4 @@
-﻿// Copyright (c) zms9110750. All rights reserved.
+// Copyright (c) zms9110750. All rights reserved.
 // Licensed under the MIT License.
 
 using Polly;
@@ -69,7 +69,10 @@ public static class PipelineExecutionExtensions
 #if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(argument, paramName);
 #else
-        if (argument is null) throw new ArgumentNullException(paramName ?? nameof(argument));
+        if (argument is null)
+        {
+            throw new ArgumentNullException(paramName ?? nameof(argument));
+        }
 #endif
     }
 }

@@ -26,9 +26,20 @@ public static class ResiliencePipelineRegistrationExtensions
         ArgumentNullException.ThrowIfNull(name);
         ArgumentNullException.ThrowIfNull(configure);
 #else
-        if (services is null) throw new ArgumentNullException(nameof(services));
-        if (name is null) throw new ArgumentNullException(nameof(name));
-        if (configure is null) throw new ArgumentNullException(nameof(configure));
+        if (services is null)
+        {
+            throw new ArgumentNullException(nameof(services));
+        }
+
+        if (name is null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
+        if (configure is null)
+        {
+            throw new ArgumentNullException(nameof(configure));
+        }
 #endif
 
         services.AddKeyedSingleton(name, (sp, key) => {

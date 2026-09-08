@@ -7,6 +7,11 @@
 		<RootNamespace>zms9110750.Utils.Core</RootNamespace>
 		<AssemblyName>zms9110750.Utils.Core</AssemblyName>
 		<Nullable>enable</Nullable>
+		<Version>0.1.0</Version>
+		<PackageOutputPath>C:\Users\16229\source\NugetPack</PackageOutputPath>
+		<Authors>zms9110750</Authors>
+		<Description>Core utilities including Pagination model</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">

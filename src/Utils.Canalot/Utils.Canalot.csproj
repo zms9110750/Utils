@@ -6,8 +6,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>zms9110750.Utils.Canalot</RootNamespace>
 		<AssemblyName>zms9110750.Utils.Canalot</AssemblyName>
-		<Nullable>enable</Nullable> 
+		<Nullable>enable</Nullable>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Utils.UnionPolyfill\Utils.UnionPolyfill.csproj" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Update="Extensions\Apply.tt">
@@ -17,10 +22,6 @@
 		<None Update="Extensions\Out.tt">
 			<Generator>TextTemplatingFileGenerator</Generator>
 			<LastGenOutput>Out.tt.cs</LastGenOutput>
-		</None>
-		<None Update="Extensions\When.tt">
-			<Generator>TextTemplatingFileGenerator</Generator>
-			<LastGenOutput>When.cs</LastGenOutput>
 		</None>
 	</ItemGroup>
 
@@ -35,11 +36,10 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Out.tt</DependentUpon>
 		</Compile>
-		<Compile Update="Extensions\When.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>When.tt</DependentUpon>
-		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 	</ItemGroup>
 
 </Project>

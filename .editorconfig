@@ -35,4 +35,5 @@ csharp_space_between_method_call_empty_parameter_list_parentheses = false
 csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
 
 # 启用格式化分析
-dotnet_diagnostic.IDE0055.severity = warning
+# 已交由编译前 dotnet format 自动处理，不在编译时重复报警
+# dotnet_diagnostic.IDE0055.severity = warning

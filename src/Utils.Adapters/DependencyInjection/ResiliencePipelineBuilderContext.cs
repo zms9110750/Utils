@@ -1,4 +1,4 @@
-﻿namespace zms9110750.Extensions.DependencyInjection;
+namespace zms9110750.Extensions.DependencyInjection;
 
 /// <summary>
 /// 构建弹性管道时的上下文，提供运行时所需的信息。

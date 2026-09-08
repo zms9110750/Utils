@@ -110,7 +110,7 @@ public sealed class ProgressStreamReadTest
         var obs = new TestObserver();
         using var inner = new MemoryStream("Hello World"u8.ToArray());
         using var stream = new ProgressStream(inner, obs);
-        stream.Read(new byte[1024], 0, 1024);
+        stream.ReadExactly(new byte[1024], 0, 1024);
         Assert.Equal(11, obs.Value);
     }
 
@@ -121,7 +121,7 @@ public sealed class ProgressStreamReadTest
         var obs = new TestObserver();
         using var inner = new MemoryStream("Hello World"u8.ToArray());
         using var stream = new ProgressStream(inner, obs);
-        await stream.ReadAsync(new byte[1024], 0, 1024);
+        await stream.ReadExactlyAsync(new byte[1024], 0, 1024);
         Assert.Equal(11, obs.Value);
     }
 
@@ -132,7 +132,7 @@ public sealed class ProgressStreamReadTest
         var obs = new TestObserver();
         using var inner = new MemoryStream("Hello World"u8.ToArray());
         using var stream = new ProgressStream(inner, obs);
-        stream.Read(new byte[1024].AsSpan());
+        stream.ReadExactly(new byte[1024].AsSpan());
         Assert.Equal(11, obs.Value);
     }
 
@@ -143,7 +143,7 @@ public sealed class ProgressStreamReadTest
         var obs = new TestObserver();
         using var inner = new MemoryStream("Hello World"u8.ToArray());
         using var stream = new ProgressStream(inner, obs);
-        await stream.ReadAsync(new byte[1024].AsMemory());
+        await stream.ReadExactlyAsync(new byte[1024].AsMemory());
         Assert.Equal(11, obs.Value);
     }
 

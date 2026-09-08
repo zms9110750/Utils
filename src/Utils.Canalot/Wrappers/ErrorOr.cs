@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace zms9110750.Utils.Canalot.Wrappers;
 
@@ -17,6 +17,7 @@ public readonly record struct ErrorOr<T>
     /// <summary>
     /// 获取失败时的错误信息
     /// </summary>
+
     public string? Error => IsInitialized ? field : throw new InvalidOperationException("Cannot convert an uninit ErrorOr to a value.");
 
     /// <summary>
@@ -78,6 +79,7 @@ public readonly record struct ErrorOr<T, TError> where TError : Exception
     /// <summary>
     /// 获取失败时的异常
     /// </summary>
+
     public TError? Error => IsInitialized ? field : throw new InvalidOperationException("Cannot convert an uninit ErrorOr to a value.");
 
     /// <summary>

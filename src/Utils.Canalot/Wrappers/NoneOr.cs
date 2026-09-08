@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace zms9110750.Utils.Canalot.Wrappers;
 
@@ -9,6 +9,7 @@ public readonly record struct NoneOr<T>
     /// 获取包装的值
     /// </summary>
     /// <exception cref="InvalidOperationException"/>
+
     public T Value => HasValue ? field : throw new InvalidOperationException("Cannot convert an unsuccessful NoneOr to a value.");
 
     /// <summary>

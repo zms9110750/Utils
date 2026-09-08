@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace zms9110750.Extensions.Utils; 
 /// <summary>
-/// Îª 2 Ôª×éÌá¹© awaiter Ö§³Ö
+/// ä¸º 2 å…ƒç»„æä¾› awaiter æ”¯æŒ
 /// </summary>
 public readonly struct TupleTaskAwaiter<T1, T2> : ICriticalNotifyCompletion
 {
@@ -36,7 +36,7 @@ public readonly struct TupleTaskAwaiter<T1, T2> : ICriticalNotifyCompletion
 }
 
 /// <summary>
-/// Îª 3 Ôª×éÌá¹© awaiter Ö§³Ö
+/// ä¸º 3 å…ƒç»„æä¾› awaiter æ”¯æŒ
 /// </summary>
 public readonly struct TupleTaskAwaiter<T1, T2, T3> : ICriticalNotifyCompletion
 {
@@ -69,7 +69,7 @@ public readonly struct TupleTaskAwaiter<T1, T2, T3> : ICriticalNotifyCompletion
 }
 
 /// <summary>
-/// Îª 4 Ôª×éÌá¹© awaiter Ö§³Ö
+/// ä¸º 4 å…ƒç»„æä¾› awaiter æ”¯æŒ
 /// </summary>
 public readonly struct TupleTaskAwaiter<T1, T2, T3, T4> : ICriticalNotifyCompletion
 {
@@ -104,7 +104,7 @@ public readonly struct TupleTaskAwaiter<T1, T2, T3, T4> : ICriticalNotifyComplet
 }
 
 /// <summary>
-/// Îª 5 Ôª×éÌá¹© awaiter Ö§³Ö
+/// ä¸º 5 å…ƒç»„æä¾› awaiter æ”¯æŒ
 /// </summary>
 public readonly struct TupleTaskAwaiter<T1, T2, T3, T4, T5> : ICriticalNotifyCompletion
 {
@@ -141,7 +141,7 @@ public readonly struct TupleTaskAwaiter<T1, T2, T3, T4, T5> : ICriticalNotifyCom
 }
 
 /// <summary>
-/// Îª 6 Ôª×éÌá¹© awaiter Ö§³Ö
+/// ä¸º 6 å…ƒç»„æä¾› awaiter æ”¯æŒ
 /// </summary>
 public readonly struct TupleTaskAwaiter<T1, T2, T3, T4, T5, T6> : ICriticalNotifyCompletion
 {
@@ -180,7 +180,7 @@ public readonly struct TupleTaskAwaiter<T1, T2, T3, T4, T5, T6> : ICriticalNotif
 }
 
 /// <summary>
-/// Îª 7 Ôª×éÌá¹© awaiter Ö§³Ö
+/// ä¸º 7 å…ƒç»„æä¾› awaiter æ”¯æŒ
 /// </summary>
 public readonly struct TupleTaskAwaiter<T1, T2, T3, T4, T5, T6, T7> : ICriticalNotifyCompletion
 {
@@ -225,37 +225,37 @@ public readonly struct TupleTaskAwaiter<T1, T2, T3, T4, T5, T6, T7> : ICriticalN
 public static partial class TupleTaskExtensions
 {
     /// <summary>
-    /// »ñÈ¡ 2 Ôª×éÖĞËùÓĞÈÎÎñµÄ awaiter
+    /// è·å– 2 å…ƒç»„ä¸­æ‰€æœ‰ä»»åŠ¡çš„ awaiter
     /// </summary>
     public static TupleTaskAwaiter<T1, T2> GetAwaiter<T1, T2>(this (Task<T1>, Task<T2>) tasks)
         => new(tasks);
 
     /// <summary>
-    /// »ñÈ¡ 3 Ôª×éÖĞËùÓĞÈÎÎñµÄ awaiter
+    /// è·å– 3 å…ƒç»„ä¸­æ‰€æœ‰ä»»åŠ¡çš„ awaiter
     /// </summary>
     public static TupleTaskAwaiter<T1, T2, T3> GetAwaiter<T1, T2, T3>(this (Task<T1>, Task<T2>, Task<T3>) tasks)
         => new(tasks);
 
     /// <summary>
-    /// »ñÈ¡ 4 Ôª×éÖĞËùÓĞÈÎÎñµÄ awaiter
+    /// è·å– 4 å…ƒç»„ä¸­æ‰€æœ‰ä»»åŠ¡çš„ awaiter
     /// </summary>
     public static TupleTaskAwaiter<T1, T2, T3, T4> GetAwaiter<T1, T2, T3, T4>(this (Task<T1>, Task<T2>, Task<T3>, Task<T4>) tasks)
         => new(tasks);
 
     /// <summary>
-    /// »ñÈ¡ 5 Ôª×éÖĞËùÓĞÈÎÎñµÄ awaiter
+    /// è·å– 5 å…ƒç»„ä¸­æ‰€æœ‰ä»»åŠ¡çš„ awaiter
     /// </summary>
     public static TupleTaskAwaiter<T1, T2, T3, T4, T5> GetAwaiter<T1, T2, T3, T4, T5>(this (Task<T1>, Task<T2>, Task<T3>, Task<T4>, Task<T5>) tasks)
         => new(tasks);
 
     /// <summary>
-    /// »ñÈ¡ 6 Ôª×éÖĞËùÓĞÈÎÎñµÄ awaiter
+    /// è·å– 6 å…ƒç»„ä¸­æ‰€æœ‰ä»»åŠ¡çš„ awaiter
     /// </summary>
     public static TupleTaskAwaiter<T1, T2, T3, T4, T5, T6> GetAwaiter<T1, T2, T3, T4, T5, T6>(this (Task<T1>, Task<T2>, Task<T3>, Task<T4>, Task<T5>, Task<T6>) tasks)
         => new(tasks);
 
     /// <summary>
-    /// »ñÈ¡ 7 Ôª×éÖĞËùÓĞÈÎÎñµÄ awaiter
+    /// è·å– 7 å…ƒç»„ä¸­æ‰€æœ‰ä»»åŠ¡çš„ awaiter
     /// </summary>
     public static TupleTaskAwaiter<T1, T2, T3, T4, T5, T6, T7> GetAwaiter<T1, T2, T3, T4, T5, T6, T7>(this (Task<T1>, Task<T2>, Task<T3>, Task<T4>, Task<T5>, Task<T6>, Task<T7>) tasks)
         => new(tasks);

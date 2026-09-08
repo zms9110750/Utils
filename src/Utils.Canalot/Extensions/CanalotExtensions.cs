@@ -1,4 +1,4 @@
-﻿using zms9110750.Utils.Canalot.Wrappers;
+using zms9110750.Utils.Canalot.Wrappers;
 
 namespace zms9110750.Extensions.Utils.Canalot;
 

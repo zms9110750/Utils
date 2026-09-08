@@ -4,16 +4,10 @@
     <Project Path="src/Utils.Canalot/Utils.Canalot.csproj" />
     <Project Path="src/Utils.Core/Utils.Core.csproj" />
     <Project Path="src/Utils.Extensions/Utils.Extensions.csproj" />
-  </Folder>
-  <Folder Name="/samples/">
-    <Project Path="samples/Utils.SingleExe/Utils.SingleExe.csproj" />
-    <Project Path="samples/Core.Sample/Core.Sample.csproj" />
-    <Project Path="samples/Adapters.Sample/Adapters.Sample.csproj" />
-    <Project Path="samples/Canalot.Sample/Canalot.Sample.csproj" />
-    <Project Path="samples/Extensions.Sample/Extensions.Sample.csproj" />
+    <Project Path="src/Utils.UnionPolyfill/Utils.UnionPolyfill.csproj" />
   </Folder>
   <Folder Name="/test/">
-    <Project Path="test/Utils.Test/Utils.Test.csproj" />
     <Project Path="test/Core.Test/Core.Test.csproj" />
+    <Project Path="test/Utils.Test/Utils.Test.csproj" />
   </Folder>
 </Solution>
