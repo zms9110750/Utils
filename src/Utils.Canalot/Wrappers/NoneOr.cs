@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace zms9110750.Utils.Canalot.Wrappers;
 
@@ -68,7 +69,9 @@ public static class NoneOr
     }
 
     public static NoneOr<T> ToNopeOr<T>(this T? value) where T : struct
-    {
+    { 
         return value == null ? new NoneOr<T>() : new NoneOr<T>(value.Value);
     }
 }
+
+ 
